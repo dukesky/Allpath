@@ -1,0 +1,10 @@
+.next
+node_modules
+.env
+.DS_Store
+
+.next.bak*
+tmp/
+
+.next.bak*
+tmp/
