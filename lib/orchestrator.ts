@@ -31,13 +31,18 @@ function sanitizeAgentOutput(content: string, participant: ParticipantConfig): s
     `^(?:\\s*\\[(?:${label})(?:\\s*\\|\\s*${model})?\\]\\s*)+`,
     "i"
   );
+  const anyBracketTag = /\[[^\]\n]{1,80}\|[^\]\n]{1,120}\]\s*/g;
 
   const speakerLine = new RegExp(`^\\s*Speaker\\s*:\\s*.*(?:\\n|\\r\\n?)`, "i");
   const messageLabel = /^\s*Message\s*:\s*/i;
+  const speakerBlock = /(?:^|\n)\s*Speaker\s*:\s*[^\n]*(?:\n|\r\n?)\s*Message\s*:\s*[\s\S]*?(?=(?:\n\s*Speaker\s*:)|$)/gi;
 
   let cleaned = content.replace(bracketPrefix, "").trimStart();
+  cleaned = cleaned.replace(speakerBlock, "");
   cleaned = cleaned.replace(speakerLine, "").trimStart();
   cleaned = cleaned.replace(messageLabel, "").trimStart();
+  cleaned = cleaned.replace(anyBracketTag, "");
+  cleaned = cleaned.replace(/\n{3,}/g, "\n\n");
 
   return cleaned;
 }
@@ -62,6 +67,7 @@ function buildPromptForParticipant(input: {
     "Do not claim all voices are the same model or that you are the only model.",
     "Do not prefix your answer with speaker tags like [Name | model].",
     "Do not include prefixes like 'Speaker:' or 'Message:' in your output.",
+    "Never write or simulate another agent's response text in your own answer.",
     "Output only the response content.",
     "If asked which models are present, answer using the configured roster above.",
     "Keep answers concise, factual, and collaboration-oriented.",

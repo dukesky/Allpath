@@ -3,6 +3,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSession } from "@/lib/store";
 import { ParticipantConfig, SessionConfig } from "@/lib/types";
 
+const DEFAULT_AGENT_INITIAL_PROMPT = [
+  "You only speak for yourself; never write what other agents would say.",
+  "Treat other agents as peers and the user as the discussion owner.",
+  "Do not imitate formatting of prior messages.",
+  "Do not output prefixes like 'Speaker:' or 'Message:'.",
+  "Do not output bracket tags like '[Name | model]'.",
+  "If you want to reference another agent, summarize their idea in one short sentence.",
+  "If disagreeing, explain your own reasoning only."
+].join("\n");
+
 function validateParticipant(raw: unknown): raw is ParticipantConfig {
   if (!raw || typeof raw !== "object") {
     return false;
@@ -38,7 +48,9 @@ export async function POST(request: NextRequest) {
     sessionId: randomUUID(),
     mode: "roundtable",
     agentInitialPrompt:
-      typeof body.agentInitialPrompt === "string" ? body.agentInitialPrompt.trim() : undefined,
+      typeof body.agentInitialPrompt === "string" && body.agentInitialPrompt.trim().length > 0
+        ? body.agentInitialPrompt.trim()
+        : DEFAULT_AGENT_INITIAL_PROMPT,
     participants,
     summarizer,
     roundNumber: 0,

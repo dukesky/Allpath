@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, Fragment, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import {
   CatalogModel,
   FEATURED_MODELS,
@@ -111,12 +111,53 @@ function ModelPicker(props: {
   );
 }
 
+function renderInlineMarkdown(text: string): ReactNode[] {
+  const nodes: ReactNode[] = [];
+  const boldPattern = /\*\*(.+?)\*\*/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null = boldPattern.exec(text);
+  let key = 0;
+
+  while (match) {
+    if (match.index > lastIndex) {
+      nodes.push(<Fragment key={`t-${key++}`}>{text.slice(lastIndex, match.index)}</Fragment>);
+    }
+
+    nodes.push(<strong key={`b-${key++}`}>{match[1]}</strong>);
+    lastIndex = match.index + match[0].length;
+    match = boldPattern.exec(text);
+  }
+
+  if (lastIndex < text.length) {
+    nodes.push(<Fragment key={`t-${key++}`}>{text.slice(lastIndex)}</Fragment>);
+  }
+
+  return nodes;
+}
+
+function renderMessageContent(text: string): ReactNode[] {
+  const lines = text.split("\n");
+  const result: ReactNode[] = [];
+
+  for (let i = 0; i < lines.length; i += 1) {
+    result.push(<Fragment key={`l-${i}`}>{renderInlineMarkdown(lines[i])}</Fragment>);
+    if (i < lines.length - 1) {
+      result.push(<br key={`br-${i}`} />);
+    }
+  }
+
+  return result;
+}
+
 export default function HomePage() {
   const [agentInitialPrompt, setAgentInitialPrompt] = useState(
     [
       "You only speak for yourself; never write what other agents would say.",
       "Treat other agents as peers and the user as the discussion owner.",
       "Do not imitate formatting of prior messages.",
+      "Do not output prefixes like 'Speaker:' or 'Message:'.",
+      "Do not output bracket tags like '[Name | model]'.",
+      "If you want to reference another agent, summarize their idea in one short sentence.",
       "If disagreeing, explain your own reasoning only."
     ].join("\n")
   );
@@ -643,7 +684,7 @@ export default function HomePage() {
                 </span>
                 <span>{message.status}</span>
               </div>
-              <p className="whitespace-pre-wrap text-sm">{message.content || "..."}</p>
+              <p className="text-sm">{message.content ? renderMessageContent(message.content) : "..."}</p>
             </article>
           ))}
         </div>
