@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
   const body = (await request.json()) as {
     participants?: unknown[];
     summarizer?: unknown;
+    agentInitialPrompt?: unknown;
   };
 
   const participants = (body.participants ?? []).filter(validateParticipant);
@@ -36,6 +37,8 @@ export async function POST(request: NextRequest) {
   const session: SessionConfig = {
     sessionId: randomUUID(),
     mode: "roundtable",
+    agentInitialPrompt:
+      typeof body.agentInitialPrompt === "string" ? body.agentInitialPrompt.trim() : undefined,
     participants,
     summarizer,
     roundNumber: 0,

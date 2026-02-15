@@ -20,13 +20,36 @@ function rosterText(participants: ParticipantConfig[], summarizer?: ParticipantC
   return ["Configured participants:", ...participantLines, "Configured summarizer:", summarizerLine].join("\n");
 }
 
+function escapeRegex(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function sanitizeAgentOutput(content: string, participant: ParticipantConfig): string {
+  const label = escapeRegex(participant.label.trim());
+  const model = escapeRegex(participant.model.trim());
+  const bracketPrefix = new RegExp(
+    `^(?:\\s*\\[(?:${label})(?:\\s*\\|\\s*${model})?\\]\\s*)+`,
+    "i"
+  );
+
+  const speakerLine = new RegExp(`^\\s*Speaker\\s*:\\s*.*(?:\\n|\\r\\n?)`, "i");
+  const messageLabel = /^\s*Message\s*:\s*/i;
+
+  let cleaned = content.replace(bracketPrefix, "").trimStart();
+  cleaned = cleaned.replace(speakerLine, "").trimStart();
+  cleaned = cleaned.replace(messageLabel, "").trimStart();
+
+  return cleaned;
+}
+
 function buildPromptForParticipant(input: {
   participant: ParticipantConfig;
   messages: Message[];
   participants: ParticipantConfig[];
   summarizer?: ParticipantConfig;
+  agentInitialPrompt?: string;
 }): ModelMessage[] {
-  const { participant, messages, participants, summarizer } = input;
+  const { participant, messages, participants, summarizer, agentInitialPrompt } = input;
 
   const systemPrompt = [
     "You are participating in an AllPath multi-agent roundtable.",
@@ -37,13 +60,17 @@ function buildPromptForParticipant(input: {
     rosterText(participants, summarizer),
     "Important: each participant above is an independently called model instance.",
     "Do not claim all voices are the same model or that you are the only model.",
+    "Do not prefix your answer with speaker tags like [Name | model].",
+    "Do not include prefixes like 'Speaker:' or 'Message:' in your output.",
+    "Output only the response content.",
     "If asked which models are present, answer using the configured roster above.",
-    "Keep answers concise, factual, and collaboration-oriented."
+    "Keep answers concise, factual, and collaboration-oriented.",
+    agentInitialPrompt ? `Additional session rules:\n${agentInitialPrompt}` : ""
   ].join("\n\n");
 
   const conversation: ModelMessage[] = messages.map((message) => ({
     role: message.sourceRole === "user" ? "user" : "assistant",
-    content: `[${message.sourceLabel}${message.sourceModel ? ` | ${message.sourceModel}` : ""}] ${message.content}`
+    content: `Speaker: ${message.sourceLabel}${message.sourceModel ? ` (${message.sourceModel})` : ""}\nMessage: ${message.content}`
   }));
 
   return [{ role: "system", content: systemPrompt }, ...conversation];
@@ -59,7 +86,8 @@ async function runParticipantTurn(sessionId: string, participant: ParticipantCon
     participant,
     messages: state.config.messages,
     participants: state.config.participants,
-    summarizer: state.config.summarizer
+    summarizer: state.config.summarizer,
+    agentInitialPrompt: state.config.agentInitialPrompt
   });
 
   const messageId = randomUUID();
@@ -110,6 +138,7 @@ async function runParticipantTurn(sessionId: string, participant: ParticipantCon
 
   if (completed) {
     updateMessage(sessionId, messageId, (message) => {
+      message.content = sanitizeAgentOutput(message.content, participant);
       message.status = "completed";
     });
   }
@@ -187,7 +216,8 @@ export async function runManualSummarizer(sessionId: string): Promise<void> {
     },
     messages: state.config.messages,
     participants: state.config.participants,
-    summarizer: state.config.summarizer
+    summarizer: state.config.summarizer,
+    agentInitialPrompt: state.config.agentInitialPrompt
   });
 
   try {
@@ -207,6 +237,7 @@ export async function runManualSummarizer(sessionId: string): Promise<void> {
     }
 
     updateMessage(sessionId, messageId, (message) => {
+      message.content = sanitizeAgentOutput(message.content, summarizer);
       message.status = "completed";
     });
   } catch (error) {

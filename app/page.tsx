@@ -1,7 +1,12 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import { FEATURED_MODELS, MORE_MODELS, modelPriceTag } from "@/lib/modelCatalog";
+import {
+  CatalogModel,
+  FEATURED_MODELS,
+  MORE_MODELS,
+  modelPriceTag
+} from "@/lib/modelCatalog";
 import { Message, ProviderType } from "@/lib/types";
 
 const PROFILE_STORAGE_KEY = "allpath-agent-profiles";
@@ -29,7 +34,7 @@ function defaultParticipant(seed: string, label: string): ParticipantForm {
   return {
     id: seed,
     label,
-    model: "openai/gpt-4o-mini",
+    model: "openai/gpt-5-mini",
     providerType: "openrouter",
     apiKey: "",
     baseUrl: "",
@@ -42,6 +47,8 @@ function defaultParticipant(seed: string, label: string): ParticipantForm {
 function ModelPicker(props: {
   selected: string;
   onSelect: (model: string) => void;
+  featuredModels: CatalogModel[];
+  moreModels: CatalogModel[];
   disabled?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -49,7 +56,7 @@ function ModelPicker(props: {
   return (
     <div className="space-y-2">
       <div className="flex gap-2 overflow-x-auto pb-1">
-        {FEATURED_MODELS.map((model) => {
+        {props.featuredModels.map((model) => {
           const active = props.selected === model.id;
           return (
             <button
@@ -85,7 +92,7 @@ function ModelPicker(props: {
           value={props.selected}
         >
           <option value="">Select model</option>
-          {[...FEATURED_MODELS, ...MORE_MODELS].map((model) => (
+          {[...props.featuredModels, ...props.moreModels].map((model) => (
             <option key={model.id} value={model.id}>
               {model.label} ({model.id}) {model.price}
             </option>
@@ -105,6 +112,14 @@ function ModelPicker(props: {
 }
 
 export default function HomePage() {
+  const [agentInitialPrompt, setAgentInitialPrompt] = useState(
+    [
+      "You only speak for yourself; never write what other agents would say.",
+      "Treat other agents as peers and the user as the discussion owner.",
+      "Do not imitate formatting of prior messages.",
+      "If disagreeing, explain your own reasoning only."
+    ].join("\n")
+  );
   const [participants, setParticipants] = useState<ParticipantForm[]>([
     defaultParticipant("p1", "Analyst A"),
     defaultParticipant("p2", "Analyst B")
@@ -114,6 +129,7 @@ export default function HomePage() {
     defaultParticipant("sum", "Summarizer")
   );
   const [profiles, setProfiles] = useState<AgentProfile[]>([]);
+  const [dynamicCatalogModels, setDynamicCatalogModels] = useState<CatalogModel[] | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [status, setStatus] = useState("idle");
   const [roundNumber, setRoundNumber] = useState(0);
@@ -136,6 +152,36 @@ export default function HomePage() {
     } catch {
       // ignore invalid localStorage format
     }
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadModels() {
+      try {
+        const response = await fetch("/api/models?providerType=openrouter");
+        if (!response.ok) {
+          return;
+        }
+
+        const json = (await response.json()) as { models?: CatalogModel[] };
+        if (!active) {
+          return;
+        }
+
+        if (Array.isArray(json.models) && json.models.length > 0) {
+          setDynamicCatalogModels(json.models);
+        }
+      } catch {
+        // fallback to default static model list
+      }
+    }
+
+    void loadModels();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -163,6 +209,24 @@ export default function HomePage() {
   const groupedMessages = useMemo(() => {
     return [...messages].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
   }, [messages]);
+
+  const modelPickerCatalog = useMemo(() => {
+    const defaults = [...FEATURED_MODELS, ...MORE_MODELS];
+    const source = dynamicCatalogModels && dynamicCatalogModels.length > 0 ? dynamicCatalogModels : defaults;
+
+    const featuredModels = source.slice(0, 8);
+    const moreModels = source.slice(8);
+
+    return { featuredModels, moreModels };
+  }, [dynamicCatalogModels]);
+
+  const dynamicPriceMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const model of dynamicCatalogModels ?? []) {
+      map.set(model.id, model.price);
+    }
+    return map;
+  }, [dynamicCatalogModels]);
 
   function updateParticipant(index: number, patch: Partial<ParticipantForm>) {
     setParticipants((current) => current.map((item, i) => (i === index ? { ...item, ...patch } : item)));
@@ -202,6 +266,12 @@ export default function HomePage() {
   function connectStream(newSessionId: string) {
     eventSourceRef.current?.close();
     const source = new EventSource(`/api/session/${newSessionId}/stream`);
+    let openedOnce = false;
+
+    source.onopen = () => {
+      openedOnce = true;
+      setError("");
+    };
 
     source.addEventListener("session_state", (event) => {
       const payload = JSON.parse((event as MessageEvent).data) as {
@@ -241,7 +311,12 @@ export default function HomePage() {
     });
 
     source.onerror = () => {
-      setError("SSE disconnected. Refresh or recreate session if needed.");
+      // EventSource auto-reconnects; avoid false alarms on initial cold-start reconnect.
+      if (!openedOnce && source.readyState !== EventSource.CLOSED) {
+        return;
+      }
+
+      setError("SSE reconnecting. If this persists, recreate session.");
     };
 
     eventSourceRef.current = source;
@@ -252,6 +327,7 @@ export default function HomePage() {
     setError("");
 
     const payload = {
+      agentInitialPrompt,
       participants: participants.map((item) => ({
         id: item.id,
         label: item.label,
@@ -308,11 +384,21 @@ export default function HomePage() {
       return;
     }
 
-    const response = await fetch(`/api/session/${sessionId}/message`, {
+    const requestPayload = JSON.stringify({ content: input });
+    let response = await fetch(`/api/session/${sessionId}/message`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: input })
+      body: requestPayload
     });
+
+    if (response.status === 404) {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      response = await fetch(`/api/session/${sessionId}/message`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: requestPayload
+      });
+    }
 
     if (!response.ok) {
       const json = (await response.json().catch(() => ({}))) as { error?: string };
@@ -345,6 +431,16 @@ export default function HomePage() {
         </a>
 
         <form className="mt-4 space-y-4" onSubmit={createSession}>
+          <div className="space-y-2 rounded-xl border border-slate-200 p-3">
+            <p className="text-sm font-semibold">Agent Initial Prompt (Session Rules)</p>
+            <textarea
+              className="h-28 w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
+              value={agentInitialPrompt}
+              onChange={(event) => setAgentInitialPrompt(event.target.value)}
+              placeholder="Session-level rules for all agents"
+            />
+          </div>
+
           {participants.map((participant, index) => (
             <div key={participant.id} className="space-y-2 rounded-xl border border-slate-200 p-3">
               <p className="text-sm font-semibold">Participant {index + 1}</p>
@@ -372,6 +468,8 @@ export default function HomePage() {
               <ModelPicker
                 selected={participant.model}
                 onSelect={(model) => updateParticipant(index, { model })}
+                featuredModels={modelPickerCatalog.featuredModels}
+                moreModels={modelPickerCatalog.moreModels}
               />
 
               <select
@@ -465,6 +563,8 @@ export default function HomePage() {
               <ModelPicker
                 selected={summarizer.model}
                 onSelect={(model) => setSummarizer((current) => ({ ...current, model }))}
+                featuredModels={modelPickerCatalog.featuredModels}
+                moreModels={modelPickerCatalog.moreModels}
               />
 
               <select
@@ -537,7 +637,9 @@ export default function HomePage() {
                 <span>
                   {message.sourceLabel}
                   {message.sourceModel ? ` (${message.sourceModel})` : ""}
-                  {message.sourceModel ? ` ${modelPriceTag(message.sourceModel)}` : ""}
+                  {message.sourceModel
+                    ? ` ${dynamicPriceMap.get(message.sourceModel) ?? modelPriceTag(message.sourceModel)}`
+                    : ""}
                 </span>
                 <span>{message.status}</span>
               </div>

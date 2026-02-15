@@ -11,6 +11,7 @@ This version focuses on a practical first release:
 - Real-time token streaming to UI via SSE
 - Optional manual Summarizer role
 - Model picker with quick chips + expanded list + price tags (`$`, `$$`, `$$$`)
+- On startup, model options auto-fetch from OpenRouter (filtered to 2025-03+); fallback to bundled defaults if fetch fails
 - Agent Personality Studio (`/agents`) for reusable role/personality profiles
 - In-memory session state (no auth, no database yet)
 

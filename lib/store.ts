@@ -8,7 +8,18 @@ interface InternalSessionState {
   queue: string[];
 }
 
-const sessions = new Map<string, InternalSessionState>();
+declare global {
+  // Keep in-memory state stable across Next.js dev hot reloads.
+  // eslint-disable-next-line no-var
+  var __allpathSessions: Map<string, InternalSessionState> | undefined;
+}
+
+const sessions =
+  globalThis.__allpathSessions ?? new Map<string, InternalSessionState>();
+
+if (!globalThis.__allpathSessions) {
+  globalThis.__allpathSessions = sessions;
+}
 
 export function getSession(sessionId: string): InternalSessionState | undefined {
   return sessions.get(sessionId);

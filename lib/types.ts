@@ -33,6 +33,7 @@ export interface Message {
 export interface SessionConfig {
   sessionId: string;
   mode: Mode;
+  agentInitialPrompt?: string;
   participants: ParticipantConfig[];
   summarizer?: ParticipantConfig;
   roundNumber: number;
