@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, Fragment, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import {
   CatalogModel,
   FEATURED_MODELS,
@@ -10,12 +11,20 @@ import {
 import { Message, ProviderType } from "@/lib/types";
 
 const PROFILE_STORAGE_KEY = "allpath-agent-profiles";
+const SESSION_LIST_STORAGE_KEY = "allpath-session-list";
+const ACTIVE_SESSION_STORAGE_KEY = "allpath-active-session";
 
 interface AgentProfile {
   id: string;
   name: string;
   roleTitle: string;
   character: string;
+}
+
+interface SessionMeta {
+  id: string;
+  title: string;
+  createdAt: string;
 }
 
 type ParticipantForm = {
@@ -151,6 +160,14 @@ function renderMessageContent(text: string): ReactNode[] {
   return result;
 }
 
+function avatarLabel(name: string): string {
+  const cleaned = name.trim();
+  if (!cleaned) {
+    return "?";
+  }
+  return cleaned.slice(0, 1).toUpperCase();
+}
+
 export default function HomePage() {
   const [globalApiKey, setGlobalApiKey] = useState("");
   const [agentInitialPrompt, setAgentInitialPrompt] = useState(
@@ -173,6 +190,7 @@ export default function HomePage() {
     defaultParticipant("sum", "Summarizer")
   );
   const [profiles, setProfiles] = useState<AgentProfile[]>([]);
+  const [sessionList, setSessionList] = useState<SessionMeta[]>([]);
   const [dynamicCatalogModels, setDynamicCatalogModels] = useState<CatalogModel[] | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [status, setStatus] = useState("idle");
@@ -181,6 +199,7 @@ export default function HomePage() {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const eventSourceRef = useRef<EventSource | null>(null);
+  const chatScrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
@@ -195,6 +214,25 @@ export default function HomePage() {
       }
     } catch {
       // ignore invalid localStorage format
+    }
+
+    const rawSessions = localStorage.getItem(SESSION_LIST_STORAGE_KEY);
+    if (rawSessions) {
+      try {
+        const parsed = JSON.parse(rawSessions) as SessionMeta[];
+        if (Array.isArray(parsed)) {
+          setSessionList(parsed);
+        }
+      } catch {
+        // ignore invalid local data
+      }
+    }
+
+    const activeSession = localStorage.getItem(ACTIVE_SESSION_STORAGE_KEY);
+    if (activeSession) {
+      setSessionId(activeSession);
+      setMessages([]);
+      connectStream(activeSession);
     }
   }, []);
 
@@ -232,10 +270,31 @@ export default function HomePage() {
   }, [globalApiKey]);
 
   useEffect(() => {
+    localStorage.setItem(SESSION_LIST_STORAGE_KEY, JSON.stringify(sessionList));
+  }, [sessionList]);
+
+  useEffect(() => {
+    if (sessionId) {
+      localStorage.setItem(ACTIVE_SESSION_STORAGE_KEY, sessionId);
+    } else {
+      localStorage.removeItem(ACTIVE_SESSION_STORAGE_KEY);
+    }
+  }, [sessionId]);
+
+  useEffect(() => {
     return () => {
       eventSourceRef.current?.close();
     };
   }, []);
+
+  useEffect(() => {
+    const container = chatScrollRef.current;
+    if (!container) {
+      return;
+    }
+
+    container.scrollTop = container.scrollHeight;
+  }, [messages.length, status]);
 
   const canCreate = participants.every((participant) => {
     if (!participant.model) {
@@ -271,8 +330,27 @@ export default function HomePage() {
           (summarizer.useSpecificApiKey ? !!summarizer.apiKey : !!globalApiKey.trim()))));
 
   const groupedMessages = useMemo(() => {
-    return [...messages].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    return [...messages]
+      .filter((message) => {
+        if (message.status === "streaming") {
+          return true;
+        }
+        return message.content.trim().length > 0;
+      })
+      .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
   }, [messages]);
+
+  const typingAgents = useMemo(() => {
+    const labels = groupedMessages
+      .filter(
+        (message) =>
+          (message.sourceRole === "assistant" || message.sourceRole === "summarizer") &&
+          message.status === "streaming"
+      )
+      .map((message) => message.sourceLabel);
+
+    return Array.from(new Set(labels));
+  }, [groupedMessages]);
 
   const modelPickerCatalog = useMemo(() => {
     const featuredModels = FEATURED_MODELS;
@@ -370,6 +448,11 @@ export default function HomePage() {
       );
     });
 
+    source.addEventListener("message_removed", (event) => {
+      const payload = JSON.parse((event as MessageEvent).data) as { messageId: string };
+      setMessages((current) => current.filter((item) => item.messageId !== payload.messageId));
+    });
+
     source.addEventListener("server_error", (event) => {
       const payload = JSON.parse((event as MessageEvent).data) as { message: string };
       setError(payload.message);
@@ -385,6 +468,17 @@ export default function HomePage() {
     };
 
     eventSourceRef.current = source;
+  }
+
+  function openSavedSession(targetSessionId: string) {
+    if (!targetSessionId) {
+      return;
+    }
+
+    setError("");
+    setSessionId(targetSessionId);
+    setMessages([]);
+    connectStream(targetSessionId);
   }
 
   async function createSession(event: FormEvent) {
@@ -437,10 +531,22 @@ export default function HomePage() {
     }
 
     const json = (await response.json()) as { sessionId: string; status: string; roundNumber: number };
+    const sessionTitle = `Session ${new Date().toLocaleString()} · ${participants
+      .map((participant) => participant.label)
+      .join(", ")}`;
+
     setSessionId(json.sessionId);
     setStatus(json.status);
     setRoundNumber(json.roundNumber);
     setMessages([]);
+    setSessionList((current) => [
+      {
+        id: json.sessionId,
+        title: sessionTitle,
+        createdAt: new Date().toISOString()
+      },
+      ...current.filter((item) => item.id !== json.sessionId)
+    ]);
     connectStream(json.sessionId);
   }
 
@@ -488,13 +594,42 @@ export default function HomePage() {
   }
 
   return (
-    <main className="mx-auto grid min-h-screen w-full max-w-7xl gap-4 p-4 lg:grid-cols-[380px_1fr]">
-      <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <main className="mx-auto h-screen w-full max-w-[1600px] p-4">
+      <div className="grid h-full gap-4 lg:grid-cols-[280px_380px_1fr]">
+      <section className="h-full min-h-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <h2 className="text-sm font-semibold text-slate-700">Sessions</h2>
+        <p className="mt-1 text-xs text-slate-500">Open a previous session and continue chatting.</p>
+        <div className="mt-3 space-y-2 overflow-y-auto">
+          {sessionList.length === 0 && (
+            <div className="rounded-lg border border-slate-200 p-2 text-xs text-slate-500">
+              No saved sessions yet.
+            </div>
+          )}
+
+          {sessionList.map((item) => (
+            <button
+              key={item.id}
+              className={`w-full rounded-lg border px-3 py-2 text-left text-xs ${
+                item.id === sessionId
+                  ? "border-primary bg-blue-50 text-blue-700"
+                  : "border-slate-200 text-slate-600"
+              }`}
+              onClick={() => openSavedSession(item.id)}
+              type="button"
+            >
+              <p className="font-medium">{item.title}</p>
+              <p className="mt-1 font-mono text-[10px]">{item.id}</p>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="h-full min-h-0 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <h1 className="text-xl font-semibold">AllPath MVP</h1>
         <p className="mt-1 text-sm text-slate-600">Round Table only, 2+ agents, manual summarizer.</p>
-        <a className="mt-1 inline-block text-sm font-medium text-primary" href="/agents">
+        <Link className="mt-1 inline-block text-sm font-medium text-primary" href="/agents">
           Open Agent Personality Studio
-        </a>
+        </Link>
 
         <form className="mt-4 space-y-4" onSubmit={createSession}>
           <div className="space-y-2 rounded-xl border border-slate-200 p-3">
@@ -735,28 +870,76 @@ export default function HomePage() {
         </form>
       </section>
 
-      <section className="flex min-h-[80vh] flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <section className="flex h-full min-h-0 flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
         <header className="border-b border-slate-200 p-3 text-sm text-slate-600">
           Session: <span className="font-mono text-xs">{sessionId ?? "not created"}</span> | Status: {status} |
           Round: {roundNumber}
         </header>
 
-        <div className="flex-1 space-y-3 overflow-y-auto p-4">
+        <div ref={chatScrollRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
           {groupedMessages.map((message) => (
-            <article key={message.messageId} className="rounded-xl border border-slate-200 p-3">
-              <div className="mb-1 flex items-center justify-between text-xs text-slate-500">
-                <span>
-                  {message.sourceLabel}
-                  {message.sourceModel ? ` (${message.sourceModel})` : ""}
-                  {message.sourceModel
-                    ? ` ${dynamicPriceMap.get(message.sourceModel) ?? modelPriceTag(message.sourceModel)}`
-                    : ""}
-                </span>
-                <span>{message.status}</span>
+            <article
+              key={message.messageId}
+              className={`flex ${
+                message.sourceRole === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                className={`max-w-[85%] items-start gap-2 ${
+                  message.sourceRole === "user" ? "flex flex-row-reverse" : "flex"
+                }`}
+              >
+                <div
+                  className={`mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
+                    message.sourceRole === "user"
+                      ? "bg-primary text-white"
+                      : "bg-slate-200 text-slate-700"
+                  }`}
+                >
+                  {avatarLabel(message.sourceRole === "user" ? "You" : message.sourceLabel)}
+                </div>
+
+                <div>
+                  <p
+                    className={`mb-1 text-xs ${
+                      message.sourceRole === "user" ? "text-right text-slate-500" : "text-slate-500"
+                    }`}
+                  >
+                    {message.sourceRole === "user" ? "You" : message.sourceLabel}
+                    {message.sourceModel ? ` (${message.sourceModel})` : ""}
+                    {message.sourceModel
+                      ? ` ${dynamicPriceMap.get(message.sourceModel) ?? modelPriceTag(message.sourceModel)}`
+                      : ""}
+                  </p>
+                  <div
+                    className={`rounded-2xl px-3 py-2 text-sm ${
+                      message.sourceRole === "user"
+                        ? "bg-primary text-white"
+                        : "bg-slate-100 text-slate-900"
+                    }`}
+                  >
+                    {message.content ? renderMessageContent(message.content) : "..."}
+                  </div>
+                </div>
               </div>
-              <p className="text-sm">{message.content ? renderMessageContent(message.content) : "..."}</p>
             </article>
           ))}
+
+          {status === "running" && typingAgents.length > 0 && (
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <div className="h-2 w-2 animate-pulse rounded-full bg-slate-400" />
+              <span>
+                {typingAgents.join(", ")} {typingAgents.length > 1 ? "are" : "is"} typing...
+              </span>
+            </div>
+          )}
+
+          {status === "running" && typingAgents.length === 0 && (
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <div className="h-2 w-2 animate-pulse rounded-full bg-slate-400" />
+              <span>Agents are thinking...</span>
+            </div>
+          )}
         </div>
 
         {error && <p className="border-t border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>}
@@ -787,6 +970,7 @@ export default function HomePage() {
           </form>
         </div>
       </section>
+      </div>
     </main>
   );
 }

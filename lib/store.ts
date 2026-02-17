@@ -88,6 +88,21 @@ export function updateMessage(
   emit(sessionId, { type: "message_updated", payload: { message } });
 }
 
+export function removeMessage(sessionId: string, messageId: string): void {
+  const session = sessions.get(sessionId);
+  if (!session) {
+    return;
+  }
+
+  const index = session.config.messages.findIndex((item) => item.messageId === messageId);
+  if (index < 0) {
+    return;
+  }
+
+  session.config.messages.splice(index, 1);
+  emit(sessionId, { type: "message_removed", payload: { messageId } });
+}
+
 export function pushQueue(sessionId: string, messageId: string): void {
   const session = sessions.get(sessionId);
   if (!session) {

@@ -46,6 +46,7 @@ export interface StreamEvent {
   type:
     | "session_state"
     | "message_created"
+    | "message_removed"
     | "message_delta"
     | "message_updated"
     | "server_error"
