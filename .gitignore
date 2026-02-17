@@ -2,9 +2,7 @@
 node_modules
 .env
 .DS_Store
-
-.next.bak*
-tmp/
+.gcloud
 
 .next.bak*
 tmp/

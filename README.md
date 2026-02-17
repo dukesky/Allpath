@@ -2,7 +2,7 @@
 
 AllPath is a multi-agent chat prototype where one user coordinates multiple LLM agents in a shared Round Table discussion.
 
-Current release version: `0.0.4`
+Current release version: `0.0.5`
 
 ## MVP Scope
 
@@ -77,6 +77,33 @@ Notes:
 - No persistence across server restarts.
 - No auth/account system.
 - No full cost/rate dashboard yet.
+
+## Deploy to GCP (Cloud Run)
+
+Project defaults used in this repo:
+
+- Project: `allpath`
+- Region: `us-central1`
+- Service: `allpath-web`
+
+Quick deploy:
+
+```bash
+export GCLOUD_BIN=/opt/homebrew/share/google-cloud-sdk/bin/gcloud
+export CLOUDSDK_CONFIG=$PWD/.gcloud
+export CLOUDSDK_PYTHON=/opt/homebrew/bin/python3
+
+$GCLOUD_BIN auth login --no-launch-browser
+$GCLOUD_BIN auth application-default login --no-launch-browser
+
+./deploy.sh
+```
+
+Deployment artifacts:
+
+- `Dockerfile`
+- `cloudbuild.yaml`
+- `deploy.sh`
 
 ## Next Milestones
 

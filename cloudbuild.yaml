@@ -1,0 +1,39 @@
+substitutions:
+  _SERVICE_NAME: allpath-web
+  _REGION: us-central1
+  _IMAGE_TAG: latest
+
+steps:
+  - id: build-image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${_IMAGE_TAG}
+      - .
+
+  - id: push-image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${_IMAGE_TAG}
+
+  - id: deploy-cloud-run
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE_NAME}
+      - --image
+      - gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${_IMAGE_TAG}
+      - --region
+      - ${_REGION}
+      - --platform
+      - managed
+      - --allow-unauthenticated
+      - --set-env-vars
+      - NODE_ENV=production
+
+images:
+  - gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${_IMAGE_TAG}

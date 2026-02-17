@@ -1,0 +1,12 @@
+.git
+.gitignore
+.next
+node_modules
+npm-debug.log
+README.md
+release_notes
+allpath_design_doc.docx
+tmp
+.env
+.env.local
+.gcloud
