@@ -34,6 +34,7 @@ export interface SessionConfig {
   sessionId: string;
   mode: Mode;
   agentInitialPrompt?: string;
+  globalApiKey?: string;
   participants: ParticipantConfig[];
   summarizer?: ParticipantConfig;
   roundNumber: number;

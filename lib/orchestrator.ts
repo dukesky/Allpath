@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { getAdapter } from "@/lib/providers";
 import { addMessage, emit, getSession, shiftQueue, updateMessage } from "@/lib/store";
-import { Message, ModelMessage, ParticipantConfig } from "@/lib/types";
+import { Message, ModelMessage, ParticipantConfig, ProviderConfig } from "@/lib/types";
 
 function nowIso(): string {
   return new Date().toISOString();
@@ -45,6 +45,17 @@ function sanitizeAgentOutput(content: string, participant: ParticipantConfig): s
   cleaned = cleaned.replace(/\n{3,}/g, "\n\n");
 
   return cleaned;
+}
+
+function resolveProviderConfig(provider: ProviderConfig, globalApiKey?: string): ProviderConfig {
+  if (provider.type !== "openrouter") {
+    return provider;
+  }
+
+  const resolvedApiKey =
+    provider.apiKey.trim() || globalApiKey?.trim() || process.env.OPENROUTER_API_KEY || "";
+
+  return { ...provider, apiKey: resolvedApiKey };
 }
 
 function buildPromptForParticipant(input: {
@@ -108,14 +119,15 @@ async function runParticipantTurn(sessionId: string, participant: ParticipantCon
     content: ""
   });
 
-  const adapter = getAdapter(participant.provider);
+  const resolvedProvider = resolveProviderConfig(participant.provider, state.config.globalApiKey);
+  const adapter = getAdapter(resolvedProvider);
   let completed = false;
 
   try {
     for await (const delta of adapter.streamChat({
       model: participant.model,
       messages: prompt,
-      provider: participant.provider
+      provider: resolvedProvider
     })) {
       updateMessage(sessionId, messageId, (message) => {
         message.content += delta;
@@ -212,7 +224,8 @@ export async function runManualSummarizer(sessionId: string): Promise<void> {
     content: ""
   });
 
-  const adapter = getAdapter(summarizer.provider);
+  const resolvedProvider = resolveProviderConfig(summarizer.provider, state.config.globalApiKey);
+  const adapter = getAdapter(resolvedProvider);
   const prompt = buildPromptForParticipant({
     participant: {
       ...summarizer,
@@ -230,7 +243,7 @@ export async function runManualSummarizer(sessionId: string): Promise<void> {
     for await (const delta of adapter.streamChat({
       model: summarizer.model,
       messages: prompt,
-      provider: summarizer.provider
+      provider: resolvedProvider
     })) {
       updateMessage(sessionId, messageId, (message) => {
         message.content += delta;

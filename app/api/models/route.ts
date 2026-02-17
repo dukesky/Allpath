@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { CatalogModel, PriceTier } from "@/lib/modelCatalog";
 import { ProviderType } from "@/lib/types";
 
-const CUTOFF_UNIX = Math.floor(new Date("2025-03-01T00:00:00Z").getTime() / 1000);
-
 function toPriceTier(prompt: number, completion: number): PriceTier {
   const avg = (prompt + completion) / 2;
 
@@ -16,17 +14,6 @@ function toPriceTier(prompt: number, completion: number): PriceTier {
   }
 
   return "$$$";
-}
-
-function isAllowedModelId(modelId: string): boolean {
-  return (
-    modelId.startsWith("openai/") ||
-    modelId.startsWith("anthropic/") ||
-    modelId.startsWith("google/gemini") ||
-    modelId.startsWith("minimax/") ||
-    modelId.startsWith("z-ai/") ||
-    modelId.startsWith("qwen/")
-  );
 }
 
 export async function GET(request: NextRequest) {
@@ -58,9 +45,7 @@ export async function GET(request: NextRequest) {
     };
 
     const models: CatalogModel[] = (json.data ?? [])
-      .filter((model) => (model.created ?? 0) >= CUTOFF_UNIX)
-      .filter((model) => isAllowedModelId(model.id))
-      .filter((model) => !model.id.includes(":free"))
+      .filter((model) => !!model.id)
       .map((model) => {
         const prompt = Number(model.pricing?.prompt ?? "0");
         const completion = Number(model.pricing?.completion ?? "0");

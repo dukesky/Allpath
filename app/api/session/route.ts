@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
     participants?: unknown[];
     summarizer?: unknown;
     agentInitialPrompt?: unknown;
+    globalApiKey?: unknown;
   };
 
   const participants = (body.participants ?? []).filter(validateParticipant);
@@ -51,6 +52,10 @@ export async function POST(request: NextRequest) {
       typeof body.agentInitialPrompt === "string" && body.agentInitialPrompt.trim().length > 0
         ? body.agentInitialPrompt.trim()
         : DEFAULT_AGENT_INITIAL_PROMPT,
+    globalApiKey:
+      typeof body.globalApiKey === "string" && body.globalApiKey.trim().length > 0
+        ? body.globalApiKey.trim()
+        : undefined,
     participants,
     summarizer,
     roundNumber: 0,

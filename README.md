@@ -2,6 +2,8 @@
 
 AllPath is a multi-agent chat prototype where one user coordinates multiple LLM agents in a shared Round Table discussion.
 
+Current release version: `0.0.3`
+
 ## MVP Scope
 
 This version focuses on a practical first release:
@@ -82,3 +84,8 @@ Notes:
 - Additional modes (Casual Chat / One-to-One Adviser)
 - Session persistence and export
 - Usage telemetry dashboard
+
+## Version Logs
+
+- Release notes are stored in `release_notes/`.
+- Naming format: `version.x.x.x_YYYY-MM-DD.md`

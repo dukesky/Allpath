@@ -23,6 +23,7 @@ type ParticipantForm = {
   label: string;
   model: string;
   providerType: ProviderType;
+  useSpecificApiKey: boolean;
   apiKey: string;
   baseUrl: string;
   roleTitle: string;
@@ -36,6 +37,7 @@ function defaultParticipant(seed: string, label: string): ParticipantForm {
     label,
     model: "openai/gpt-5-mini",
     providerType: "openrouter",
+    useSpecificApiKey: false,
     apiKey: "",
     baseUrl: "",
     roleTitle: "",
@@ -150,6 +152,7 @@ function renderMessageContent(text: string): ReactNode[] {
 }
 
 export default function HomePage() {
+  const [globalApiKey, setGlobalApiKey] = useState("");
   const [agentInitialPrompt, setAgentInitialPrompt] = useState(
     [
       "You only speak for yourself; never write what other agents would say.",
@@ -200,7 +203,10 @@ export default function HomePage() {
 
     async function loadModels() {
       try {
-        const response = await fetch("/api/models?providerType=openrouter");
+        const query = globalApiKey.trim()
+          ? `?providerType=openrouter&apiKey=${encodeURIComponent(globalApiKey.trim())}`
+          : "?providerType=openrouter";
+        const response = await fetch(`/api/models${query}`);
         if (!response.ok) {
           return;
         }
@@ -223,7 +229,7 @@ export default function HomePage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [globalApiKey]);
 
   useEffect(() => {
     return () => {
@@ -232,11 +238,27 @@ export default function HomePage() {
   }, []);
 
   const canCreate = participants.every((participant) => {
-    if (!participant.model || !participant.apiKey) {
+    if (!participant.model) {
       return false;
     }
 
-    if (participant.providerType === "custom" && !participant.baseUrl) {
+    if (participant.providerType === "custom" && (!participant.baseUrl || !participant.apiKey)) {
+      return false;
+    }
+
+    if (
+      participant.providerType === "openrouter" &&
+      participant.useSpecificApiKey &&
+      !participant.apiKey
+    ) {
+      return false;
+    }
+
+    if (
+      participant.providerType === "openrouter" &&
+      !participant.useSpecificApiKey &&
+      !globalApiKey.trim()
+    ) {
       return false;
     }
 
@@ -244,20 +266,22 @@ export default function HomePage() {
   }) &&
     (!summarizerEnabled ||
       (!!summarizer.model &&
-        !!summarizer.apiKey &&
-        (summarizer.providerType !== "custom" || !!summarizer.baseUrl)));
+        (summarizer.providerType !== "custom" || (!!summarizer.baseUrl && !!summarizer.apiKey)) &&
+        (summarizer.providerType !== "openrouter" ||
+          (summarizer.useSpecificApiKey ? !!summarizer.apiKey : !!globalApiKey.trim()))));
 
   const groupedMessages = useMemo(() => {
     return [...messages].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
   }, [messages]);
 
   const modelPickerCatalog = useMemo(() => {
-    const defaults = [...FEATURED_MODELS, ...MORE_MODELS];
-    const source = dynamicCatalogModels && dynamicCatalogModels.length > 0 ? dynamicCatalogModels : defaults;
+    const featuredModels = FEATURED_MODELS;
+    if (!dynamicCatalogModels || dynamicCatalogModels.length === 0) {
+      return { featuredModels, moreModels: MORE_MODELS };
+    }
 
-    const featuredModels = source.slice(0, 8);
-    const moreModels = source.slice(8);
-
+    const featuredIds = new Set(featuredModels.map((model) => model.id));
+    const moreModels = dynamicCatalogModels.filter((model) => !featuredIds.has(model.id));
     return { featuredModels, moreModels };
   }, [dynamicCatalogModels]);
 
@@ -368,6 +392,7 @@ export default function HomePage() {
     setError("");
 
     const payload = {
+      globalApiKey: globalApiKey.trim() || undefined,
       agentInitialPrompt,
       participants: participants.map((item) => ({
         id: item.id,
@@ -377,7 +402,7 @@ export default function HomePage() {
         character: item.character || undefined,
         provider: {
           type: item.providerType,
-          apiKey: item.apiKey,
+          apiKey: item.useSpecificApiKey ? item.apiKey : "",
           baseUrl: item.baseUrl || undefined
         }
       })),
@@ -392,7 +417,7 @@ export default function HomePage() {
               "Summarize with decision, rationale, risks, and next actions.",
             provider: {
               type: summarizer.providerType,
-              apiKey: summarizer.apiKey,
+              apiKey: summarizer.useSpecificApiKey ? summarizer.apiKey : "",
               baseUrl: summarizer.baseUrl || undefined
             }
           }
@@ -480,6 +505,16 @@ export default function HomePage() {
               onChange={(event) => setAgentInitialPrompt(event.target.value)}
               placeholder="Session-level rules for all agents"
             />
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-slate-700">Unified OpenRouter API Key</p>
+              <input
+                className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
+                type="password"
+                value={globalApiKey}
+                onChange={(event) => setGlobalApiKey(event.target.value)}
+                placeholder="Used by all OpenRouter agents unless overridden"
+              />
+            </div>
           </div>
 
           {participants.map((participant, index) => (
@@ -522,13 +557,28 @@ export default function HomePage() {
                 <option value="custom">Custom Provider</option>
               </select>
 
-              <input
-                className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
-                type="password"
-                value={participant.apiKey}
-                onChange={(event) => updateParticipant(index, { apiKey: event.target.value })}
-                placeholder="API Key"
-              />
+              {participant.providerType === "openrouter" && (
+                <label className="flex items-center gap-2 text-xs text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={participant.useSpecificApiKey}
+                    onChange={(event) =>
+                      updateParticipant(index, { useSpecificApiKey: event.target.checked })
+                    }
+                  />
+                  Use a specific API key for this agent
+                </label>
+              )}
+
+              {(participant.providerType === "custom" || participant.useSpecificApiKey) && (
+                <input
+                  className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
+                  type="password"
+                  value={participant.apiKey}
+                  onChange={(event) => updateParticipant(index, { apiKey: event.target.value })}
+                  placeholder="API Key"
+                />
+              )}
 
               {participant.providerType === "custom" && (
                 <input
@@ -622,13 +672,33 @@ export default function HomePage() {
                 <option value="custom">Custom Provider</option>
               </select>
 
-              <input
-                className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
-                type="password"
-                value={summarizer.apiKey}
-                onChange={(event) => setSummarizer((current) => ({ ...current, apiKey: event.target.value }))}
-                placeholder="API Key"
-              />
+              {summarizer.providerType === "openrouter" && (
+                <label className="flex items-center gap-2 text-xs text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={summarizer.useSpecificApiKey}
+                    onChange={(event) =>
+                      setSummarizer((current) => ({
+                        ...current,
+                        useSpecificApiKey: event.target.checked
+                      }))
+                    }
+                  />
+                  Use a specific API key for summarizer
+                </label>
+              )}
+
+              {(summarizer.providerType === "custom" || summarizer.useSpecificApiKey) && (
+                <input
+                  className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
+                  type="password"
+                  value={summarizer.apiKey}
+                  onChange={(event) =>
+                    setSummarizer((current) => ({ ...current, apiKey: event.target.value }))
+                  }
+                  placeholder="API Key"
+                />
+              )}
 
               {summarizer.providerType === "custom" && (
                 <input
