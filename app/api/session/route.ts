@@ -22,6 +22,7 @@ function validateParticipant(raw: unknown): raw is ParticipantConfig {
   return (
     typeof value.id === "string" &&
     typeof value.label === "string" &&
+    (typeof value.avatarUrl === "undefined" || typeof value.avatarUrl === "string") &&
     typeof value.model === "string" &&
     !!value.provider &&
     typeof (value.provider as Record<string, unknown>).type === "string" &&

@@ -36,6 +36,27 @@ function sanitizeAgentOutput(content: string, participant: ParticipantConfig): s
   const speakerLine = new RegExp(`^\\s*Speaker\\s*:\\s*.*(?:\\n|\\r\\n?)`, "i");
   const messageLabel = /^\s*Message\s*:\s*/i;
   const speakerBlock = /(?:^|\n)\s*Speaker\s*:\s*[^\n]*(?:\n|\r\n?)\s*Message\s*:\s*[\s\S]*?(?=(?:\n\s*Speaker\s*:)|$)/gi;
+  const speakerBlockWithCapture =
+    /(?:^|\n)\s*Speaker\s*:\s*([^\n]*)(?:\n|\r\n?)\s*Message\s*:\s*([\s\S]*?)(?=(?:\n\s*Speaker\s*:)|$)/gi;
+
+  const parsedBlocks: Array<{ speaker: string; message: string }> = [];
+  let blockMatch: RegExpExecArray | null = speakerBlockWithCapture.exec(content);
+  while (blockMatch) {
+    parsedBlocks.push({
+      speaker: blockMatch[1].trim(),
+      message: blockMatch[2].trim()
+    });
+    blockMatch = speakerBlockWithCapture.exec(content);
+  }
+
+  if (parsedBlocks.length > 0) {
+    const labelLower = participant.label.trim().toLowerCase();
+    const ownBlock =
+      parsedBlocks.find((block) => block.speaker.toLowerCase().includes(labelLower)) ?? parsedBlocks[0];
+    if (ownBlock?.message) {
+      return ownBlock.message.replace(anyBracketTag, "").trim();
+    }
+  }
 
   let cleaned = content.replace(bracketPrefix, "").trimStart();
   cleaned = cleaned.replace(speakerBlock, "");
@@ -79,6 +100,8 @@ function buildPromptForParticipant(input: {
     "Do not prefix your answer with speaker tags like [Name | model].",
     "Do not include prefixes like 'Speaker:' or 'Message:' in your output.",
     "Never write or simulate another agent's response text in your own answer.",
+    "Conversation history is provided as structured metadata blocks, not as a format to copy.",
+    "Your output must be plain response text only. No XML/JSON/YAML wrappers.",
     "Output only the response content.",
     "If asked which models are present, answer using the configured roster above.",
     "Keep answers concise, factual, and collaboration-oriented.",
@@ -87,7 +110,15 @@ function buildPromptForParticipant(input: {
 
   const conversation: ModelMessage[] = messages.map((message) => ({
     role: message.sourceRole === "user" ? "user" : "assistant",
-    content: `Speaker: ${message.sourceLabel}${message.sourceModel ? ` (${message.sourceModel})` : ""}\nMessage: ${message.content}`
+    content: [
+      "<history_message>",
+      `source_role: ${message.sourceRole}`,
+      `speaker: ${JSON.stringify(message.sourceLabel)}`,
+      `model: ${JSON.stringify(message.sourceModel ?? "")}`,
+      `round_id: ${message.roundId}`,
+      `content_json: ${JSON.stringify(message.content)}`,
+      "</history_message>"
+    ].join("\n")
   }));
 
   return [{ role: "system", content: systemPrompt }, ...conversation];
@@ -114,6 +145,7 @@ async function runParticipantTurn(sessionId: string, participant: ParticipantCon
     sourceRole: "assistant",
     sourceModel: participant.model,
     sourceLabel: participant.label,
+    sourceAvatarUrl: participant.avatarUrl,
     createdAt: nowIso(),
     status: "streaming",
     content: ""
@@ -248,6 +280,7 @@ export async function runManualSummarizer(sessionId: string): Promise<void> {
     sourceRole: "summarizer",
     sourceModel: summarizer.model,
     sourceLabel: summarizer.label,
+    sourceAvatarUrl: summarizer.avatarUrl,
     createdAt: nowIso(),
     status: "streaming",
     content: ""

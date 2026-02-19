@@ -12,6 +12,7 @@ export interface ProviderConfig {
 export interface ParticipantConfig {
   id: string;
   label: string;
+  avatarUrl?: string;
   model: string;
   provider: ProviderConfig;
   roleTitle?: string;
@@ -25,6 +26,7 @@ export interface Message {
   sourceRole: Role;
   sourceModel?: string;
   sourceLabel: string;
+  sourceAvatarUrl?: string;
   createdAt: string;
   status: "streaming" | "completed" | "failed";
   content: string;

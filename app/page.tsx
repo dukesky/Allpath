@@ -9,17 +9,12 @@ import {
   modelPriceTag
 } from "@/lib/modelCatalog";
 import { Message, ProviderType } from "@/lib/types";
+import { DEFAULT_AGENT_PROFILES, AgentProfile, mergeWithDefaultProfiles } from "@/lib/agentProfiles";
+import { readImageFileAsDataUrl } from "@/lib/avatar";
 
 const PROFILE_STORAGE_KEY = "allpath-agent-profiles";
 const SESSION_LIST_STORAGE_KEY = "allpath-session-list";
 const ACTIVE_SESSION_STORAGE_KEY = "allpath-active-session";
-
-interface AgentProfile {
-  id: string;
-  name: string;
-  roleTitle: string;
-  character: string;
-}
 
 interface SessionMeta {
   id: string;
@@ -30,6 +25,7 @@ interface SessionMeta {
 type ParticipantForm = {
   id: string;
   label: string;
+  avatarUrl: string;
   model: string;
   providerType: ProviderType;
   useSpecificApiKey: boolean;
@@ -44,6 +40,7 @@ function defaultParticipant(seed: string, label: string): ParticipantForm {
   return {
     id: seed,
     label,
+    avatarUrl: "",
     model: "openai/gpt-5-mini",
     providerType: "openrouter",
     useSpecificApiKey: false,
@@ -204,16 +201,19 @@ export default function HomePage() {
   useEffect(() => {
     const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
     if (!raw) {
+      setProfiles(DEFAULT_AGENT_PROFILES);
       return;
     }
 
     try {
       const parsed = JSON.parse(raw) as AgentProfile[];
       if (Array.isArray(parsed)) {
-        setProfiles(parsed);
+        setProfiles(mergeWithDefaultProfiles(parsed));
+      } else {
+        setProfiles(DEFAULT_AGENT_PROFILES);
       }
     } catch {
-      // ignore invalid localStorage format
+      setProfiles(DEFAULT_AGENT_PROFILES);
     }
 
     const rawSessions = localStorage.getItem(SESSION_LIST_STORAGE_KEY);
@@ -384,6 +384,7 @@ export default function HomePage() {
 
     updateParticipant(index, {
       profileId,
+      avatarUrl: profile.avatarUrl || "",
       roleTitle: profile.roleTitle,
       character: profile.character,
       label: profile.name || participants[index].label
@@ -400,6 +401,7 @@ export default function HomePage() {
     setSummarizer((current) => ({
       ...current,
       profileId,
+      avatarUrl: profile.avatarUrl || "",
       roleTitle: profile.roleTitle,
       character: profile.character,
       label: profile.name || current.label
@@ -470,6 +472,16 @@ export default function HomePage() {
     eventSourceRef.current = source;
   }
 
+  async function uploadAvatar(file: File, apply: (value: string) => void) {
+    try {
+      setError("");
+      const dataUrl = await readImageFileAsDataUrl(file);
+      apply(dataUrl);
+    } catch (uploadError) {
+      setError((uploadError as Error).message);
+    }
+  }
+
   function openSavedSession(targetSessionId: string) {
     if (!targetSessionId) {
       return;
@@ -479,6 +491,22 @@ export default function HomePage() {
     setSessionId(targetSessionId);
     setMessages([]);
     connectStream(targetSessionId);
+  }
+
+  function deleteSavedSession(targetSessionId: string) {
+    setSessionList((current) => current.filter((item) => item.id !== targetSessionId));
+    if (targetSessionId !== sessionId) {
+      return;
+    }
+
+    eventSourceRef.current?.close();
+    eventSourceRef.current = null;
+    setSessionId(null);
+    setMessages([]);
+    setStatus("idle");
+    setRoundNumber(0);
+    setError("");
+    localStorage.removeItem(ACTIVE_SESSION_STORAGE_KEY);
   }
 
   async function createSession(event: FormEvent) {
@@ -491,6 +519,7 @@ export default function HomePage() {
       participants: participants.map((item) => ({
         id: item.id,
         label: item.label,
+        avatarUrl: item.avatarUrl || undefined,
         model: item.model,
         roleTitle: item.roleTitle || undefined,
         character: item.character || undefined,
@@ -504,6 +533,7 @@ export default function HomePage() {
         ? {
             id: summarizer.id,
             label: summarizer.label,
+            avatarUrl: summarizer.avatarUrl || undefined,
             model: summarizer.model,
             roleTitle: summarizer.roleTitle || "Summarizer",
             character:
@@ -607,19 +637,32 @@ export default function HomePage() {
           )}
 
           {sessionList.map((item) => (
-            <button
+            <div
               key={item.id}
-              className={`w-full rounded-lg border px-3 py-2 text-left text-xs ${
+              className={`rounded-lg border px-2 py-2 text-xs ${
                 item.id === sessionId
                   ? "border-primary bg-blue-50 text-blue-700"
                   : "border-slate-200 text-slate-600"
               }`}
-              onClick={() => openSavedSession(item.id)}
-              type="button"
             >
-              <p className="font-medium">{item.title}</p>
-              <p className="mt-1 font-mono text-[10px]">{item.id}</p>
-            </button>
+              <div className="flex items-start gap-2">
+                <button
+                  className="flex-1 text-left"
+                  onClick={() => openSavedSession(item.id)}
+                  type="button"
+                >
+                  <p className="font-medium">{item.title}</p>
+                  <p className="mt-1 font-mono text-[10px]">{item.id}</p>
+                </button>
+                <button
+                  className="rounded-md border border-slate-300 px-2 py-1 text-[10px] text-slate-600"
+                  onClick={() => deleteSavedSession(item.id)}
+                  type="button"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
           ))}
         </div>
       </section>
@@ -675,6 +718,36 @@ export default function HomePage() {
                 onChange={(event) => updateParticipant(index, { label: event.target.value })}
                 placeholder="Agent label"
               />
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-md bg-slate-100 text-xs font-semibold text-slate-700">
+                  {participant.avatarUrl ? (
+                    <img src={participant.avatarUrl} alt={`${participant.label} avatar`} className="h-full w-full object-contain" />
+                  ) : (
+                    avatarLabel(participant.label)
+                  )}
+                </div>
+                <input
+                  className="text-xs"
+                  type="file"
+                  accept="image/*"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (!file) {
+                      return;
+                    }
+                    void uploadAvatar(file, (value) => updateParticipant(index, { avatarUrl: value }));
+                  }}
+                />
+                {participant.avatarUrl && (
+                  <button
+                    className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                    type="button"
+                    onClick={() => updateParticipant(index, { avatarUrl: "" })}
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
 
               <ModelPicker
                 selected={participant.model}
@@ -785,6 +858,38 @@ export default function HomePage() {
                 onChange={(event) => setSummarizer((current) => ({ ...current, label: event.target.value }))}
                 placeholder="Label"
               />
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-md bg-slate-100 text-xs font-semibold text-slate-700">
+                  {summarizer.avatarUrl ? (
+                    <img src={summarizer.avatarUrl} alt={`${summarizer.label} avatar`} className="h-full w-full object-contain" />
+                  ) : (
+                    avatarLabel(summarizer.label)
+                  )}
+                </div>
+                <input
+                  className="text-xs"
+                  type="file"
+                  accept="image/*"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (!file) {
+                      return;
+                    }
+                    void uploadAvatar(file, (value) =>
+                      setSummarizer((current) => ({ ...current, avatarUrl: value }))
+                    );
+                  }}
+                />
+                {summarizer.avatarUrl && (
+                  <button
+                    className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                    type="button"
+                    onClick={() => setSummarizer((current) => ({ ...current, avatarUrl: "" }))}
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
 
               <ModelPicker
                 selected={summarizer.model}
@@ -893,10 +998,18 @@ export default function HomePage() {
                   className={`mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
                     message.sourceRole === "user"
                       ? "bg-primary text-white"
-                      : "bg-slate-200 text-slate-700"
+                      : "bg-slate-100 text-slate-700"
                   }`}
                 >
-                  {avatarLabel(message.sourceRole === "user" ? "You" : message.sourceLabel)}
+                  {message.sourceRole !== "user" && message.sourceAvatarUrl ? (
+                    <img
+                      src={message.sourceAvatarUrl}
+                      alt={`${message.sourceLabel} avatar`}
+                      className="h-full w-full rounded-full object-contain"
+                    />
+                  ) : (
+                    avatarLabel(message.sourceRole === "user" ? "You" : message.sourceLabel)
+                  )}
                 </div>
 
                 <div>
