@@ -9,10 +9,19 @@ import {
   modelPriceTag
 } from "@/lib/modelCatalog";
 import { Message, ProviderType } from "@/lib/types";
-import { DEFAULT_AGENT_PROFILES, AgentProfile, mergeWithDefaultProfiles } from "@/lib/agentProfiles";
+import { AgentProfile, normalizeAgentLibrary } from "@/lib/agentProfiles";
 import { readImageFileAsDataUrl } from "@/lib/avatar";
+import {
+  CUSTOM_PROMPT_PRESET_ID,
+  DEFAULT_SESSION_RULES,
+  PromptPreset,
+  USER_PREFERENCES_STORAGE_KEY,
+  defaultUserPreferences,
+  normalizeUserPreferences
+} from "@/lib/userPreferences";
 
 const PROFILE_STORAGE_KEY = "allpath-agent-profiles";
+const STORY_STORAGE_KEY = "allpath-agent-stories";
 const SESSION_LIST_STORAGE_KEY = "allpath-session-list";
 const ACTIVE_SESSION_STORAGE_KEY = "allpath-active-session";
 
@@ -22,10 +31,13 @@ interface SessionMeta {
   createdAt: string;
 }
 
+type ApiKeyMode = "default_profile" | "unified" | "by_agent";
+
 type ParticipantForm = {
   id: string;
   label: string;
   avatarUrl: string;
+  storyFilter: string;
   model: string;
   providerType: ProviderType;
   useSpecificApiKey: boolean;
@@ -41,6 +53,7 @@ function defaultParticipant(seed: string, label: string): ParticipantForm {
     id: seed,
     label,
     avatarUrl: "",
+    storyFilter: "all",
     model: "openai/gpt-5-mini",
     providerType: "openrouter",
     useSpecificApiKey: false,
@@ -165,19 +178,25 @@ function avatarLabel(name: string): string {
   return cleaned.slice(0, 1).toUpperCase();
 }
 
+function parseLocalJson<T>(value: string | null, fallback: T): T {
+  if (!value) {
+    return fallback;
+  }
+
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    return fallback;
+  }
+}
+
 export default function HomePage() {
-  const [globalApiKey, setGlobalApiKey] = useState("");
-  const [agentInitialPrompt, setAgentInitialPrompt] = useState(
-    [
-      "You only speak for yourself; never write what other agents would say.",
-      "Treat other agents as peers and the user as the discussion owner.",
-      "Do not imitate formatting of prior messages.",
-      "Do not output prefixes like 'Speaker:' or 'Message:'.",
-      "Do not output bracket tags like '[Name | model]'.",
-      "If you want to reference another agent, summarize their idea in one short sentence.",
-      "If disagreeing, explain your own reasoning only."
-    ].join("\n")
-  );
+  const [apiKeyMode, setApiKeyMode] = useState<ApiKeyMode>("default_profile");
+  const [defaultProfileApiKey, setDefaultProfileApiKey] = useState("");
+  const [unifiedApiKey, setUnifiedApiKey] = useState("");
+  const [promptPresets, setPromptPresets] = useState<PromptPreset[]>([]);
+  const [selectedPromptPresetId, setSelectedPromptPresetId] = useState(CUSTOM_PROMPT_PRESET_ID);
+  const [customInitialPrompt, setCustomInitialPrompt] = useState(DEFAULT_SESSION_RULES);
   const [participants, setParticipants] = useState<ParticipantForm[]>([
     defaultParticipant("p1", "Analyst A"),
     defaultParticipant("p2", "Analyst B")
@@ -187,6 +206,7 @@ export default function HomePage() {
     defaultParticipant("sum", "Summarizer")
   );
   const [profiles, setProfiles] = useState<AgentProfile[]>([]);
+  const [stories, setStories] = useState<string[]>([]);
   const [sessionList, setSessionList] = useState<SessionMeta[]>([]);
   const [dynamicCatalogModels, setDynamicCatalogModels] = useState<CatalogModel[] | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -197,35 +217,45 @@ export default function HomePage() {
   const [error, setError] = useState("");
   const eventSourceRef = useRef<EventSource | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
+  const effectiveGlobalApiKey =
+    apiKeyMode === "default_profile"
+      ? defaultProfileApiKey
+      : apiKeyMode === "unified"
+        ? unifiedApiKey
+        : "";
 
   useEffect(() => {
-    const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
-    if (!raw) {
-      setProfiles(DEFAULT_AGENT_PROFILES);
-      return;
-    }
+    const parsedProfiles = parseLocalJson<AgentProfile[]>(
+      localStorage.getItem(PROFILE_STORAGE_KEY),
+      []
+    );
+    const parsedStories = parseLocalJson<string[]>(
+      localStorage.getItem(STORY_STORAGE_KEY),
+      []
+    );
+    const normalizedLibrary = normalizeAgentLibrary(parsedProfiles, parsedStories);
+    setProfiles(normalizedLibrary.profiles);
+    setStories(normalizedLibrary.stories);
 
-    try {
-      const parsed = JSON.parse(raw) as AgentProfile[];
-      if (Array.isArray(parsed)) {
-        setProfiles(mergeWithDefaultProfiles(parsed));
-      } else {
-        setProfiles(DEFAULT_AGENT_PROFILES);
-      }
-    } catch {
-      setProfiles(DEFAULT_AGENT_PROFILES);
-    }
+    const normalizedPrefs = normalizeUserPreferences(
+      parseLocalJson(localStorage.getItem(USER_PREFERENCES_STORAGE_KEY), defaultUserPreferences())
+    );
+    setDefaultProfileApiKey(normalizedPrefs.globalApiKey);
+    setUnifiedApiKey(normalizedPrefs.globalApiKey);
+    setPromptPresets(normalizedPrefs.promptPresets);
+    setSelectedPromptPresetId(normalizedPrefs.defaultPromptPresetId);
+    const defaultPrompt =
+      normalizedPrefs.promptPresets.find(
+        (preset) => preset.id === normalizedPrefs.defaultPromptPresetId
+      )?.prompt ?? DEFAULT_SESSION_RULES;
+    setCustomInitialPrompt(defaultPrompt);
 
-    const rawSessions = localStorage.getItem(SESSION_LIST_STORAGE_KEY);
-    if (rawSessions) {
-      try {
-        const parsed = JSON.parse(rawSessions) as SessionMeta[];
-        if (Array.isArray(parsed)) {
-          setSessionList(parsed);
-        }
-      } catch {
-        // ignore invalid local data
-      }
+    const parsedSessions = parseLocalJson<SessionMeta[]>(
+      localStorage.getItem(SESSION_LIST_STORAGE_KEY),
+      []
+    );
+    if (Array.isArray(parsedSessions)) {
+      setSessionList(parsedSessions);
     }
 
     const activeSession = localStorage.getItem(ACTIVE_SESSION_STORAGE_KEY);
@@ -241,8 +271,8 @@ export default function HomePage() {
 
     async function loadModels() {
       try {
-        const query = globalApiKey.trim()
-          ? `?providerType=openrouter&apiKey=${encodeURIComponent(globalApiKey.trim())}`
+        const query = effectiveGlobalApiKey.trim()
+          ? `?providerType=openrouter&apiKey=${encodeURIComponent(effectiveGlobalApiKey.trim())}`
           : "?providerType=openrouter";
         const response = await fetch(`/api/models${query}`);
         if (!response.ok) {
@@ -267,7 +297,7 @@ export default function HomePage() {
     return () => {
       active = false;
     };
-  }, [globalApiKey]);
+  }, [effectiveGlobalApiKey]);
 
   useEffect(() => {
     localStorage.setItem(SESSION_LIST_STORAGE_KEY, JSON.stringify(sessionList));
@@ -304,21 +334,13 @@ export default function HomePage() {
     if (participant.providerType === "custom" && (!participant.baseUrl || !participant.apiKey)) {
       return false;
     }
-
-    if (
-      participant.providerType === "openrouter" &&
-      participant.useSpecificApiKey &&
-      !participant.apiKey
-    ) {
-      return false;
-    }
-
-    if (
-      participant.providerType === "openrouter" &&
-      !participant.useSpecificApiKey &&
-      !globalApiKey.trim()
-    ) {
-      return false;
+    if (participant.providerType === "openrouter") {
+      if (apiKeyMode === "by_agent" && !participant.apiKey.trim()) {
+        return false;
+      }
+      if (apiKeyMode !== "by_agent" && !effectiveGlobalApiKey.trim()) {
+        return false;
+      }
     }
 
     return true;
@@ -327,7 +349,9 @@ export default function HomePage() {
       (!!summarizer.model &&
         (summarizer.providerType !== "custom" || (!!summarizer.baseUrl && !!summarizer.apiKey)) &&
         (summarizer.providerType !== "openrouter" ||
-          (summarizer.useSpecificApiKey ? !!summarizer.apiKey : !!globalApiKey.trim()))));
+          (apiKeyMode === "by_agent"
+            ? !!summarizer.apiKey.trim()
+            : !!effectiveGlobalApiKey.trim()))));
 
   const groupedMessages = useMemo(() => {
     return [...messages]
@@ -371,6 +395,26 @@ export default function HomePage() {
     return map;
   }, [dynamicCatalogModels]);
 
+  const selectedPromptPreset = useMemo(
+    () => promptPresets.find((preset) => preset.id === selectedPromptPresetId),
+    [promptPresets, selectedPromptPresetId]
+  );
+
+  const resolvedAgentInitialPrompt =
+    selectedPromptPresetId === CUSTOM_PROMPT_PRESET_ID
+      ? customInitialPrompt
+      : selectedPromptPreset?.prompt ?? customInitialPrompt;
+
+  function filterProfilesByStory(storyFilter: string): AgentProfile[] {
+    if (storyFilter === "all") {
+      return profiles;
+    }
+    if (storyFilter === "__none__") {
+      return profiles.filter((profile) => !profile.story.trim());
+    }
+    return profiles.filter((profile) => profile.story === storyFilter);
+  }
+
   function updateParticipant(index: number, patch: Partial<ParticipantForm>) {
     setParticipants((current) => current.map((item, i) => (i === index ? { ...item, ...patch } : item)));
   }
@@ -384,6 +428,7 @@ export default function HomePage() {
 
     updateParticipant(index, {
       profileId,
+      storyFilter: profile.story ? profile.story : "__none__",
       avatarUrl: profile.avatarUrl || "",
       roleTitle: profile.roleTitle,
       character: profile.character,
@@ -401,6 +446,7 @@ export default function HomePage() {
     setSummarizer((current) => ({
       ...current,
       profileId,
+      storyFilter: profile.story ? profile.story : "__none__",
       avatarUrl: profile.avatarUrl || "",
       roleTitle: profile.roleTitle,
       character: profile.character,
@@ -461,8 +507,15 @@ export default function HomePage() {
     });
 
     source.onerror = () => {
-      // EventSource auto-reconnects; avoid false alarms on initial cold-start reconnect.
-      if (!openedOnce && source.readyState !== EventSource.CLOSED) {
+      if (!openedOnce) {
+        eventSourceRef.current?.close();
+        eventSourceRef.current = null;
+        localStorage.removeItem(ACTIVE_SESSION_STORAGE_KEY);
+        setSessionId(null);
+        setMessages([]);
+        setStatus("idle");
+        setRoundNumber(0);
+        setError("Session expired or not found. Please create a new session.");
         return;
       }
 
@@ -514,8 +567,8 @@ export default function HomePage() {
     setError("");
 
     const payload = {
-      globalApiKey: globalApiKey.trim() || undefined,
-      agentInitialPrompt,
+      globalApiKey: effectiveGlobalApiKey.trim() || undefined,
+      agentInitialPrompt: resolvedAgentInitialPrompt,
       participants: participants.map((item) => ({
         id: item.id,
         label: item.label,
@@ -525,7 +578,12 @@ export default function HomePage() {
         character: item.character || undefined,
         provider: {
           type: item.providerType,
-          apiKey: item.useSpecificApiKey ? item.apiKey : "",
+          apiKey:
+            item.providerType === "openrouter" && apiKeyMode === "by_agent"
+              ? item.apiKey
+              : item.providerType === "custom"
+                ? item.apiKey
+                : "",
           baseUrl: item.baseUrl || undefined
         }
       })),
@@ -541,7 +599,12 @@ export default function HomePage() {
               "Summarize with decision, rationale, risks, and next actions.",
             provider: {
               type: summarizer.providerType,
-              apiKey: summarizer.useSpecificApiKey ? summarizer.apiKey : "",
+              apiKey:
+                summarizer.providerType === "openrouter" && apiKeyMode === "by_agent"
+                  ? summarizer.apiKey
+                  : summarizer.providerType === "custom"
+                    ? summarizer.apiKey
+                    : "",
               baseUrl: summarizer.baseUrl || undefined
             }
           }
@@ -670,28 +733,78 @@ export default function HomePage() {
       <section className="h-full min-h-0 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <h1 className="text-xl font-semibold">AllPath MVP</h1>
         <p className="mt-1 text-sm text-slate-600">Round Table only, 2+ agents, manual summarizer.</p>
-        <Link className="mt-1 inline-block text-sm font-medium text-primary" href="/agents">
-          Open Agent Personality Studio
-        </Link>
+        <div className="mt-1 flex gap-3">
+          <Link className="inline-block text-sm font-medium text-primary" href="/agents">
+            Open Agent Personality Studio
+          </Link>
+          <Link className="inline-block text-sm font-medium text-primary" href="/profile">
+            Open User Profile
+          </Link>
+        </div>
 
         <form className="mt-4 space-y-4" onSubmit={createSession}>
           <div className="space-y-2 rounded-xl border border-slate-200 p-3">
             <p className="text-sm font-semibold">Agent Initial Prompt (Session Rules)</p>
-            <textarea
-              className="h-28 w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
-              value={agentInitialPrompt}
-              onChange={(event) => setAgentInitialPrompt(event.target.value)}
-              placeholder="Session-level rules for all agents"
-            />
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-slate-700">Unified OpenRouter API Key</p>
-              <input
-                className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
-                type="password"
-                value={globalApiKey}
-                onChange={(event) => setGlobalApiKey(event.target.value)}
-                placeholder="Used by all OpenRouter agents unless overridden"
+            <select
+              className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
+              value={selectedPromptPresetId}
+              onChange={(event) => setSelectedPromptPresetId(event.target.value)}
+            >
+              {promptPresets.map((preset) => (
+                <option key={preset.id} value={preset.id}>
+                  {preset.name}
+                </option>
+              ))}
+              <option value={CUSTOM_PROMPT_PRESET_ID}>Custom</option>
+            </select>
+            {selectedPromptPresetId === CUSTOM_PROMPT_PRESET_ID ? (
+              <textarea
+                className="h-28 w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
+                value={customInitialPrompt}
+                onChange={(event) => setCustomInitialPrompt(event.target.value)}
+                placeholder="Session-level rules for all agents"
               />
+            ) : (
+              <textarea
+                className="h-28 w-full rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-sm text-slate-600"
+                value={selectedPromptPreset?.prompt ?? ""}
+                readOnly
+              />
+            )}
+            <div className="space-y-1">
+              <p className="text-xs font-medium text-slate-700">OpenRouter API Key Mode</p>
+              <select
+                className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
+                value={apiKeyMode}
+                onChange={(event) => setApiKeyMode(event.target.value as ApiKeyMode)}
+              >
+                <option value="default_profile">Use Default OpenRouter API Key (from User Profile)</option>
+                <option value="unified">Use Unified API Key (set once here)</option>
+                <option value="by_agent">Customized by Agent (each agent enters key)</option>
+              </select>
+              {apiKeyMode === "default_profile" && (
+                <input
+                  className="w-full rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-sm text-slate-600"
+                  type="password"
+                  value={defaultProfileApiKey}
+                  readOnly
+                  placeholder="No default key in User Profile"
+                />
+              )}
+              {apiKeyMode === "unified" && (
+                <input
+                  className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
+                  type="password"
+                  value={unifiedApiKey}
+                  onChange={(event) => setUnifiedApiKey(event.target.value)}
+                  placeholder="Used by all OpenRouter agents"
+                />
+              )}
+              {apiKeyMode === "by_agent" && (
+                <p className="text-xs text-slate-500">
+                  OpenRouter agents must provide API key in their own card.
+                </p>
+              )}
             </div>
           </div>
 
@@ -701,13 +814,33 @@ export default function HomePage() {
 
               <select
                 className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
+                value={participant.storyFilter}
+                onChange={(event) =>
+                  updateParticipant(index, {
+                    storyFilter: event.target.value,
+                    profileId: ""
+                  })
+                }
+              >
+                <option value="all">All stories</option>
+                <option value="__none__">No story</option>
+                {stories.map((storyName) => (
+                  <option key={storyName} value={storyName}>
+                    {storyName}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
                 onChange={(event) => applyProfileToParticipant(index, event.target.value)}
                 value={participant.profileId}
               >
                 <option value="">Apply profile (optional)</option>
-                {profiles.map((profile) => (
+                {filterProfilesByStory(participant.storyFilter).map((profile) => (
                   <option key={profile.id} value={profile.id}>
                     {profile.name}
+                    {profile.story ? ` · ${profile.story}` : ""}
                   </option>
                 ))}
               </select>
@@ -765,26 +898,18 @@ export default function HomePage() {
                 <option value="custom">Custom Provider</option>
               </select>
 
-              {participant.providerType === "openrouter" && (
-                <label className="flex items-center gap-2 text-xs text-slate-700">
-                  <input
-                    type="checkbox"
-                    checked={participant.useSpecificApiKey}
-                    onChange={(event) =>
-                      updateParticipant(index, { useSpecificApiKey: event.target.checked })
-                    }
-                  />
-                  Use a specific API key for this agent
-                </label>
-              )}
-
-              {(participant.providerType === "custom" || participant.useSpecificApiKey) && (
+              {(participant.providerType === "custom" ||
+                (participant.providerType === "openrouter" && apiKeyMode === "by_agent")) && (
                 <input
                   className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
                   type="password"
                   value={participant.apiKey}
                   onChange={(event) => updateParticipant(index, { apiKey: event.target.value })}
-                  placeholder="API Key"
+                  placeholder={
+                    participant.providerType === "openrouter"
+                      ? "OpenRouter API Key for this agent"
+                      : "API Key"
+                  }
                 />
               )}
 
@@ -841,13 +966,34 @@ export default function HomePage() {
 
               <select
                 className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
+                value={summarizer.storyFilter}
+                onChange={(event) =>
+                  setSummarizer((current) => ({
+                    ...current,
+                    storyFilter: event.target.value,
+                    profileId: ""
+                  }))
+                }
+              >
+                <option value="all">All stories</option>
+                <option value="__none__">No story</option>
+                {stories.map((storyName) => (
+                  <option key={storyName} value={storyName}>
+                    {storyName}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
                 onChange={(event) => applyProfileToSummarizer(event.target.value)}
                 value={summarizer.profileId}
               >
                 <option value="">Apply profile (optional)</option>
-                {profiles.map((profile) => (
+                {filterProfilesByStory(summarizer.storyFilter).map((profile) => (
                   <option key={profile.id} value={profile.id}>
                     {profile.name}
+                    {profile.story ? ` · ${profile.story}` : ""}
                   </option>
                 ))}
               </select>
@@ -912,23 +1058,8 @@ export default function HomePage() {
                 <option value="custom">Custom Provider</option>
               </select>
 
-              {summarizer.providerType === "openrouter" && (
-                <label className="flex items-center gap-2 text-xs text-slate-700">
-                  <input
-                    type="checkbox"
-                    checked={summarizer.useSpecificApiKey}
-                    onChange={(event) =>
-                      setSummarizer((current) => ({
-                        ...current,
-                        useSpecificApiKey: event.target.checked
-                      }))
-                    }
-                  />
-                  Use a specific API key for summarizer
-                </label>
-              )}
-
-              {(summarizer.providerType === "custom" || summarizer.useSpecificApiKey) && (
+              {(summarizer.providerType === "custom" ||
+                (summarizer.providerType === "openrouter" && apiKeyMode === "by_agent")) && (
                 <input
                   className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
                   type="password"
@@ -936,7 +1067,11 @@ export default function HomePage() {
                   onChange={(event) =>
                     setSummarizer((current) => ({ ...current, apiKey: event.target.value }))
                   }
-                  placeholder="API Key"
+                  placeholder={
+                    summarizer.providerType === "openrouter"
+                      ? "OpenRouter API Key for summarizer"
+                      : "API Key"
+                  }
                 />
               )}
 

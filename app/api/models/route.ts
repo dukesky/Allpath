@@ -44,8 +44,11 @@ export async function GET(request: NextRequest) {
       }>;
     };
 
-    const models: CatalogModel[] = (json.data ?? [])
+    const minCreatedUnix = Math.floor(new Date("2025-03-01T00:00:00Z").getTime() / 1000);
+
+    const models = (json.data ?? [])
       .filter((model) => !!model.id)
+      .filter((model) => !model.created || model.created >= minCreatedUnix)
       .map((model) => {
         const prompt = Number(model.pricing?.prompt ?? "0");
         const completion = Number(model.pricing?.completion ?? "0");
@@ -53,10 +56,18 @@ export async function GET(request: NextRequest) {
         return {
           id: model.id,
           label: model.name?.trim() || model.id,
-          price: toPriceTier(prompt, completion)
+          price: toPriceTier(prompt, completion),
+          created: model.created ?? 0
         };
       })
-      .sort((a, b) => a.id.localeCompare(b.id));
+      .sort((a, b) => {
+        if (b.created !== a.created) {
+          return b.created - a.created;
+        }
+        return a.id.localeCompare(b.id);
+      })
+      .slice(0, 500)
+      .map(({ id, label, price }) => ({ id, label, price })) as CatalogModel[];
 
     return NextResponse.json({ models });
   } catch (error) {

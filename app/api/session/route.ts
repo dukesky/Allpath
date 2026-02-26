@@ -2,16 +2,9 @@ import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createSession } from "@/lib/store";
 import { ParticipantConfig, SessionConfig } from "@/lib/types";
+import { DEFAULT_SESSION_RULES } from "@/lib/userPreferences";
 
-const DEFAULT_AGENT_INITIAL_PROMPT = [
-  "You only speak for yourself; never write what other agents would say.",
-  "Treat other agents as peers and the user as the discussion owner.",
-  "Do not imitate formatting of prior messages.",
-  "Do not output prefixes like 'Speaker:' or 'Message:'.",
-  "Do not output bracket tags like '[Name | model]'.",
-  "If you want to reference another agent, summarize their idea in one short sentence.",
-  "If disagreeing, explain your own reasoning only."
-].join("\n");
+const DEFAULT_AGENT_INITIAL_PROMPT = DEFAULT_SESSION_RULES;
 
 function validateParticipant(raw: unknown): raw is ParticipantConfig {
   if (!raw || typeof raw !== "object") {

@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { getAdapter } from "@/lib/providers";
-import { addMessage, emit, getSession, removeMessage, shiftQueue, updateMessage } from "@/lib/store";
+import { addMessage, emit, getSession, shiftQueue, updateMessage } from "@/lib/store";
 import { Message, ModelMessage, ParticipantConfig, ProviderConfig } from "@/lib/types";
 
 function nowIso(): string {
@@ -195,12 +195,10 @@ async function runParticipantTurn(sessionId: string, participant: ParticipantCon
       console.warn(
         `[allpath] empty_output participant=${participant.label} model=${participant.model} session=${sessionId} round=${roundId} raw_len=0 sanitized_len=0`
       );
-      removeMessage(sessionId, messageId);
-      emit(sessionId, {
-        type: "server_error",
-        payload: {
-          message: `${participant.label} returned empty output. Message hidden.`
-        }
+      updateMessage(sessionId, messageId, (message) => {
+        message.status = "failed";
+        message.content =
+          "No visible text output returned by model (empty stream or non-text response).";
       });
       return;
     }
@@ -325,12 +323,10 @@ export async function runManualSummarizer(sessionId: string): Promise<void> {
       console.warn(
         `[allpath] empty_output participant=${summarizer.label} model=${summarizer.model} session=${sessionId} round=${roundId} raw_len=0 sanitized_len=0`
       );
-      removeMessage(sessionId, messageId);
-      emit(sessionId, {
-        type: "server_error",
-        payload: {
-          message: `${summarizer.label} returned empty output. Message hidden.`
-        }
+      updateMessage(sessionId, messageId, (message) => {
+        message.status = "failed";
+        message.content =
+          "No visible text output returned by model (empty stream or non-text response).";
       });
       return;
     }

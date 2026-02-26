@@ -6,15 +6,16 @@ function parseSseChunk(buffer: string): { rest: string; deltas: string[] } {
   const deltas: string[] = [];
 
   for (const part of parts) {
-    const line = part
+    const dataLines = part
       .split("\n")
-      .find((entry) => entry.startsWith("data:"));
+      .filter((entry) => entry.startsWith("data:"))
+      .map((entry) => entry.slice(5).trim());
 
-    if (!line) {
+    if (dataLines.length === 0) {
       continue;
     }
 
-    const raw = line.slice(5).trim();
+    const raw = dataLines.join("\n").trim();
     if (!raw || raw === "[DONE]") {
       continue;
     }
