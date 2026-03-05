@@ -8,7 +8,7 @@ import {
   MORE_MODELS,
   modelPriceTag
 } from "@/lib/modelCatalog";
-import { Message, ProviderType } from "@/lib/types";
+import { Message, MessageAttachment, Mode, ProviderType } from "@/lib/types";
 import { AgentProfile, normalizeAgentLibrary } from "@/lib/agentProfiles";
 import { readImageFileAsDataUrl } from "@/lib/avatar";
 import {
@@ -30,6 +30,8 @@ interface SessionMeta {
   title: string;
   createdAt: string;
 }
+
+type PendingAttachment = Omit<MessageAttachment, "attachmentId"> & { localId: string };
 
 type ApiKeyMode = "default_profile" | "unified" | "by_agent";
 
@@ -190,7 +192,32 @@ function parseLocalJson<T>(value: string | null, fallback: T): T {
   }
 }
 
+function isTextLikeFile(file: File): boolean {
+  if (file.type.startsWith("text/")) {
+    return true;
+  }
+  const lower = file.name.toLowerCase();
+  return [".txt", ".md", ".json", ".csv"].some((suffix) => lower.endsWith(suffix));
+}
+
+function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error(`Failed to read ${file.name}`));
+    reader.onload = () => {
+      if (typeof reader.result !== "string") {
+        reject(new Error(`Failed to parse ${file.name}`));
+        return;
+      }
+      resolve(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function HomePage() {
+  const [isSessionSidebarOpen, setIsSessionSidebarOpen] = useState(false);
+  const [sessionMode, setSessionMode] = useState<Mode>("roundtable");
   const [apiKeyMode, setApiKeyMode] = useState<ApiKeyMode>("default_profile");
   const [defaultProfileApiKey, setDefaultProfileApiKey] = useState("");
   const [unifiedApiKey, setUnifiedApiKey] = useState("");
@@ -214,6 +241,10 @@ export default function HomePage() {
   const [roundNumber, setRoundNumber] = useState(0);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [pendingAttachments, setPendingAttachments] = useState<PendingAttachment[]>([]);
+  const [targetParticipantIds, setTargetParticipantIds] = useState<string[]>([]);
+  const [mentionQuery, setMentionQuery] = useState("");
+  const [showMentionMenu, setShowMentionMenu] = useState(false);
   const [error, setError] = useState("");
   const eventSourceRef = useRef<EventSource | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
@@ -395,6 +426,16 @@ export default function HomePage() {
     return map;
   }, [dynamicCatalogModels]);
 
+  const mentionCandidates = useMemo(() => {
+    if (sessionMode !== "one_to_one") {
+      return [];
+    }
+    const query = mentionQuery.trim().toLowerCase();
+    return participants.filter((participant) =>
+      query ? participant.label.toLowerCase().includes(query) : true
+    );
+  }, [mentionQuery, participants, sessionMode]);
+
   const selectedPromptPreset = useMemo(
     () => promptPresets.find((preset) => preset.id === selectedPromptPresetId),
     [promptPresets, selectedPromptPresetId]
@@ -414,6 +455,25 @@ export default function HomePage() {
     }
     return profiles.filter((profile) => profile.story === storyFilter);
   }
+
+  useEffect(() => {
+    if (sessionMode !== "one_to_one") {
+      setShowMentionMenu(false);
+      setMentionQuery("");
+      setTargetParticipantIds([]);
+      return;
+    }
+
+    const match = input.match(/(?:^|\s)@([^\s@]*)$/);
+    if (!match) {
+      setShowMentionMenu(false);
+      setMentionQuery("");
+      return;
+    }
+
+    setMentionQuery(match[1] ?? "");
+    setShowMentionMenu(true);
+  }, [input, sessionMode]);
 
   function updateParticipant(index: number, patch: Partial<ParticipantForm>) {
     setParticipants((current) => current.map((item, i) => (i === index ? { ...item, ...patch } : item)));
@@ -468,11 +528,15 @@ export default function HomePage() {
       const payload = JSON.parse((event as MessageEvent).data) as {
         status: string;
         roundNumber: number;
+        mode?: Mode;
         existingMessages?: Message[];
       };
 
       setStatus(payload.status);
       setRoundNumber(payload.roundNumber);
+      if (payload.mode) {
+        setSessionMode(payload.mode);
+      }
 
       if (payload.existingMessages) {
         setMessages(payload.existingMessages);
@@ -535,6 +599,91 @@ export default function HomePage() {
     }
   }
 
+  async function addPendingAttachments(fileList: FileList | null) {
+    if (!fileList || fileList.length === 0) {
+      return;
+    }
+
+    const maxAttachments = 6;
+    const current = pendingAttachments.length;
+    const remaining = Math.max(0, maxAttachments - current);
+    const files = Array.from(fileList).slice(0, remaining);
+    if (files.length === 0) {
+      setError("Attachment limit reached (max 6 files).");
+      return;
+    }
+
+    const parsed: PendingAttachment[] = [];
+    for (const file of files) {
+      const localId = crypto.randomUUID();
+      if (file.type.startsWith("image/")) {
+        const dataUrl = await readFileAsDataUrl(file);
+        parsed.push({
+          localId,
+          name: file.name,
+          mimeType: file.type || "application/octet-stream",
+          kind: "image",
+          dataUrl
+        });
+        continue;
+      }
+
+      if (isTextLikeFile(file)) {
+        const textContent = await file.text();
+        parsed.push({
+          localId,
+          name: file.name,
+          mimeType: file.type || "text/plain",
+          kind: "text",
+          textContent: textContent.slice(0, 12000)
+        });
+        continue;
+      }
+
+      setError(`Unsupported file type: ${file.name}`);
+    }
+
+    if (parsed.length > 0) {
+      setPendingAttachments((currentAttachments) => [...currentAttachments, ...parsed]);
+    }
+  }
+
+  function removePendingAttachment(localId: string) {
+    setPendingAttachments((currentAttachments) =>
+      currentAttachments.filter((attachment) => attachment.localId !== localId)
+    );
+  }
+
+  function selectMentionTarget(participantId: string, label: string) {
+    setInput((current) => current.replace(/(?:^|\s)@([^\s@]*)$/, ` @${label} `).trimStart());
+    setTargetParticipantIds((current) =>
+      current.includes(participantId) ? current : [...current, participantId]
+    );
+    setShowMentionMenu(false);
+    setMentionQuery("");
+  }
+
+  async function changeSessionMode(nextMode: Mode) {
+    setSessionMode(nextMode);
+    if (nextMode !== "one_to_one") {
+      setTargetParticipantIds([]);
+    }
+    if (!sessionId) {
+      return;
+    }
+
+    const response = await fetch(`/api/session/${sessionId}/mode`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mode: nextMode })
+    });
+
+    if (!response.ok) {
+      const json = (await response.json().catch(() => ({}))) as { error?: string };
+      setError(json.error ?? "Failed to switch mode.");
+    }
+  }
+
   function openSavedSession(targetSessionId: string) {
     if (!targetSessionId) {
       return;
@@ -567,6 +716,7 @@ export default function HomePage() {
     setError("");
 
     const payload = {
+      mode: sessionMode,
       globalApiKey: effectiveGlobalApiKey.trim() || undefined,
       agentInitialPrompt: resolvedAgentInitialPrompt,
       participants: participants.map((item) => ({
@@ -623,7 +773,12 @@ export default function HomePage() {
       return;
     }
 
-    const json = (await response.json()) as { sessionId: string; status: string; roundNumber: number };
+    const json = (await response.json()) as {
+      sessionId: string;
+      status: string;
+      roundNumber: number;
+      mode?: Mode;
+    };
     const sessionTitle = `Session ${new Date().toLocaleString()} · ${participants
       .map((participant) => participant.label)
       .join(", ")}`;
@@ -631,6 +786,9 @@ export default function HomePage() {
     setSessionId(json.sessionId);
     setStatus(json.status);
     setRoundNumber(json.roundNumber);
+    if (json.mode) {
+      setSessionMode(json.mode);
+    }
     setMessages([]);
     setSessionList((current) => [
       {
@@ -645,11 +803,25 @@ export default function HomePage() {
 
   async function sendMessage(event: FormEvent) {
     event.preventDefault();
-    if (!sessionId || !input.trim()) {
+    if (!sessionId || (!input.trim() && pendingAttachments.length === 0)) {
       return;
     }
 
-    const requestPayload = JSON.stringify({ content: input });
+    const requestPayload = JSON.stringify({
+      content: input,
+      mode: sessionMode,
+      attachments: pendingAttachments.map((attachment) => ({
+        name: attachment.name,
+        mimeType: attachment.mimeType,
+        kind: attachment.kind,
+        dataUrl: attachment.dataUrl,
+        textContent: attachment.textContent
+      })),
+      targetParticipantIds:
+        sessionMode === "one_to_one" && targetParticipantIds.length > 0
+          ? targetParticipantIds
+          : undefined
+    });
     let response = await fetch(`/api/session/${sessionId}/message`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -672,6 +844,9 @@ export default function HomePage() {
     }
 
     setInput("");
+    setPendingAttachments([]);
+    setShowMentionMenu(false);
+    setMentionQuery("");
   }
 
   async function runSummarizer() {
@@ -688,7 +863,22 @@ export default function HomePage() {
 
   return (
     <main className="mx-auto h-screen w-full max-w-[1600px] p-4">
-      <div className="grid h-full gap-4 lg:grid-cols-[280px_380px_1fr]">
+      <div className="mb-2 flex items-center justify-between">
+        <button
+          className="rounded-md border border-slate-300 px-3 py-1 text-xs text-slate-700"
+          type="button"
+          onClick={() => setIsSessionSidebarOpen((value) => !value)}
+        >
+          {isSessionSidebarOpen ? "Hide Sessions" : "Show Sessions"}
+        </button>
+      </div>
+
+      <div
+        className={`grid h-[calc(100%-2.5rem)] gap-4 ${
+          isSessionSidebarOpen ? "lg:grid-cols-[280px_380px_1fr]" : "lg:grid-cols-[380px_1fr]"
+        }`}
+      >
+      {isSessionSidebarOpen && (
       <section className="h-full min-h-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <h2 className="text-sm font-semibold text-slate-700">Sessions</h2>
         <p className="mt-1 text-xs text-slate-500">Open a previous session and continue chatting.</p>
@@ -729,6 +919,7 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+      )}
 
       <section className="h-full min-h-0 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <h1 className="text-xl font-semibold">AllPath MVP</h1>
@@ -1111,9 +1302,24 @@ export default function HomePage() {
       </section>
 
       <section className="flex h-full min-h-0 flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <header className="border-b border-slate-200 p-3 text-sm text-slate-600">
-          Session: <span className="font-mono text-xs">{sessionId ?? "not created"}</span> | Status: {status} |
-          Round: {roundNumber}
+        <header className="border-b border-slate-200 p-3">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-sm text-slate-600">
+              Session: <span className="font-mono text-xs">{sessionId ?? "not created"}</span> | Status: {status} |
+              Round: {roundNumber}
+            </p>
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-slate-500">Mode</label>
+              <select
+                className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                value={sessionMode}
+                onChange={(event) => void changeSessionMode(event.target.value as Mode)}
+              >
+                <option value="roundtable">Round Table</option>
+                <option value="one_to_one">One to One</option>
+              </select>
+            </div>
+          </div>
         </header>
 
         <div ref={chatScrollRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
@@ -1167,6 +1373,17 @@ export default function HomePage() {
                     }`}
                   >
                     {message.content ? renderMessageContent(message.content) : "..."}
+                    {message.sourceRole === "user" &&
+                      message.attachments &&
+                      message.attachments.length > 0 && (
+                        <div className="mt-2 space-y-1">
+                          {message.attachments.map((attachment) => (
+                            <div key={attachment.attachmentId} className="text-xs opacity-90">
+                              {attachment.kind === "image" ? "Image" : "File"}: {attachment.name}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -1193,16 +1410,99 @@ export default function HomePage() {
         {error && <p className="border-t border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>}
 
         <div className="border-t border-slate-200 p-3">
+          {sessionMode === "one_to_one" && (
+            <div className="mb-2 flex items-center gap-2 text-xs">
+              <span className="text-slate-500">Targets:</span>
+              {targetParticipantIds.length === 0 ? (
+                <span className="rounded-full bg-slate-100 px-2 py-1 text-slate-600">All agents</span>
+              ) : (
+                targetParticipantIds.map((targetId) => {
+                  const target = participants.find((participant) => participant.id === targetId);
+                  if (!target) {
+                    return null;
+                  }
+                  return (
+                    <button
+                      key={targetId}
+                      className="rounded-full border border-slate-300 px-2 py-1 text-slate-700"
+                      type="button"
+                      onClick={() =>
+                        setTargetParticipantIds((current) => current.filter((id) => id !== targetId))
+                      }
+                    >
+                      @{target.label} x
+                    </button>
+                  );
+                })
+              )}
+              {targetParticipantIds.length > 0 && (
+                <button
+                  className="rounded-md border border-slate-300 px-2 py-1 text-slate-600"
+                  type="button"
+                  onClick={() => setTargetParticipantIds([])}
+                >
+                  Reply all
+                </button>
+              )}
+            </div>
+          )}
+          {pendingAttachments.length > 0 && (
+            <div className="mb-2 flex flex-wrap gap-2">
+              {pendingAttachments.map((attachment) => (
+                <button
+                  key={attachment.localId}
+                  type="button"
+                  className="rounded-full border border-slate-300 px-2 py-1 text-xs text-slate-700"
+                  onClick={() => removePendingAttachment(attachment.localId)}
+                >
+                  {attachment.kind === "image" ? "image" : "file"}: {attachment.name} x
+                </button>
+              ))}
+            </div>
+          )}
           <form className="flex gap-2" onSubmit={sendMessage}>
-            <input
-              className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-              placeholder="Type your message"
-            />
+            <div className="relative flex-1">
+              <input
+                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                placeholder={
+                  sessionMode === "one_to_one"
+                    ? "Type message, use @ to mention a specific agent"
+                    : "Type your message"
+                }
+              />
+              {sessionMode === "one_to_one" && showMentionMenu && mentionCandidates.length > 0 && (
+                <div className="absolute bottom-11 left-0 z-10 w-64 rounded-md border border-slate-200 bg-white p-1 shadow-lg">
+                  {mentionCandidates.map((candidate) => (
+                    <button
+                      key={candidate.id}
+                      className="block w-full rounded px-2 py-1 text-left text-xs text-slate-700 hover:bg-slate-100"
+                      type="button"
+                      onClick={() => selectMentionTarget(candidate.id, candidate.label)}
+                    >
+                      @{candidate.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <label className="cursor-pointer rounded-md border border-slate-300 px-3 py-2 text-xs text-slate-700">
+              Attach
+              <input
+                className="hidden"
+                type="file"
+                multiple
+                accept="image/*,.txt,.md,.json,.csv"
+                onChange={(event) => {
+                  void addPendingAttachments(event.target.files);
+                  event.target.value = "";
+                }}
+              />
+            </label>
             <button
               type="submit"
-              disabled={!sessionId || !input.trim()}
+              disabled={!sessionId || (!input.trim() && pendingAttachments.length === 0)}
               className="rounded-md bg-ink px-4 py-2 text-sm text-white disabled:opacity-40"
             >
               Send

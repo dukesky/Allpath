@@ -33,6 +33,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
           payload: {
             status: session.config.status,
             roundNumber: session.config.roundNumber,
+            mode: session.config.mode,
             existingMessages: session.config.messages
           }
         })

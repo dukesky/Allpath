@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { getAdapter } from "@/lib/providers";
 import { addMessage, emit, getSession, shiftQueue, updateMessage } from "@/lib/store";
-import { Message, ModelMessage, ParticipantConfig, ProviderConfig } from "@/lib/types";
+import { Message, MessageAttachment, ModelMessage, ParticipantConfig, ProviderConfig } from "@/lib/types";
 
 function nowIso(): string {
   return new Date().toISOString();
@@ -85,11 +85,14 @@ function buildPromptForParticipant(input: {
   participants: ParticipantConfig[];
   summarizer?: ParticipantConfig;
   agentInitialPrompt?: string;
+  mode: "roundtable" | "one_to_one";
 }): ModelMessage[] {
-  const { participant, messages, participants, summarizer, agentInitialPrompt } = input;
+  const { participant, messages, participants, summarizer, agentInitialPrompt, mode } = input;
 
   const systemPrompt = [
-    "You are participating in an AllPath multi-agent roundtable.",
+    mode === "one_to_one"
+      ? "You are participating in an AllPath one-to-one mode conversation."
+      : "You are participating in an AllPath multi-agent roundtable.",
     `Your participant label: ${participant.label}`,
     `Your configured model ID: ${participant.model}`,
     participant.roleTitle ? `Your role in the discussion: ${participant.roleTitle}` : "Your role in the discussion: analyst",
@@ -108,23 +111,86 @@ function buildPromptForParticipant(input: {
     agentInitialPrompt ? `Additional session rules:\n${agentInitialPrompt}` : ""
   ].join("\n\n");
 
-  const conversation: ModelMessage[] = messages.map((message) => ({
-    role: message.sourceRole === "user" ? "user" : "assistant",
-    content: [
-      "<history_message>",
-      `source_role: ${message.sourceRole}`,
-      `speaker: ${JSON.stringify(message.sourceLabel)}`,
-      `model: ${JSON.stringify(message.sourceModel ?? "")}`,
-      `round_id: ${message.roundId}`,
-      `content_json: ${JSON.stringify(message.content)}`,
-      "</history_message>"
-    ].join("\n")
-  }));
+  const visibleMessages =
+    mode === "one_to_one" ? messages.filter((message) => message.sourceRole === "user") : messages;
+
+  const conversation: ModelMessage[] = visibleMessages.map((message) => {
+    const role = message.sourceRole === "user" ? "user" : "assistant";
+    if (role !== "user") {
+      return {
+        role,
+        content: [
+          "<history_message>",
+          `source_role: ${message.sourceRole}`,
+          `speaker: ${JSON.stringify(message.sourceLabel)}`,
+          `model: ${JSON.stringify(message.sourceModel ?? "")}`,
+          `round_id: ${message.roundId}`,
+          `content_json: ${JSON.stringify(message.content)}`,
+          "</history_message>"
+        ].join("\n")
+      };
+    }
+
+    return {
+      role,
+      content: userMessageContentWithAttachments(message)
+    };
+  });
 
   return [{ role: "system", content: systemPrompt }, ...conversation];
 }
 
-async function runParticipantTurn(sessionId: string, participant: ParticipantConfig, roundId: number): Promise<void> {
+function userMessageContentWithAttachments(
+  message: Message
+): Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }> | string {
+  const attachments = message.attachments ?? [];
+  if (attachments.length === 0) {
+    return message.content;
+  }
+
+  const parts: Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }> = [];
+  const intro = message.content.trim()
+    ? `User message:\n${message.content.trim()}`
+    : "User message contains attachments.";
+  parts.push({ type: "text", text: intro });
+
+  for (const attachment of attachments) {
+    appendAttachmentPart(parts, attachment);
+  }
+
+  return parts;
+}
+
+function appendAttachmentPart(
+  parts: Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }>,
+  attachment: MessageAttachment
+) {
+  if (attachment.kind === "image" && attachment.dataUrl) {
+    parts.push({ type: "text", text: `Image attachment: ${attachment.name}` });
+    parts.push({ type: "image_url", image_url: { url: attachment.dataUrl } });
+    return;
+  }
+
+  if (attachment.kind === "text" && attachment.textContent) {
+    parts.push({
+      type: "text",
+      text: `Text attachment (${attachment.name}):\n${attachment.textContent}`
+    });
+    return;
+  }
+
+  parts.push({
+    type: "text",
+    text: `Attachment ${attachment.name} could not be parsed as text/image content.`
+  });
+}
+
+async function runParticipantTurn(
+  sessionId: string,
+  participant: ParticipantConfig,
+  roundId: number,
+  mode: "roundtable" | "one_to_one"
+): Promise<void> {
   const state = getSession(sessionId);
   if (!state) {
     return;
@@ -135,7 +201,8 @@ async function runParticipantTurn(sessionId: string, participant: ParticipantCon
     messages: state.config.messages,
     participants: state.config.participants,
     summarizer: state.config.summarizer,
-    agentInitialPrompt: state.config.agentInitialPrompt
+    agentInitialPrompt: state.config.agentInitialPrompt,
+    mode
   });
 
   const messageId = randomUUID();
@@ -231,8 +298,8 @@ export async function processSessionQueue(sessionId: string): Promise<void> {
     return;
   }
 
-  const nextMessageId = shiftQueue(sessionId);
-  if (!nextMessageId) {
+  const nextQueueItem = shiftQueue(sessionId);
+  if (!nextQueueItem) {
     return;
   }
 
@@ -245,8 +312,15 @@ export async function processSessionQueue(sessionId: string): Promise<void> {
     payload: { status: state.config.status, roundNumber: state.config.roundNumber }
   });
 
-  for (const participant of state.config.participants) {
-    await runParticipantTurn(sessionId, participant, roundId);
+  const participantTargets =
+    nextQueueItem.mode === "one_to_one" && nextQueueItem.targetParticipantIds?.length
+      ? state.config.participants.filter((participant) =>
+          nextQueueItem.targetParticipantIds?.includes(participant.id)
+        )
+      : state.config.participants;
+
+  for (const participant of participantTargets) {
+    await runParticipantTurn(sessionId, participant, roundId, nextQueueItem.mode);
   }
 
   state.config.status = "waiting";
@@ -255,7 +329,10 @@ export async function processSessionQueue(sessionId: string): Promise<void> {
     payload: { status: state.config.status, roundNumber: state.config.roundNumber }
   });
 
-  emit(sessionId, { type: "round_completed", payload: { roundId, userMessageId: nextMessageId } });
+  emit(sessionId, {
+    type: "round_completed",
+    payload: { roundId, userMessageId: nextQueueItem.messageId }
+  });
 
   if (state.queue.length > 0) {
     await processSessionQueue(sessionId);
@@ -296,7 +373,8 @@ export async function runManualSummarizer(sessionId: string): Promise<void> {
     messages: state.config.messages,
     participants: state.config.participants,
     summarizer: state.config.summarizer,
-    agentInitialPrompt: state.config.agentInitialPrompt
+    agentInitialPrompt: state.config.agentInitialPrompt,
+    mode: state.config.mode
   });
 
   try {

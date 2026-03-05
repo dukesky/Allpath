@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createSession } from "@/lib/store";
-import { ParticipantConfig, SessionConfig } from "@/lib/types";
+import { Mode, ParticipantConfig, SessionConfig } from "@/lib/types";
 import { DEFAULT_SESSION_RULES } from "@/lib/userPreferences";
 
 const DEFAULT_AGENT_INITIAL_PROMPT = DEFAULT_SESSION_RULES;
@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
     summarizer?: unknown;
     agentInitialPrompt?: unknown;
     globalApiKey?: unknown;
+    mode?: unknown;
   };
 
   const participants = (body.participants ?? []).filter(validateParticipant);
@@ -39,9 +40,11 @@ export async function POST(request: NextRequest) {
 
   const summarizer = validateParticipant(body.summarizer) ? body.summarizer : undefined;
 
+  const mode: Mode = body.mode === "one_to_one" ? "one_to_one" : "roundtable";
+
   const session: SessionConfig = {
     sessionId: randomUUID(),
-    mode: "roundtable",
+    mode,
     agentInitialPrompt:
       typeof body.agentInitialPrompt === "string" && body.agentInitialPrompt.trim().length > 0
         ? body.agentInitialPrompt.trim()

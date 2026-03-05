@@ -1,11 +1,17 @@
-import { Message, SessionConfig, StreamEvent } from "@/lib/types";
+import { Message, Mode, SessionConfig, StreamEvent } from "@/lib/types";
 
 type Subscriber = (event: StreamEvent) => void;
+
+interface QueueItem {
+  messageId: string;
+  mode: Mode;
+  targetParticipantIds?: string[];
+}
 
 interface InternalSessionState {
   config: SessionConfig;
   subscribers: Set<Subscriber>;
-  queue: string[];
+  queue: QueueItem[];
 }
 
 declare global {
@@ -103,20 +109,42 @@ export function removeMessage(sessionId: string, messageId: string): void {
   emit(sessionId, { type: "message_removed", payload: { messageId } });
 }
 
-export function pushQueue(sessionId: string, messageId: string): void {
+export function pushQueue(
+  sessionId: string,
+  item: { messageId: string; mode: Mode; targetParticipantIds?: string[] }
+): void {
   const session = sessions.get(sessionId);
   if (!session) {
     return;
   }
 
-  session.queue.push(messageId);
+  session.queue.push({
+    messageId: item.messageId,
+    mode: item.mode,
+    targetParticipantIds: item.targetParticipantIds?.length ? item.targetParticipantIds : undefined
+  });
 }
 
-export function shiftQueue(sessionId: string): string | undefined {
+export function shiftQueue(sessionId: string): QueueItem | undefined {
   const session = sessions.get(sessionId);
   if (!session) {
     return undefined;
   }
 
   return session.queue.shift();
+}
+
+export function setSessionMode(sessionId: string, mode: Mode): boolean {
+  const session = sessions.get(sessionId);
+  if (!session) {
+    return false;
+  }
+
+  session.config.mode = mode;
+  emit(sessionId, {
+    type: "session_state",
+    payload: { status: session.config.status, roundNumber: session.config.roundNumber, mode }
+  });
+
+  return true;
 }

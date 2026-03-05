@@ -1,7 +1,16 @@
-export type Mode = "roundtable";
+export type Mode = "roundtable" | "one_to_one";
 export type ProviderType = "openrouter" | "custom";
 
 export type Role = "user" | "assistant" | "summarizer";
+
+export interface MessageAttachment {
+  attachmentId: string;
+  name: string;
+  mimeType: string;
+  kind: "image" | "text";
+  dataUrl?: string;
+  textContent?: string;
+}
 
 export interface ProviderConfig {
   type: ProviderType;
@@ -30,6 +39,7 @@ export interface Message {
   createdAt: string;
   status: "streaming" | "completed" | "failed";
   content: string;
+  attachments?: MessageAttachment[];
 }
 
 export interface SessionConfig {
@@ -58,7 +68,12 @@ export interface StreamEvent {
 
 export interface ModelMessage {
   role: "system" | "user" | "assistant";
-  content: string;
+  content:
+    | string
+    | Array<
+        | { type: "text"; text: string }
+        | { type: "image_url"; image_url: { url: string } }
+      >;
 }
 
 export interface ProviderAdapter {
