@@ -2,7 +2,9 @@
 
 AllPath is a multi-agent chat prototype where one user coordinates multiple LLM agents in a shared Round Table discussion.
 
-Current release version: `0.0.9`
+Current release version: `0.0.10`
+
+Production URL: `https://all-path.com`
 
 ## MVP Scope
 
@@ -58,11 +60,13 @@ npm run dev
 
 Open: `http://localhost:3000`
 
+Production: `https://all-path.com`
+
 ## Environment Variables
 
 ```bash
 OPENROUTER_API_KEY=
-OPENROUTER_SITE_URL=http://localhost:3000
+OPENROUTER_SITE_URL=https://all-path.com
 OPENROUTER_APP_NAME=AllPath MVP
 ```
 
