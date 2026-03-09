@@ -15,7 +15,8 @@ export interface AgentLibrary {
 export const DEFAULT_STORIES: string[] = [
   "Journey to the West",
   "Dragon Ball",
-  "Historical Figures"
+  "Historical Figures",
+  "Meteor Garden (Taiwan 2001)"
 ];
 
 export const DEFAULT_AGENT_PROFILES: AgentProfile[] = [
@@ -52,7 +53,7 @@ export const DEFAULT_AGENT_PROFILES: AgentProfile[] = [
     roleTitle: "Energetic Frontliner",
     character:
       "You are optimistic, battle-tested, and action-oriented. Focus on direct solutions, courage, and continuous improvement.",
-    avatarUrl: "https://upload.wikimedia.org/wikipedia/en/c/cb/Goku_Dragon_Ball.png",
+    avatarUrl: "/avatars/son-goku.png",
     story: "Dragon Ball"
   },
   {
@@ -61,7 +62,7 @@ export const DEFAULT_AGENT_PROFILES: AgentProfile[] = [
     roleTitle: "Proud Strategist",
     character:
       "You are proud, sharp, and competitive. Pressure-test weak ideas and push for higher standards and disciplined execution.",
-    avatarUrl: "https://upload.wikimedia.org/wikipedia/en/2/23/Vegeta_Dragon_Ball.png",
+    avatarUrl: "/avatars/vegeta.png",
     story: "Dragon Ball"
   },
   {
@@ -70,7 +71,7 @@ export const DEFAULT_AGENT_PROFILES: AgentProfile[] = [
     roleTitle: "Scholar Fighter",
     character:
       "You balance intellect and strength. Prioritize evidence-based reasoning while staying ready to act when needed.",
-    avatarUrl: "https://upload.wikimedia.org/wikipedia/en/3/35/Gohan_Dragon_Ball.png",
+    avatarUrl: "/avatars/son-gohan.png",
     story: "Dragon Ball"
   },
   {
@@ -79,7 +80,7 @@ export const DEFAULT_AGENT_PROFILES: AgentProfile[] = [
     roleTitle: "Calm Mentor",
     character:
       "You are composed and tactical. Break problems into steps, coach teammates, and reduce risk through preparation.",
-    avatarUrl: "https://upload.wikimedia.org/wikipedia/en/1/17/Piccolo_Dragon_Ball.png",
+    avatarUrl: "/avatars/piccolo.png",
     story: "Dragon Ball"
   },
   {
@@ -88,8 +89,62 @@ export const DEFAULT_AGENT_PROFILES: AgentProfile[] = [
     roleTitle: "Inventive Operator",
     character:
       "You are highly practical and inventive. Favor smart tools, fast iteration, and clear operational plans.",
-    avatarUrl: "https://upload.wikimedia.org/wikipedia/en/7/72/Bulma_Dragon_Ball.png",
+    avatarUrl: "/avatars/bulma.png",
     story: "Dragon Ball"
+  },
+  {
+    id: "preset-shan-cai",
+    name: "Shan Cai",
+    roleTitle: "Resilient Realist",
+    character:
+      "You are sincere, principled, and grounded. Prioritize fairness, emotional honesty, and practical choices under pressure.",
+    avatarUrl: "/avatars/shan-cai.jpeg",
+    story: "Meteor Garden (Taiwan 2001)"
+  },
+  {
+    id: "preset-dao-ming-si",
+    name: "Dao Ming Si",
+    roleTitle: "Direct Decision Maker",
+    character:
+      "You are bold and action-oriented. State clear preferences, take ownership, and push toward concrete decisions quickly.",
+    avatarUrl: "/avatars/dao-ming-si.jpg",
+    story: "Meteor Garden (Taiwan 2001)"
+  },
+  {
+    id: "preset-hua-ze-lei",
+    name: "Hua Ze Lei",
+    roleTitle: "Calm Reflective Analyst",
+    character:
+      "You are quiet, observant, and thoughtful. Offer balanced perspectives, emotional insight, and long-term thinking.",
+    avatarUrl: "/avatars/hua-ze-lei.jpg",
+    story: "Meteor Garden (Taiwan 2001)"
+  },
+  {
+    id: "preset-xi-men",
+    name: "Xi Men",
+    roleTitle: "Social Strategist",
+    character:
+      "You are socially perceptive and pragmatic. Read relationship dynamics quickly and propose tactful, workable compromises.",
+    avatarUrl: "/avatars/xi-men.jpg",
+    story: "Meteor Garden (Taiwan 2001)"
+  },
+  {
+    id: "preset-mei-zuo",
+    name: "Mei Zuo",
+    roleTitle: "Steady Supporter",
+    character:
+      "You are composed, loyal, and diplomatic. Keep the team coordinated, reduce conflict, and protect group cohesion.",
+    avatarUrl: "/avatars/mei-zuo.jpeg",
+    story: "Meteor Garden (Taiwan 2001)"
+  },
+  {
+    id: "preset-teng-tang-jing",
+    name: "Teng Tang Jing",
+    roleTitle: "Mature Mentor",
+    character:
+      "You are elegant and mature. Bring perspective, empathy, and high-level guidance while keeping boundaries clear.",
+    avatarUrl: "",
+    story: "Meteor Garden (Taiwan 2001)"
   }
 ];
 
@@ -109,7 +164,12 @@ export function mergeWithDefaultProfiles(profiles: AgentProfile[]): AgentProfile
       story: normalizeStory(profile.story)
     };
     const matchedDefault = defaultsByName.get(profile.name.trim().toLowerCase());
-    if (matchedDefault && (!merged.avatarUrl || merged.avatarUrl.endsWith(".svg"))) {
+    if (
+      matchedDefault &&
+      (!merged.avatarUrl ||
+        merged.avatarUrl.endsWith(".svg") ||
+        merged.avatarUrl.includes("upload.wikimedia.org/wikipedia"))
+    ) {
       merged.avatarUrl = matchedDefault.avatarUrl;
     }
     if (matchedDefault && !merged.story) {

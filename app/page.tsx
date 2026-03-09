@@ -10,7 +10,6 @@ import {
 } from "@/lib/modelCatalog";
 import { Message, MessageAttachment, Mode, ProviderType } from "@/lib/types";
 import { AgentProfile, normalizeAgentLibrary } from "@/lib/agentProfiles";
-import { readImageFileAsDataUrl } from "@/lib/avatar";
 import {
   CUSTOM_PROMPT_PRESET_ID,
   DEFAULT_SESSION_RULES,
@@ -589,16 +588,6 @@ export default function HomePage() {
     eventSourceRef.current = source;
   }
 
-  async function uploadAvatar(file: File, apply: (value: string) => void) {
-    try {
-      setError("");
-      const dataUrl = await readImageFileAsDataUrl(file);
-      apply(dataUrl);
-    } catch (uploadError) {
-      setError((uploadError as Error).message);
-    }
-  }
-
   async function addPendingAttachments(fileList: FileList | null) {
     if (!fileList || fileList.length === 0) {
       return;
@@ -999,7 +988,15 @@ export default function HomePage() {
             </div>
           </div>
 
-          {participants.map((participant, index) => (
+          {participants.map((participant, index) => {
+            const selectedProfile =
+              profiles.find((profile) => profile.id === participant.profileId) ?? null;
+            const infoStory = selectedProfile?.story || "No story";
+            const infoRole = participant.roleTitle || selectedProfile?.roleTitle || "No role title";
+            const infoCharacter =
+              participant.character || selectedProfile?.character || "No personality prompt";
+
+            return (
             <div key={participant.id} className="space-y-2 rounded-xl border border-slate-200 p-3">
               <p className="text-sm font-semibold">Participant {index + 1}</p>
 
@@ -1042,36 +1039,31 @@ export default function HomePage() {
                 onChange={(event) => updateParticipant(index, { label: event.target.value })}
                 placeholder="Agent label"
               />
-              <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-md bg-slate-100 text-xs font-semibold text-slate-700">
-                  {participant.avatarUrl ? (
-                    <img src={participant.avatarUrl} alt={`${participant.label} avatar`} className="h-full w-full object-contain" />
-                  ) : (
-                    avatarLabel(participant.label)
-                  )}
+              {(participant.avatarUrl || participant.profileId) && (
+                <div className="flex items-stretch gap-3 rounded-lg border border-slate-200 bg-slate-50 p-2">
+                  <div className="flex w-20 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white">
+                    {participant.avatarUrl ? (
+                      <img
+                        src={participant.avatarUrl}
+                        alt={`${participant.label} avatar`}
+                        className="h-full w-full object-contain"
+                      />
+                    ) : (
+                      <span className="text-xs font-semibold text-slate-500">
+                        {avatarLabel(participant.label)}
+                      </span>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1 space-y-1 text-xs text-slate-700">
+                    <p><span className="font-semibold text-slate-500">Group:</span> {infoStory}</p>
+                    <p><span className="font-semibold text-slate-500">Profile:</span> {participant.label}</p>
+                    <p><span className="font-semibold text-slate-500">Role:</span> {infoRole}</p>
+                    <p className="line-clamp-2">
+                      <span className="font-semibold text-slate-500">Personality:</span> {infoCharacter}
+                    </p>
+                  </div>
                 </div>
-                <input
-                  className="text-xs"
-                  type="file"
-                  accept="image/*"
-                  onChange={(event) => {
-                    const file = event.target.files?.[0];
-                    if (!file) {
-                      return;
-                    }
-                    void uploadAvatar(file, (value) => updateParticipant(index, { avatarUrl: value }));
-                  }}
-                />
-                {participant.avatarUrl && (
-                  <button
-                    className="rounded-md border border-slate-300 px-2 py-1 text-xs"
-                    type="button"
-                    onClick={() => updateParticipant(index, { avatarUrl: "" })}
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
+              )}
 
               <ModelPicker
                 selected={participant.model}
@@ -1127,7 +1119,7 @@ export default function HomePage() {
                 placeholder="Personality prompt"
               />
             </div>
-          ))}
+          )})}
 
           <button
             type="button"
@@ -1154,6 +1146,15 @@ export default function HomePage() {
           {summarizerEnabled && (
             <div className="space-y-2 rounded-xl border border-slate-200 p-3">
               <p className="text-sm font-semibold">Summarizer</p>
+              {(() => {
+                const selectedProfile =
+                  profiles.find((profile) => profile.id === summarizer.profileId) ?? null;
+                const infoStory = selectedProfile?.story || "No story";
+                const infoRole = summarizer.roleTitle || selectedProfile?.roleTitle || "No role title";
+                const infoCharacter =
+                  summarizer.character || selectedProfile?.character || "No personality prompt";
+                return (
+                  <>
 
               <select
                 className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
@@ -1195,38 +1196,31 @@ export default function HomePage() {
                 onChange={(event) => setSummarizer((current) => ({ ...current, label: event.target.value }))}
                 placeholder="Label"
               />
-              <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-md bg-slate-100 text-xs font-semibold text-slate-700">
-                  {summarizer.avatarUrl ? (
-                    <img src={summarizer.avatarUrl} alt={`${summarizer.label} avatar`} className="h-full w-full object-contain" />
-                  ) : (
-                    avatarLabel(summarizer.label)
-                  )}
+              {(summarizer.avatarUrl || summarizer.profileId) && (
+                <div className="flex items-stretch gap-3 rounded-lg border border-slate-200 bg-slate-50 p-2">
+                  <div className="flex w-20 shrink-0 items-center justify-center overflow-hidden rounded-md bg-white">
+                    {summarizer.avatarUrl ? (
+                      <img
+                        src={summarizer.avatarUrl}
+                        alt={`${summarizer.label} avatar`}
+                        className="h-full w-full object-contain"
+                      />
+                    ) : (
+                      <span className="text-xs font-semibold text-slate-500">
+                        {avatarLabel(summarizer.label)}
+                      </span>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1 space-y-1 text-xs text-slate-700">
+                    <p><span className="font-semibold text-slate-500">Group:</span> {infoStory}</p>
+                    <p><span className="font-semibold text-slate-500">Profile:</span> {summarizer.label}</p>
+                    <p><span className="font-semibold text-slate-500">Role:</span> {infoRole}</p>
+                    <p className="line-clamp-2">
+                      <span className="font-semibold text-slate-500">Personality:</span> {infoCharacter}
+                    </p>
+                  </div>
                 </div>
-                <input
-                  className="text-xs"
-                  type="file"
-                  accept="image/*"
-                  onChange={(event) => {
-                    const file = event.target.files?.[0];
-                    if (!file) {
-                      return;
-                    }
-                    void uploadAvatar(file, (value) =>
-                      setSummarizer((current) => ({ ...current, avatarUrl: value }))
-                    );
-                  }}
-                />
-                {summarizer.avatarUrl && (
-                  <button
-                    className="rounded-md border border-slate-300 px-2 py-1 text-xs"
-                    type="button"
-                    onClick={() => setSummarizer((current) => ({ ...current, avatarUrl: "" }))}
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
+              )}
 
               <ModelPicker
                 selected={summarizer.model}
@@ -1288,6 +1282,9 @@ export default function HomePage() {
                 onChange={(event) => setSummarizer((current) => ({ ...current, character: event.target.value }))}
                 placeholder="Personality prompt"
               />
+                  </>
+                );
+              })()}
             </div>
           )}
 
