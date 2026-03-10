@@ -1,3 +1,5 @@
+import generatedCatalog from "@/lib/generated/openrouterModels.json";
+
 export type PriceTier = "$" | "$$" | "$$$";
 
 export interface CatalogModel {
@@ -20,7 +22,7 @@ export const FEATURED_MODELS: CatalogModel[] = [
   { id: "qwen/qwen3-235b-a22b", label: "Qwen3 235B A22B", price: "$" }
 ];
 
-export const MORE_MODELS: CatalogModel[] = [
+const FALLBACK_MORE_MODELS: CatalogModel[] = [
   { id: "openai/gpt-5-nano", label: "OpenAI GPT-5 nano", price: "$" },
   { id: "openai/gpt-5.1", label: "OpenAI GPT-5.1", price: "$$$" },
   { id: "openai/o3-pro", label: "OpenAI o3-pro", price: "$$$" },
@@ -39,6 +41,15 @@ export const MORE_MODELS: CatalogModel[] = [
   { id: "x-ai/grok-3-mini", label: "Grok 3 mini", price: "$$" },
   { id: "meta-llama/llama-3.3-70b-instruct", label: "Llama 3.3 70B Instruct", price: "$" }
 ];
+
+const generatedModels = ((generatedCatalog as { models?: CatalogModel[] }).models ?? []).filter(
+  (model) => !!model?.id && !!model?.label && !!model?.price
+);
+const featuredIds = new Set(FEATURED_MODELS.map((model) => model.id));
+const generatedMoreModels = generatedModels.filter((model) => !featuredIds.has(model.id));
+
+export const MORE_MODELS: CatalogModel[] =
+  generatedMoreModels.length > 0 ? generatedMoreModels : FALLBACK_MORE_MODELS;
 
 export function modelPriceTag(modelId: string): PriceTier | "?" {
   const found = [...FEATURED_MODELS, ...MORE_MODELS].find((model) => model.id === modelId);

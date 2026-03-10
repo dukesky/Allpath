@@ -2,7 +2,7 @@
 
 AllPath is a multi-agent chat prototype where one user coordinates multiple LLM agents in a shared Round Table discussion.
 
-Current release version: `0.0.10`
+Current release version: `0.0.11`
 
 Production URL: `https://all-path.com`
 
@@ -74,6 +74,22 @@ Notes:
 
 - Participant-level API keys entered in UI are used for live calls.
 - Global `OPENROUTER_API_KEY` is an optional fallback for model listing or default routing.
+
+## Model Catalog Updates
+
+- The app fetches live models from OpenRouter at runtime via `/api/models`.
+- Static fallback list is now generated from `lib/generated/openrouterModels.json`.
+- Manual refresh command:
+
+```bash
+npm run models:update
+```
+
+- Automatic refresh:
+  - GitHub Actions workflow: `.github/workflows/update-model-catalog.yml`
+  - Runs on every push to `main`, on manual trigger, and every 12 hours.
+  - Commits updates automatically when OpenRouter model list changes.
+  - Recommended repo secret: `OPENROUTER_API_KEY`
 
 ## Current Limitations
 
