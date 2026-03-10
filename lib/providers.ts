@@ -1,9 +1,9 @@
-import { ModelMessage, ProviderAdapter, ProviderConfig } from "@/lib/types";
+import { ModelMessage, ProviderAdapter, ProviderConfig, ProviderStreamEvent, ProviderUsage } from "@/lib/types";
 
-function parseSseChunk(buffer: string): { rest: string; deltas: string[] } {
+function parseSseChunk(buffer: string): { rest: string; events: ProviderStreamEvent[] } {
   const parts = buffer.split("\n\n");
   const rest = parts.pop() ?? "";
-  const deltas: string[] = [];
+  const events: ProviderStreamEvent[] = [];
 
   for (const part of parts) {
     const dataLines = part
@@ -22,18 +22,44 @@ function parseSseChunk(buffer: string): { rest: string; deltas: string[] } {
 
     try {
       const json = JSON.parse(raw) as {
+        id?: string;
         choices?: Array<{ delta?: { content?: string } }>;
+        usage?: {
+          prompt_tokens?: number;
+          completion_tokens?: number;
+          total_tokens?: number;
+          cost?: number | string;
+        };
       };
+      if (typeof json.id === "string" && json.id.trim()) {
+        events.push({ type: "generation", generationId: json.id.trim() });
+      }
+
       const token = json.choices?.[0]?.delta?.content;
       if (token) {
-        deltas.push(token);
+        events.push({ type: "delta", delta: token });
+      }
+
+      if (json.usage) {
+        const usage: ProviderUsage = {
+          promptTokens: json.usage.prompt_tokens,
+          completionTokens: json.usage.completion_tokens,
+          totalTokens: json.usage.total_tokens,
+          cost:
+            typeof json.usage.cost === "number"
+              ? json.usage.cost
+              : typeof json.usage.cost === "string"
+                ? Number(json.usage.cost)
+                : undefined
+        };
+        events.push({ type: "usage", usage });
       }
     } catch {
       // Keep stream robust against malformed chunks.
     }
   }
 
-  return { rest, deltas };
+  return { rest, events };
 }
 
 async function* streamFromOpenAICompatible(input: {
@@ -42,7 +68,8 @@ async function* streamFromOpenAICompatible(input: {
   model: string;
   messages: ModelMessage[];
   extraHeaders?: Record<string, string>;
-}): AsyncGenerator<string> {
+  extraBody?: Record<string, unknown>;
+}): AsyncGenerator<ProviderStreamEvent> {
   const response = await fetch(input.endpoint, {
     method: "POST",
     headers: {
@@ -53,7 +80,8 @@ async function* streamFromOpenAICompatible(input: {
     body: JSON.stringify({
       model: input.model,
       messages: input.messages,
-      stream: true
+      stream: true,
+      ...input.extraBody
     })
   });
 
@@ -73,11 +101,11 @@ async function* streamFromOpenAICompatible(input: {
     }
 
     buffer += decoder.decode(value, { stream: true });
-    const { rest, deltas } = parseSseChunk(buffer);
+    const { rest, events } = parseSseChunk(buffer);
     buffer = rest;
 
-    for (const delta of deltas) {
-      yield delta;
+    for (const event of events) {
+      yield event;
     }
   }
 }

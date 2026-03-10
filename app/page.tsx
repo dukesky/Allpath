@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, Fragment, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   CatalogModel,
@@ -33,6 +34,16 @@ interface SessionMeta {
 type PendingAttachment = Omit<MessageAttachment, "attachmentId"> & { localId: string };
 
 type ApiKeyMode = "default_profile" | "unified" | "by_agent";
+
+interface TrialStatusResponse {
+  available: boolean;
+  requiresInviteCode: boolean;
+  trialStatus?: "active" | "exhausted" | "revoked";
+  remainingBudgetUsd?: number;
+  trialBudgetUsd?: number;
+  trialSpentUsd?: number;
+  hasPersonalOpenRouterKey: boolean;
+}
 
 type ParticipantForm = {
   id: string;
@@ -214,6 +225,14 @@ function readFileAsDataUrl(file: File): Promise<string> {
   });
 }
 
+async function fetchTrialStatus(): Promise<TrialStatusResponse | null> {
+  const response = await fetch("/api/trial/status");
+  if (!response.ok) {
+    return null;
+  }
+  return (await response.json()) as TrialStatusResponse;
+}
+
 export default function HomePage() {
   const [isSessionSidebarOpen, setIsSessionSidebarOpen] = useState(false);
   const [sessionMode, setSessionMode] = useState<Mode>("roundtable");
@@ -244,6 +263,9 @@ export default function HomePage() {
   const [targetParticipantIds, setTargetParticipantIds] = useState<string[]>([]);
   const [mentionQuery, setMentionQuery] = useState("");
   const [showMentionMenu, setShowMentionMenu] = useState(false);
+  const [trialStatus, setTrialStatus] = useState<TrialStatusResponse | null>(null);
+  const [inviteCode, setInviteCode] = useState("");
+  const [isRedeemingInvite, setIsRedeemingInvite] = useState(false);
   const [error, setError] = useState("");
   const eventSourceRef = useRef<EventSource | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
@@ -253,6 +275,12 @@ export default function HomePage() {
       : apiKeyMode === "unified"
         ? unifiedApiKey
         : "";
+  const hasServerOpenRouterAccess =
+    !!trialStatus?.hasPersonalOpenRouterKey ||
+    (trialStatus?.available === true &&
+      trialStatus.requiresInviteCode === false &&
+      trialStatus.trialStatus === "active" &&
+      Number(trialStatus.remainingBudgetUsd ?? 0) > 0);
 
   useEffect(() => {
     const parsedProfiles = parseLocalJson<AgentProfile[]>(
@@ -294,6 +322,12 @@ export default function HomePage() {
       setMessages([]);
       connectStream(activeSession);
     }
+
+    void fetchTrialStatus().then((value) => {
+      if (value) {
+        setTrialStatus(value);
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -368,7 +402,7 @@ export default function HomePage() {
       if (apiKeyMode === "by_agent" && !participant.apiKey.trim()) {
         return false;
       }
-      if (apiKeyMode !== "by_agent" && !effectiveGlobalApiKey.trim()) {
+      if (apiKeyMode !== "by_agent" && !effectiveGlobalApiKey.trim() && !hasServerOpenRouterAccess) {
         return false;
       }
     }
@@ -381,7 +415,7 @@ export default function HomePage() {
         (summarizer.providerType !== "openrouter" ||
           (apiKeyMode === "by_agent"
             ? !!summarizer.apiKey.trim()
-            : !!effectiveGlobalApiKey.trim()))));
+            : !!effectiveGlobalApiKey.trim() || hasServerOpenRouterAccess))));
 
   const groupedMessages = useMemo(() => {
     return [...messages]
@@ -588,6 +622,43 @@ export default function HomePage() {
     eventSourceRef.current = source;
   }
 
+  async function refreshTrialStatus() {
+    const nextStatus = await fetchTrialStatus();
+    if (nextStatus) {
+      setTrialStatus(nextStatus);
+    }
+  }
+
+  async function redeemTrialInvite(event: FormEvent) {
+    event.preventDefault();
+    if (!inviteCode.trim()) {
+      setError("Invite code is required.");
+      return;
+    }
+
+    setIsRedeemingInvite(true);
+    setError("");
+    try {
+      const response = await fetch("/api/trial/redeem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: inviteCode })
+      });
+      const json = (await response.json().catch(() => ({}))) as
+        | TrialStatusResponse
+        | { error?: string };
+      if (!response.ok) {
+        setError((json as { error?: string }).error ?? "Failed to redeem invite code.");
+        return;
+      }
+
+      setTrialStatus(json as TrialStatusResponse);
+      setInviteCode("");
+    } finally {
+      setIsRedeemingInvite(false);
+    }
+  }
+
   async function addPendingAttachments(fileList: FileList | null) {
     if (!fileList || fileList.length === 0) {
       return;
@@ -757,8 +828,11 @@ export default function HomePage() {
     });
 
     if (!response.ok) {
-      const json = (await response.json().catch(() => ({}))) as { error?: string };
+      const json = (await response.json().catch(() => ({}))) as { error?: string; code?: string };
       setError(json.error ?? "Failed to create session.");
+      if (json.code?.startsWith("trial_")) {
+        await refreshTrialStatus();
+      }
       return;
     }
 
@@ -827,8 +901,11 @@ export default function HomePage() {
     }
 
     if (!response.ok) {
-      const json = (await response.json().catch(() => ({}))) as { error?: string };
+      const json = (await response.json().catch(() => ({}))) as { error?: string; code?: string };
       setError(json.error ?? "Failed to send message.");
+      if (json.code?.startsWith("trial_")) {
+        await refreshTrialStatus();
+      }
       return;
     }
 
@@ -845,8 +922,11 @@ export default function HomePage() {
 
     const response = await fetch(`/api/session/${sessionId}/summarize`, { method: "POST" });
     if (!response.ok) {
-      const json = (await response.json().catch(() => ({}))) as { error?: string };
+      const json = (await response.json().catch(() => ({}))) as { error?: string; code?: string };
       setError(json.error ?? "Failed to run summarizer.");
+      if (json.code?.startsWith("trial_")) {
+        await refreshTrialStatus();
+      }
     }
   }
 
@@ -911,8 +991,22 @@ export default function HomePage() {
       )}
 
       <section className="h-full min-h-0 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h1 className="text-xl font-semibold">AllPath MVP</h1>
-        <p className="mt-1 text-sm text-slate-600">Round Table only, 2+ agents, manual summarizer.</p>
+        <div className="flex items-center gap-4">
+          <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+            <Image
+              alt="AllPath logo"
+              className="object-contain"
+              fill
+              priority
+              sizes="64px"
+              src="/allpath-logo-mark.png"
+            />
+          </div>
+          <div>
+            <h1 className="text-xl font-semibold">AllPath</h1>
+            <p className="mt-1 text-sm text-slate-600">Multi-agent discussion workspace.</p>
+          </div>
+        </div>
         <div className="mt-1 flex gap-3">
           <Link className="inline-block text-sm font-medium text-primary" href="/agents">
             Open Agent Personality Studio
@@ -920,6 +1014,59 @@ export default function HomePage() {
           <Link className="inline-block text-sm font-medium text-primary" href="/profile">
             Open User Profile
           </Link>
+        </div>
+
+        <div className="mt-4 space-y-3">
+          {trialStatus?.available === true && trialStatus.requiresInviteCode && (
+            <form
+              className="rounded-xl border border-amber-300 bg-amber-50 p-3"
+              onSubmit={redeemTrialInvite}
+            >
+              <p className="text-sm font-semibold text-amber-900">Friend Trial Access</p>
+              <p className="mt-1 text-xs text-amber-800">
+                Enter the invite code to unlock your free starter budget. After that, this browser can try the app without setting an API key.
+              </p>
+              <div className="mt-3 flex gap-2">
+                <input
+                  className="flex-1 rounded-md border border-amber-300 px-3 py-2 text-sm"
+                  value={inviteCode}
+                  onChange={(event) => setInviteCode(event.target.value)}
+                  placeholder="Invite code"
+                />
+                <button
+                  type="submit"
+                  disabled={isRedeemingInvite}
+                  className="rounded-md bg-amber-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
+                >
+                  {isRedeemingInvite ? "Checking..." : "Redeem"}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {trialStatus?.available === true && !trialStatus.requiresInviteCode && (
+            <div
+              className={`rounded-xl border p-3 text-sm ${
+                trialStatus.trialStatus === "active"
+                  ? "border-emerald-300 bg-emerald-50 text-emerald-900"
+                  : "border-rose-300 bg-rose-50 text-rose-900"
+              }`}
+            >
+              <p className="font-semibold">
+                {trialStatus.hasPersonalOpenRouterKey
+                  ? "Personal OpenRouter key saved for this browser"
+                  : trialStatus.trialStatus === "active"
+                    ? "Free trial is active"
+                    : "Free trial budget is exhausted"}
+              </p>
+              <p className="mt-1 text-xs">
+                Remaining budget: ${Number(trialStatus.remainingBudgetUsd ?? 0).toFixed(2)}
+                {!trialStatus.hasPersonalOpenRouterKey && trialStatus.trialStatus !== "active"
+                  ? " . Add your own OpenRouter key in User Profile to continue."
+                  : ""}
+              </p>
+            </div>
+          )}
         </div>
 
         <form className="mt-4 space-y-4" onSubmit={createSession}>
@@ -963,13 +1110,20 @@ export default function HomePage() {
                 <option value="by_agent">Customized by Agent (each agent enters key)</option>
               </select>
               {apiKeyMode === "default_profile" && (
-                <input
-                  className="w-full rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-sm text-slate-600"
-                  type="password"
-                  value={defaultProfileApiKey}
-                  readOnly
-                  placeholder="No default key in User Profile"
-                />
+                <div className="space-y-2">
+                  <input
+                    className="w-full rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-sm text-slate-600"
+                    type="password"
+                    value={defaultProfileApiKey}
+                    readOnly
+                    placeholder="No local default key in User Profile"
+                  />
+                  {!defaultProfileApiKey.trim() && hasServerOpenRouterAccess && (
+                    <p className="text-xs text-emerald-700">
+                      Server-backed guest access is available, so OpenRouter sessions can still run without a local key.
+                    </p>
+                  )}
+                </div>
               )}
               {apiKeyMode === "unified" && (
                 <input

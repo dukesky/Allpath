@@ -7,9 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "models:update": "node scripts/update-openrouter-models.mjs"
+    "models:update": "node scripts/update-openrouter-models.mjs",
+    "trial:invite:init": "node scripts/init-trial-invite-code.mjs"
   },
   "dependencies": {
+    "@google-cloud/firestore": "^8.3.0",
     "next": "15.1.6",
     "react": "19.0.0",
     "react-dom": "19.0.0"

@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "AllPath MVP",
-  description: "Multi-agent roundtable MVP"
+  title: "AllPath",
+  description: "Multi-agent discussion workspace"
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

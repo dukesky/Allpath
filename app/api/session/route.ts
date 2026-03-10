@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createSession } from "@/lib/store";
 import { Mode, ParticipantConfig, SessionConfig } from "@/lib/types";
+import { getGuestFromCookie } from "@/lib/trial";
 import { DEFAULT_SESSION_RULES } from "@/lib/userPreferences";
 
 const DEFAULT_AGENT_INITIAL_PROMPT = DEFAULT_SESSION_RULES;
@@ -39,6 +40,21 @@ export async function POST(request: NextRequest) {
   }
 
   const summarizer = validateParticipant(body.summarizer) ? body.summarizer : undefined;
+  const guest = await getGuestFromCookie();
+
+  const requiresServerOpenRouterAccess = [...participants, ...(summarizer ? [summarizer] : [])].some(
+    (item) =>
+      item.provider.type === "openrouter" &&
+      !item.provider.apiKey.trim() &&
+      !(typeof body.globalApiKey === "string" && body.globalApiKey.trim().length > 0)
+  );
+
+  if (requiresServerOpenRouterAccess && !guest) {
+    return NextResponse.json(
+      { error: "Redeem an invite code or provide your own OpenRouter API key first.", code: "trial_invite_required" },
+      { status: 401 }
+    );
+  }
 
   const mode: Mode = body.mode === "one_to_one" ? "one_to_one" : "roundtable";
 
@@ -53,6 +69,7 @@ export async function POST(request: NextRequest) {
       typeof body.globalApiKey === "string" && body.globalApiKey.trim().length > 0
         ? body.globalApiKey.trim()
         : undefined,
+    trialGuestId: guest?.guestId,
     participants,
     summarizer,
     roundNumber: 0,

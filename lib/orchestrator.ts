@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { getAdapter } from "@/lib/providers";
 import { addMessage, emit, getSession, shiftQueue, updateMessage } from "@/lib/store";
 import { Message, MessageAttachment, ModelMessage, ParticipantConfig, ProviderConfig } from "@/lib/types";
+import { applyOwnerTrialUsage, resolveOpenRouterProviderForSession, TrialAccessError } from "@/lib/trial";
 
 function nowIso(): string {
   return new Date().toISOString();
@@ -66,17 +67,6 @@ function sanitizeAgentOutput(content: string, participant: ParticipantConfig): s
   cleaned = cleaned.replace(/\n{3,}/g, "\n\n");
 
   return cleaned;
-}
-
-function resolveProviderConfig(provider: ProviderConfig, globalApiKey?: string): ProviderConfig {
-  if (provider.type !== "openrouter") {
-    return provider;
-  }
-
-  const resolvedApiKey =
-    provider.apiKey.trim() || globalApiKey?.trim() || process.env.OPENROUTER_API_KEY || "";
-
-  return { ...provider, apiKey: resolvedApiKey };
 }
 
 function buildPromptForParticipant(input: {
@@ -218,24 +208,56 @@ async function runParticipantTurn(
     content: ""
   });
 
-  const resolvedProvider = resolveProviderConfig(participant.provider, state.config.globalApiKey);
+  let resolvedProvider: ProviderConfig;
+  let funding: "client" | "guest_personal" | "owner_trial";
+  try {
+    const resolution = await resolveOpenRouterProviderForSession({
+      provider: participant.provider,
+      sessionGlobalApiKey: state.config.globalApiKey,
+      trialGuestId: state.config.trialGuestId
+    });
+    resolvedProvider = resolution.provider;
+    funding = resolution.funding;
+  } catch (error) {
+    const message =
+      error instanceof TrialAccessError ? error.message : `Model call failed: ${(error as Error).message}`;
+    updateMessage(sessionId, messageId, (messageRecord) => {
+      messageRecord.status = "failed";
+      messageRecord.content = message;
+    });
+    emit(sessionId, {
+      type: "server_error",
+      payload: {
+        message: `${participant.label} failed: ${message}`
+      }
+    });
+    return;
+  }
+
   const adapter = getAdapter(resolvedProvider);
   let completed = false;
+  let usageCostUsd: number | undefined;
 
   try {
-    for await (const delta of adapter.streamChat({
+    for await (const event of adapter.streamChat({
       model: participant.model,
       messages: prompt,
       provider: resolvedProvider
     })) {
-      updateMessage(sessionId, messageId, (message) => {
-        message.content += delta;
-      });
+      if (event.type === "delta") {
+        updateMessage(sessionId, messageId, (message) => {
+          message.content += event.delta;
+        });
 
-      emit(sessionId, {
-        type: "message_delta",
-        payload: { messageId, delta }
-      });
+        emit(sessionId, {
+          type: "message_delta",
+          payload: { messageId, delta: event.delta }
+        });
+      }
+
+      if (event.type === "usage" && typeof event.usage.cost === "number" && Number.isFinite(event.usage.cost)) {
+        usageCostUsd = event.usage.cost;
+      }
     }
 
     completed = true;
@@ -254,6 +276,19 @@ async function runParticipantTurn(
   }
 
   if (completed) {
+    if (funding === "owner_trial") {
+      if (typeof usageCostUsd === "number" && Number.isFinite(usageCostUsd)) {
+        await applyOwnerTrialUsage({
+          guestId: state.config.trialGuestId,
+          costUsd: usageCostUsd
+        });
+      } else {
+        console.warn(
+          `[allpath] missing_usage_cost participant=${participant.label} model=${participant.model} session=${sessionId} round=${roundId}`
+        );
+      }
+    }
+
     const currentMessage = state.config.messages.find((message) => message.messageId === messageId);
     const rawContent = currentMessage?.content ?? "";
     const sanitized = sanitizeAgentOutput(rawContent, participant);
@@ -361,7 +396,30 @@ export async function runManualSummarizer(sessionId: string): Promise<void> {
     content: ""
   });
 
-  const resolvedProvider = resolveProviderConfig(summarizer.provider, state.config.globalApiKey);
+  let resolvedProvider: ProviderConfig;
+  let funding: "client" | "guest_personal" | "owner_trial";
+  try {
+    const resolution = await resolveOpenRouterProviderForSession({
+      provider: summarizer.provider,
+      sessionGlobalApiKey: state.config.globalApiKey,
+      trialGuestId: state.config.trialGuestId
+    });
+    resolvedProvider = resolution.provider;
+    funding = resolution.funding;
+  } catch (error) {
+    const message =
+      error instanceof TrialAccessError ? error.message : `Summarizer failed: ${(error as Error).message}`;
+    updateMessage(sessionId, messageId, (messageRecord) => {
+      messageRecord.status = "failed";
+      messageRecord.content = message;
+    });
+    emit(sessionId, {
+      type: "server_error",
+      payload: { message }
+    });
+    return;
+  }
+
   const adapter = getAdapter(resolvedProvider);
   const prompt = buildPromptForParticipant({
     participant: {
@@ -376,21 +434,41 @@ export async function runManualSummarizer(sessionId: string): Promise<void> {
     agentInitialPrompt: state.config.agentInitialPrompt,
     mode: state.config.mode
   });
+  let usageCostUsd: number | undefined;
 
   try {
-    for await (const delta of adapter.streamChat({
+    for await (const event of adapter.streamChat({
       model: summarizer.model,
       messages: prompt,
       provider: resolvedProvider
     })) {
-      updateMessage(sessionId, messageId, (message) => {
-        message.content += delta;
-      });
+      if (event.type === "delta") {
+        updateMessage(sessionId, messageId, (message) => {
+          message.content += event.delta;
+        });
 
-      emit(sessionId, {
-        type: "message_delta",
-        payload: { messageId, delta }
-      });
+        emit(sessionId, {
+          type: "message_delta",
+          payload: { messageId, delta: event.delta }
+        });
+      }
+
+      if (event.type === "usage" && typeof event.usage.cost === "number" && Number.isFinite(event.usage.cost)) {
+        usageCostUsd = event.usage.cost;
+      }
+    }
+
+    if (funding === "owner_trial") {
+      if (typeof usageCostUsd === "number" && Number.isFinite(usageCostUsd)) {
+        await applyOwnerTrialUsage({
+          guestId: state.config.trialGuestId,
+          costUsd: usageCostUsd
+        });
+      } else {
+        console.warn(
+          `[allpath] missing_usage_cost participant=${summarizer.label} model=${summarizer.model} session=${sessionId} round=${roundId}`
+        );
+      }
     }
 
     const currentMessage = state.config.messages.find((message) => message.messageId === messageId);

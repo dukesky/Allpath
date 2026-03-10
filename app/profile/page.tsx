@@ -10,6 +10,16 @@ import {
   USER_PREFERENCES_STORAGE_KEY
 } from "@/lib/userPreferences";
 
+interface TrialStatusResponse {
+  available: boolean;
+  requiresInviteCode: boolean;
+  trialStatus?: "active" | "exhausted" | "revoked";
+  remainingBudgetUsd?: number;
+  trialBudgetUsd?: number;
+  trialSpentUsd?: number;
+  hasPersonalOpenRouterKey: boolean;
+}
+
 function uid(): string {
   return Math.random().toString(36).slice(2, 10);
 }
@@ -32,6 +42,9 @@ export default function ProfilePage() {
   const [defaultPresetId, setDefaultPresetId] = useState("");
   const [newPresetName, setNewPresetName] = useState("");
   const [newPresetPrompt, setNewPresetPrompt] = useState("");
+  const [serverApiKey, setServerApiKey] = useState("");
+  const [trialStatus, setTrialStatus] = useState<TrialStatusResponse | null>(null);
+  const [statusMessage, setStatusMessage] = useState("");
 
   useEffect(() => {
     const normalized = normalizeUserPreferences(
@@ -40,6 +53,19 @@ export default function ProfilePage() {
     setApiKey(normalized.globalApiKey);
     setPresets(normalized.promptPresets);
     setDefaultPresetId(normalized.defaultPromptPresetId);
+  }, []);
+
+  useEffect(() => {
+    async function loadTrialStatus() {
+      const response = await fetch("/api/trial/status");
+      if (!response.ok) {
+        return;
+      }
+      const json = (await response.json()) as TrialStatusResponse;
+      setTrialStatus(json);
+    }
+
+    void loadTrialStatus();
   }, []);
 
   useEffect(() => {
@@ -55,6 +81,29 @@ export default function ProfilePage() {
       defaultPromptPresetId: defaultPresetId
     });
     localStorage.setItem(USER_PREFERENCES_STORAGE_KEY, JSON.stringify(normalized));
+    setStatusMessage("Local user preferences saved.");
+  }
+
+  async function saveServerApiKey() {
+    setStatusMessage("");
+    const response = await fetch("/api/trial/personal-key", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ apiKey: serverApiKey })
+    });
+
+    const json = (await response.json().catch(() => ({}))) as
+      | TrialStatusResponse
+      | { error?: string };
+
+    if (!response.ok) {
+      setStatusMessage((json as { error?: string }).error ?? "Failed to save server-backed OpenRouter key.");
+      return;
+    }
+
+    setTrialStatus(json as TrialStatusResponse);
+    setServerApiKey("");
+    setStatusMessage("Server-backed OpenRouter key saved for this guest browser.");
   }
 
   function addPreset(event: FormEvent) {
@@ -105,9 +154,49 @@ export default function ProfilePage() {
       </header>
 
       <section className="mb-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <p className="text-sm font-semibold">Guest Trial Access</p>
+        <p className="mt-1 text-xs text-slate-500">
+          This browser can save a server-backed OpenRouter key after the free trial budget is used up.
+        </p>
+        <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
+          {!trialStatus?.available && <p>Trial backend is unavailable in this environment.</p>}
+          {trialStatus?.available && trialStatus.requiresInviteCode && (
+            <p>Redeem an invite code on the main page before you can save a server-backed key.</p>
+          )}
+          {trialStatus?.available && !trialStatus.requiresInviteCode && (
+            <>
+              <p>Trial status: {trialStatus.trialStatus ?? "unknown"}</p>
+              <p>
+                Remaining trial budget: $
+                {Number(trialStatus.remainingBudgetUsd ?? 0).toFixed(2)}
+              </p>
+              <p>Server-backed personal key saved: {trialStatus.hasPersonalOpenRouterKey ? "yes" : "no"}</p>
+            </>
+          )}
+        </div>
+        <div className="mt-3 flex gap-2">
+          <input
+            className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
+            type="password"
+            value={serverApiKey}
+            onChange={(event) => setServerApiKey(event.target.value)}
+            placeholder="Save OpenRouter key for this browser on the server"
+          />
+          <button
+            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
+            onClick={() => void saveServerApiKey()}
+            disabled={!serverApiKey.trim() || !!trialStatus?.requiresInviteCode}
+            type="button"
+          >
+            Save Key
+          </button>
+        </div>
+      </section>
+
+      <section className="mb-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <p className="text-sm font-semibold">Default OpenRouter API Key</p>
         <p className="mt-1 text-xs text-slate-500">
-          This key is the default for OpenRouter calls in the main page when you choose "Use Default API Key".
+          This key stays in local browser storage and is still available as a manual override when you choose "Use Default API Key".
           Get or manage your key at{" "}
           <a
             className="font-medium text-primary"
@@ -194,6 +283,7 @@ export default function ProfilePage() {
       >
         Save User Preferences
       </button>
+      {statusMessage && <p className="mt-3 text-sm text-slate-600">{statusMessage}</p>}
     </main>
   );
 }

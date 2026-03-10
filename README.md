@@ -2,7 +2,7 @@
 
 AllPath is a multi-agent chat prototype where one user coordinates multiple LLM agents in a shared Round Table discussion.
 
-Current release version: `0.0.11`
+Current release version: `0.0.12`
 
 Production URL: `https://all-path.com`
 
@@ -17,7 +17,8 @@ This version focuses on a practical first release:
 - Model picker with quick chips + expanded list + price tags (`$`, `$$`, `$$$`)
 - On startup, model options auto-fetch from OpenRouter (filtered to 2025-03+); fallback to bundled defaults if fetch fails
 - Agent Personality Studio (`/agents`) for reusable role/personality profiles
-- In-memory session state (no auth, no database yet)
+- Guest trial mode with invite-code redemption and server-funded starter budget
+- In-memory session state for chats; Firestore-backed guest trial persistence
 
 ## Tech Stack
 
@@ -35,10 +36,12 @@ This version focuses on a practical first release:
 - `app/api/session/[id]/stream/route.ts`: SSE stream endpoint
 - `app/api/session/[id]/summarize/route.ts`: manual summarizer trigger
 - `app/api/models/route.ts`: provider model list helper
+- `app/api/trial/*`: guest trial redemption/status/personal-key endpoints
 - `lib/orchestrator.ts`: multi-agent round execution + summarizer execution
 - `lib/providers.ts`: provider adapter layer (OpenRouter/custom)
 - `lib/store.ts`: in-memory session/message store
 - `lib/modelCatalog.ts`: featured model presets + price tiers
+- `lib/trial.ts`: guest trial, Firestore persistence, and server-side OpenRouter access resolution
 - `lib/types.ts`: shared types
 
 ## How It Works
@@ -66,6 +69,8 @@ Production: `https://all-path.com`
 
 ```bash
 OPENROUTER_API_KEY=
+TRIAL_COOKIE_SECRET=
+TRIAL_ENCRYPTION_SECRET=
 OPENROUTER_SITE_URL=https://all-path.com
 OPENROUTER_APP_NAME=AllPath MVP
 ```
@@ -74,6 +79,87 @@ Notes:
 
 - Participant-level API keys entered in UI are used for live calls.
 - Global `OPENROUTER_API_KEY` is an optional fallback for model listing or default routing.
+- Guest-trial mode uses server-side OpenRouter access plus Firestore persistence.
+- Cloud Run should have default Google credentials to access Firestore.
+
+## Guest Trial Setup
+
+Production guest-trial flow depends on Firestore plus three server secrets:
+
+- `OPENROUTER_API_KEY`
+- `TRIAL_COOKIE_SECRET`
+- `TRIAL_ENCRYPTION_SECRET`
+
+### 1. Enable Firestore
+
+In GCP:
+
+1. Open Firestore in your `allpath` project.
+2. Create the database in Native mode.
+3. Use the same region as Cloud Run if possible.
+4. Ensure the Cloud Run runtime service account has Firestore access.
+
+Suggested IAM role for the runtime service account:
+
+- `Cloud Datastore User`
+
+### 2. Configure Cloud Run env vars
+
+Set these on the deployed service:
+
+```bash
+OPENROUTER_API_KEY=...
+TRIAL_COOKIE_SECRET=...long-random-secret...
+TRIAL_ENCRYPTION_SECRET=...long-random-secret...
+OPENROUTER_SITE_URL=https://all-path.com
+OPENROUTER_APP_NAME=AllPath
+```
+
+### 3. Initialize invite codes
+
+The app reads invite codes from Firestore collection `trial_invite_codes`.
+
+You can upsert one with:
+
+```bash
+INVITE_CODE=myfriends \
+INVITE_LABEL="Friends Trial" \
+TRIAL_BUDGET_USD=1 \
+npm run trial:invite:init
+```
+
+Optional env vars for the script:
+
+- `GOOGLE_CLOUD_PROJECT`
+- `GCLOUD_PROJECT`
+- `INVITE_ENABLED=false` to disable a code
+
+The script requires Google credentials locally. The simplest local setup is:
+
+```bash
+gcloud auth application-default login
+gcloud config set project allpath
+export GOOGLE_CLOUD_PROJECT=allpath
+```
+
+If you want to rotate or disable a code later, rerun the same command with the same `INVITE_CODE`.
+
+### 4. Firestore collections used by the app
+
+- `trial_invite_codes`
+- `trial_guests`
+
+Invite code documents use the invite code itself as the document ID and store:
+
+- `code`
+- `enabled`
+- `label`
+- `trialBudgetUsd`
+- `redeemedCount`
+- `createdAt`
+- `updatedAt`
+
+Guest documents are created automatically on successful redemption.
 
 ## Model Catalog Updates
 

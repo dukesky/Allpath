@@ -18,6 +18,18 @@ export interface ProviderConfig {
   baseUrl?: string;
 }
 
+export interface ProviderUsage {
+  promptTokens?: number;
+  completionTokens?: number;
+  totalTokens?: number;
+  cost?: number;
+}
+
+export type ProviderStreamEvent =
+  | { type: "delta"; delta: string }
+  | { type: "usage"; usage: ProviderUsage }
+  | { type: "generation"; generationId: string };
+
 export interface ParticipantConfig {
   id: string;
   label: string;
@@ -47,6 +59,7 @@ export interface SessionConfig {
   mode: Mode;
   agentInitialPrompt?: string;
   globalApiKey?: string;
+  trialGuestId?: string;
   participants: ParticipantConfig[];
   summarizer?: ParticipantConfig;
   roundNumber: number;
@@ -81,6 +94,6 @@ export interface ProviderAdapter {
     model: string;
     messages: ModelMessage[];
     provider: ProviderConfig;
-  }): AsyncGenerator<string>;
+  }): AsyncGenerator<ProviderStreamEvent>;
   listModels?(provider: ProviderConfig): Promise<Array<{ id: string; name: string }>>;
 }

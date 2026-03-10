@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { processSessionQueue } from "@/lib/orchestrator";
 import { addMessage, getSession, pushQueue, setSessionMode } from "@/lib/store";
 import { MessageAttachment, Mode } from "@/lib/types";
+import { resolveOpenRouterProviderForSession, TrialAccessError } from "@/lib/trial";
 
 function normalizeAttachments(raw: unknown): MessageAttachment[] {
   if (!Array.isArray(raw)) {
@@ -56,6 +57,38 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json({ error: "Session not found." }, { status: 404 });
   }
 
+  if (body.mode === "roundtable" || body.mode === "one_to_one") {
+    setSessionMode(id, body.mode);
+  }
+
+  const validTargetIds = (body.targetParticipantIds ?? []).filter((targetId) =>
+    session.config.participants.some((participant) => participant.id === targetId)
+  );
+
+  const nextMode = body.mode === "one_to_one" ? "one_to_one" : session.config.mode;
+  const participantTargets =
+    nextMode === "one_to_one" && validTargetIds.length > 0
+      ? session.config.participants.filter((participant) => validTargetIds.includes(participant.id))
+      : session.config.participants;
+
+  try {
+    for (const participant of participantTargets) {
+      await resolveOpenRouterProviderForSession({
+        provider: participant.provider,
+        sessionGlobalApiKey: session.config.globalApiKey,
+        trialGuestId: session.config.trialGuestId
+      });
+    }
+  } catch (error) {
+    const message =
+      error instanceof TrialAccessError ? error.message : "Failed to validate OpenRouter access.";
+    const code =
+      error instanceof TrialAccessError ? error.code : "trial_access_error";
+    const status =
+      error instanceof TrialAccessError ? error.status : 500;
+    return NextResponse.json({ error: message, code }, { status });
+  }
+
   const messageId = randomUUID();
   addMessage(id, {
     messageId,
@@ -68,17 +101,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     attachments: attachments.length > 0 ? attachments : undefined
   });
 
-  if (body.mode === "roundtable" || body.mode === "one_to_one") {
-    setSessionMode(id, body.mode);
-  }
-
-  const validTargetIds = (body.targetParticipantIds ?? []).filter((targetId) =>
-    session.config.participants.some((participant) => participant.id === targetId)
-  );
-
   pushQueue(id, {
     messageId,
-    mode: body.mode === "one_to_one" ? "one_to_one" : session.config.mode,
+    mode: nextMode,
     targetParticipantIds: validTargetIds
   });
   void processSessionQueue(id);
