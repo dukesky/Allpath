@@ -9,7 +9,8 @@ declare global {
 export function getFirestoreDb(): Firestore {
   if (!globalThis.__allpathFirestore) {
     globalThis.__allpathFirestore = new Firestore({
-      projectId: process.env.GOOGLE_CLOUD_PROJECT || process.env.GCLOUD_PROJECT || undefined
+      projectId: process.env.GOOGLE_CLOUD_PROJECT || process.env.GCLOUD_PROJECT || undefined,
+      databaseId: process.env.FIRESTORE_DATABASE_ID?.trim() || undefined
     });
   }
 

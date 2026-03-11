@@ -2,7 +2,7 @@
 
 AllPath is a multi-agent chat prototype where one user coordinates multiple LLM agents in a shared Round Table discussion.
 
-Current release version: `0.0.12`
+Current release version: `0.0.13`
 
 Production URL: `https://all-path.com`
 
@@ -71,6 +71,7 @@ Production: `https://all-path.com`
 OPENROUTER_API_KEY=
 TRIAL_COOKIE_SECRET=
 TRIAL_ENCRYPTION_SECRET=
+FIRESTORE_DATABASE_ID=
 OPENROUTER_SITE_URL=https://all-path.com
 OPENROUTER_APP_NAME=AllPath MVP
 ```
@@ -89,6 +90,7 @@ Production guest-trial flow depends on Firestore plus three server secrets:
 - `OPENROUTER_API_KEY`
 - `TRIAL_COOKIE_SECRET`
 - `TRIAL_ENCRYPTION_SECRET`
+- `FIRESTORE_DATABASE_ID` when your Firestore database is not `(default)`
 
 ### 1. Enable Firestore
 
@@ -111,6 +113,7 @@ Set these on the deployed service:
 OPENROUTER_API_KEY=...
 TRIAL_COOKIE_SECRET=...long-random-secret...
 TRIAL_ENCRYPTION_SECRET=...long-random-secret...
+FIRESTORE_DATABASE_ID=default
 OPENROUTER_SITE_URL=https://all-path.com
 OPENROUTER_APP_NAME=AllPath
 ```
@@ -125,6 +128,7 @@ You can upsert one with:
 INVITE_CODE=myfriends \
 INVITE_LABEL="Friends Trial" \
 TRIAL_BUDGET_USD=1 \
+FIRESTORE_DATABASE_ID=default \
 npm run trial:invite:init
 ```
 
@@ -132,6 +136,7 @@ Optional env vars for the script:
 
 - `GOOGLE_CLOUD_PROJECT`
 - `GCLOUD_PROJECT`
+- `FIRESTORE_DATABASE_ID`
 - `INVITE_ENABLED=false` to disable a code
 
 The script requires Google credentials locally. The simplest local setup is:

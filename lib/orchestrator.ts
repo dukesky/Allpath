@@ -39,6 +39,9 @@ function sanitizeAgentOutput(content: string, participant: ParticipantConfig): s
   const speakerBlock = /(?:^|\n)\s*Speaker\s*:\s*[^\n]*(?:\n|\r\n?)\s*Message\s*:\s*[\s\S]*?(?=(?:\n\s*Speaker\s*:)|$)/gi;
   const speakerBlockWithCapture =
     /(?:^|\n)\s*Speaker\s*:\s*([^\n]*)(?:\n|\r\n?)\s*Message\s*:\s*([\s\S]*?)(?=(?:\n\s*Speaker\s*:)|$)/gi;
+  const internalLine = /^\s*(?:source_role|speaker|model|round_id|content_json)\s*:\s*.*(?:\n|\r\n?)/gim;
+  const historyBlock = /<\/?history_message>\s*/gi;
+  const transcriptHeader = /^\s*\[(?:User|Agent|Summarizer)\s*\|\s*[^\]\n]{1,120}\]\s*/gim;
 
   const parsedBlocks: Array<{ speaker: string; message: string }> = [];
   let blockMatch: RegExpExecArray | null = speakerBlockWithCapture.exec(content);
@@ -63,10 +66,66 @@ function sanitizeAgentOutput(content: string, participant: ParticipantConfig): s
   cleaned = cleaned.replace(speakerBlock, "");
   cleaned = cleaned.replace(speakerLine, "").trimStart();
   cleaned = cleaned.replace(messageLabel, "").trimStart();
+  cleaned = cleaned.replace(historyBlock, "");
+  cleaned = cleaned.replace(internalLine, "");
+  cleaned = cleaned.replace(transcriptHeader, "");
   cleaned = cleaned.replace(anyBracketTag, "");
   cleaned = cleaned.replace(/\n{3,}/g, "\n\n");
 
   return cleaned;
+}
+
+function transcriptLabelForMessage(message: Message): string {
+  if (message.sourceRole === "user") {
+    return "User | You";
+  }
+
+  if (message.sourceRole === "summarizer") {
+    return `Summarizer | ${message.sourceLabel}`;
+  }
+
+  return `Agent | ${message.sourceLabel}`;
+}
+
+function transcriptTextForMessage(message: Message): string {
+  const sections = [`[${transcriptLabelForMessage(message)}]`, message.content.trim() || "(empty response)"];
+
+  const attachments = message.attachments ?? [];
+  for (const attachment of attachments) {
+    if (attachment.kind === "image") {
+      sections.push(`[Attachment: image "${attachment.name}"]`);
+      continue;
+    }
+
+    if (attachment.kind === "text" && attachment.textContent) {
+      sections.push(`[Attachment: text "${attachment.name}"]`);
+      sections.push(attachment.textContent);
+      continue;
+    }
+
+    sections.push(`[Attachment: file "${attachment.name}"]`);
+  }
+
+  return sections.join("\n");
+}
+
+function buildConversationTranscript(messages: Message[]): string {
+  if (messages.length === 0) {
+    return "No previous messages yet.";
+  }
+
+  const blocks: string[] = [];
+  let currentRound: number | null = null;
+
+  for (const message of messages) {
+    if (message.roundId !== currentRound) {
+      currentRound = message.roundId;
+      blocks.push(`[Round ${currentRound}]`);
+    }
+    blocks.push(transcriptTextForMessage(message));
+  }
+
+  return blocks.join("\n\n");
 }
 
 function buildPromptForParticipant(input: {
@@ -93,8 +152,9 @@ function buildPromptForParticipant(input: {
     "Do not prefix your answer with speaker tags like [Name | model].",
     "Do not include prefixes like 'Speaker:' or 'Message:' in your output.",
     "Never write or simulate another agent's response text in your own answer.",
-    "Conversation history is provided as structured metadata blocks, not as a format to copy.",
-    "Your output must be plain response text only. No XML/JSON/YAML wrappers.",
+    "Conversation history is provided as transcript context, not as an output format to imitate.",
+    "Never output transcript markers, XML, JSON, YAML, or metadata fields such as source_role, speaker, model, round_id, or content_json.",
+    "Your output must be plain response text only. No wrappers or transcript markup.",
     "Output only the response content.",
     "If asked which models are present, answer using the configured roster above.",
     "Keep answers concise, factual, and collaboration-oriented.",
@@ -103,29 +163,41 @@ function buildPromptForParticipant(input: {
 
   const visibleMessages =
     mode === "one_to_one" ? messages.filter((message) => message.sourceRole === "user") : messages;
+  const transcript = buildConversationTranscript(visibleMessages);
+  const latestUserMessage = [...visibleMessages].reverse().find((message) => message.sourceRole === "user");
 
-  const conversation: ModelMessage[] = visibleMessages.map((message) => {
-    const role = message.sourceRole === "user" ? "user" : "assistant";
-    if (role !== "user") {
-      return {
-        role,
-        content: [
-          "<history_message>",
-          `source_role: ${message.sourceRole}`,
-          `speaker: ${JSON.stringify(message.sourceLabel)}`,
-          `model: ${JSON.stringify(message.sourceModel ?? "")}`,
-          `round_id: ${message.roundId}`,
-          `content_json: ${JSON.stringify(message.content)}`,
-          "</history_message>"
-        ].join("\n")
-      };
-    }
+  const contextPrompt = [
+    `Conversation mode: ${mode === "one_to_one" ? "One-to-One" : "Round Table"}`,
+    "Participants in this session:",
+    ...participants.map((item) => {
+      const role = item.roleTitle ? item.roleTitle : "not set";
+      return `- ${item.label}: ${role}`;
+    }),
+    summarizer ? `Summarizer: ${summarizer.label}` : "Summarizer: disabled",
+    "Interaction rule: all participants are separate model calls. You may respond to prior points, but do not imitate transcript formatting."
+  ].join("\n");
 
-    return {
-      role,
-      content: userMessageContentWithAttachments(message)
-    };
-  });
+  const currentTaskPrompt = [
+    "Conversation transcript so far:",
+    transcript,
+    "",
+    latestUserMessage
+      ? `Current user request:\n${latestUserMessage.content.trim() || "(see transcript)"}`
+      : "Current user request:\nNo user request yet.",
+    `Respond now as ${participant.label} only.`
+  ].join("\n");
+
+  const conversation: ModelMessage[] = [
+    { role: "user", content: contextPrompt },
+    { role: "user", content: currentTaskPrompt }
+  ];
+
+  if (latestUserMessage?.attachments?.length) {
+    conversation.push({
+      role: "user",
+      content: userMessageContentWithAttachments(latestUserMessage)
+    });
+  }
 
   return [{ role: "system", content: systemPrompt }, ...conversation];
 }

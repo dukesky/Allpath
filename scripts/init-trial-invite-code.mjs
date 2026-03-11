@@ -28,8 +28,9 @@ async function main() {
   const label = (process.env.INVITE_LABEL ?? "Friends Trial").trim();
   const trialBudgetUsd = optionalNumber("TRIAL_BUDGET_USD", 1);
   const projectId = process.env.GOOGLE_CLOUD_PROJECT?.trim() || process.env.GCLOUD_PROJECT?.trim() || undefined;
+  const databaseId = process.env.FIRESTORE_DATABASE_ID?.trim() || undefined;
 
-  const db = new Firestore({ projectId });
+  const db = new Firestore({ projectId, databaseId });
   const ref = db.collection("trial_invite_codes").doc(code);
   const now = new Date().toISOString();
   const snapshot = await ref.get();
@@ -51,6 +52,9 @@ async function main() {
   console.log(`trialBudgetUsd=${trialBudgetUsd.toFixed(2)}`);
   if (projectId) {
     console.log(`projectId=${projectId}`);
+  }
+  if (databaseId) {
+    console.log(`databaseId=${databaseId}`);
   }
 }
 
