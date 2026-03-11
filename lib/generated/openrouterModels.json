@@ -1,8 +1,18 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-03-10T01:35:57.846Z",
+  "generatedAt": "2026-03-11T01:52:38.774Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "bytedance-seed/seed-2.0-lite",
+      "label": "ByteDance Seed: Seed-2.0-Lite",
+      "price": "$"
+    },
+    {
+      "id": "qwen/qwen3.5-9b",
+      "label": "Qwen: Qwen3.5-9B",
+      "price": "$"
+    },
     {
       "id": "openai/gpt-5.4-pro",
       "label": "OpenAI: GPT-5.4 Pro",
@@ -549,11 +559,6 @@
       "price": "$"
     },
     {
-      "id": "z-ai/glm-4.6:exacto",
-      "label": "Z.ai: GLM 4.6 (exacto)",
-      "price": "$"
-    },
-    {
       "id": "anthropic/claude-sonnet-4.5",
       "label": "Anthropic: Claude Sonnet 4.5",
       "price": "$$"
@@ -606,11 +611,6 @@
     {
       "id": "deepseek/deepseek-v3.1-terminus",
       "label": "DeepSeek: DeepSeek V3.1 Terminus",
-      "price": "$"
-    },
-    {
-      "id": "deepseek/deepseek-v3.1-terminus:exacto",
-      "label": "DeepSeek: DeepSeek V3.1 Terminus (exacto)",
       "price": "$"
     },
     {
@@ -672,11 +672,6 @@
       "id": "moonshotai/kimi-k2-0905",
       "label": "MoonshotAI: Kimi K2 0905",
       "price": "$"
-    },
-    {
-      "id": "moonshotai/kimi-k2-0905:exacto",
-      "label": "MoonshotAI: Kimi K2 0905 (exacto)",
-      "price": "$$"
     },
     {
       "id": "qwen/qwen3-30b-a3b-thinking-2507",
@@ -759,11 +754,6 @@
       "price": "$"
     },
     {
-      "id": "openai/gpt-oss-120b:exacto",
-      "label": "OpenAI: gpt-oss-120b (exacto)",
-      "price": "$"
-    },
-    {
       "id": "openai/gpt-oss-120b:free",
       "label": "OpenAI: gpt-oss-120b (free)",
       "price": "$"
@@ -826,11 +816,6 @@
     {
       "id": "qwen/qwen3-coder",
       "label": "Qwen: Qwen3 Coder 480B A35B",
-      "price": "$"
-    },
-    {
-      "id": "qwen/qwen3-coder:exacto",
-      "label": "Qwen: Qwen3 Coder 480B A35B (exacto)",
       "price": "$"
     },
     {
