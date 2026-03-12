@@ -34,6 +34,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
             status: session.config.status,
             roundNumber: session.config.roundNumber,
             mode: session.config.mode,
+            participants: session.config.participants,
             existingMessages: session.config.messages
           }
         })

@@ -35,6 +35,7 @@ export interface ParticipantConfig {
   label: string;
   avatarUrl?: string;
   model: string;
+  muted?: boolean;
   provider: ProviderConfig;
   roleTitle?: string;
   character?: string;

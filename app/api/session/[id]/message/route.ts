@@ -61,15 +61,20 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     setSessionMode(id, body.mode);
   }
 
+  const activeParticipants = session.config.participants.filter((participant) => !participant.muted);
   const validTargetIds = (body.targetParticipantIds ?? []).filter((targetId) =>
-    session.config.participants.some((participant) => participant.id === targetId)
+    activeParticipants.some((participant) => participant.id === targetId)
   );
 
   const nextMode = body.mode === "one_to_one" ? "one_to_one" : session.config.mode;
   const participantTargets =
     nextMode === "one_to_one" && validTargetIds.length > 0
-      ? session.config.participants.filter((participant) => validTargetIds.includes(participant.id))
-      : session.config.participants;
+      ? activeParticipants.filter((participant) => validTargetIds.includes(participant.id))
+      : activeParticipants;
+
+  if (participantTargets.length === 0) {
+    return NextResponse.json({ error: "All participants are muted. Unmute at least one member first." }, { status: 400 });
+  }
 
   try {
     for (const participant of participantTargets) {

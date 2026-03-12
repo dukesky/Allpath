@@ -148,3 +148,32 @@ export function setSessionMode(sessionId: string, mode: Mode): boolean {
 
   return true;
 }
+
+export function setParticipantMuted(
+  sessionId: string,
+  participantId: string,
+  muted: boolean
+): SessionConfig["participants"] | null {
+  const session = sessions.get(sessionId);
+  if (!session) {
+    return null;
+  }
+
+  const participant = session.config.participants.find((item) => item.id === participantId);
+  if (!participant) {
+    return null;
+  }
+
+  participant.muted = muted;
+  emit(sessionId, {
+    type: "session_state",
+    payload: {
+      status: session.config.status,
+      roundNumber: session.config.roundNumber,
+      mode: session.config.mode,
+      participants: session.config.participants
+    }
+  });
+
+  return session.config.participants;
+}

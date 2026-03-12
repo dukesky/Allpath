@@ -137,6 +137,7 @@ function buildPromptForParticipant(input: {
   mode: "roundtable" | "one_to_one";
 }): ModelMessage[] {
   const { participant, messages, participants, summarizer, agentInitialPrompt, mode } = input;
+  const activeParticipants = participants.filter((item) => !item.muted);
 
   const systemPrompt = [
     mode === "one_to_one"
@@ -146,7 +147,7 @@ function buildPromptForParticipant(input: {
     `Your configured model ID: ${participant.model}`,
     participant.roleTitle ? `Your role in the discussion: ${participant.roleTitle}` : "Your role in the discussion: analyst",
     participant.character ? `Your personality guidance: ${participant.character}` : "Your personality guidance: neutral and pragmatic",
-    rosterText(participants, summarizer),
+    rosterText(activeParticipants, summarizer),
     "Important: each participant above is an independently called model instance.",
     "Do not claim all voices are the same model or that you are the only model.",
     "Do not prefix your answer with speaker tags like [Name | model].",
@@ -169,7 +170,7 @@ function buildPromptForParticipant(input: {
   const contextPrompt = [
     `Conversation mode: ${mode === "one_to_one" ? "One-to-One" : "Round Table"}`,
     "Participants in this session:",
-    ...participants.map((item) => {
+    ...activeParticipants.map((item) => {
       const role = item.roleTitle ? item.roleTitle : "not set";
       return `- ${item.label}: ${role}`;
     }),
@@ -422,9 +423,10 @@ export async function processSessionQueue(sessionId: string): Promise<void> {
   const participantTargets =
     nextQueueItem.mode === "one_to_one" && nextQueueItem.targetParticipantIds?.length
       ? state.config.participants.filter((participant) =>
+          !participant.muted &&
           nextQueueItem.targetParticipantIds?.includes(participant.id)
         )
-      : state.config.participants;
+      : state.config.participants.filter((participant) => !participant.muted);
 
   for (const participant of participantTargets) {
     await runParticipantTurn(sessionId, participant, roundId, nextQueueItem.mode);

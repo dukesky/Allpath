@@ -25,10 +25,19 @@ const STORY_STORAGE_KEY = "allpath-agent-stories";
 const SESSION_LIST_STORAGE_KEY = "allpath-session-list";
 const ACTIVE_SESSION_STORAGE_KEY = "allpath-active-session";
 
+interface SessionMemberMeta {
+  id: string;
+  label: string;
+  avatarUrl?: string;
+  model?: string;
+  muted?: boolean;
+}
+
 interface SessionMeta {
   id: string;
   title: string;
   createdAt: string;
+  members: SessionMemberMeta[];
 }
 
 type PendingAttachment = Omit<MessageAttachment, "attachmentId"> & { localId: string };
@@ -60,6 +69,31 @@ type ParticipantForm = {
   profileId: string;
 };
 
+function participantToSessionMember(participant: {
+  id: string;
+  label: string;
+  avatarUrl?: string;
+  model?: string;
+  muted?: boolean;
+}): SessionMemberMeta {
+  return {
+    id: participant.id,
+    label: participant.label,
+    avatarUrl: participant.avatarUrl || "",
+    model: participant.model,
+    muted: participant.muted ?? false
+  };
+}
+
+function initialsForLabel(label: string): string {
+  return label
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
 function defaultParticipant(seed: string, label: string): ParticipantForm {
   return {
     id: seed,
@@ -75,6 +109,12 @@ function defaultParticipant(seed: string, label: string): ParticipantForm {
     character: "",
     profileId: ""
   };
+}
+
+function isImageAttachment(
+  attachment: Pick<MessageAttachment, "kind" | "dataUrl"> | Pick<PendingAttachment, "kind" | "dataUrl">
+): boolean {
+  return attachment.kind === "image" && typeof attachment.dataUrl === "string" && attachment.dataUrl.length > 0;
 }
 
 function ModelPicker(props: {
@@ -235,6 +275,9 @@ async function fetchTrialStatus(): Promise<TrialStatusResponse | null> {
 
 export default function HomePage() {
   const [isSessionSidebarOpen, setIsSessionSidebarOpen] = useState(false);
+  const [isSetupPanelOpen, setIsSetupPanelOpen] = useState(true);
+  const [isMobileView, setIsMobileView] = useState(false);
+  const [isChatMembersOpen, setIsChatMembersOpen] = useState(false);
   const [sessionMode, setSessionMode] = useState<Mode>("roundtable");
   const [apiKeyMode, setApiKeyMode] = useState<ApiKeyMode>("default_profile");
   const [defaultProfileApiKey, setDefaultProfileApiKey] = useState("");
@@ -253,6 +296,8 @@ export default function HomePage() {
   const [profiles, setProfiles] = useState<AgentProfile[]>([]);
   const [stories, setStories] = useState<string[]>([]);
   const [sessionList, setSessionList] = useState<SessionMeta[]>([]);
+  const [expandedSessionMembers, setExpandedSessionMembers] = useState<Record<string, boolean>>({});
+  const [activeSessionMembers, setActiveSessionMembers] = useState<SessionMemberMeta[]>([]);
   const [dynamicCatalogModels, setDynamicCatalogModels] = useState<CatalogModel[] | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [status, setStatus] = useState("idle");
@@ -263,6 +308,7 @@ export default function HomePage() {
   const [targetParticipantIds, setTargetParticipantIds] = useState<string[]>([]);
   const [mentionQuery, setMentionQuery] = useState("");
   const [showMentionMenu, setShowMentionMenu] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<{ src: string; name: string } | null>(null);
   const [trialStatus, setTrialStatus] = useState<TrialStatusResponse | null>(null);
   const [inviteCode, setInviteCode] = useState("");
   const [isRedeemingInvite, setIsRedeemingInvite] = useState(false);
@@ -281,6 +327,20 @@ export default function HomePage() {
       trialStatus.requiresInviteCode === false &&
       trialStatus.trialStatus === "active" &&
       Number(trialStatus.remainingBudgetUsd ?? 0) > 0);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 1023px)");
+    const syncViewport = () => {
+      const mobile = media.matches;
+      setIsMobileView(mobile);
+      if (!mobile) {
+        setIsSetupPanelOpen(true);
+      }
+    };
+    syncViewport();
+    media.addEventListener("change", syncViewport);
+    return () => media.removeEventListener("change", syncViewport);
+  }, []);
 
   useEffect(() => {
     const parsedProfiles = parseLocalJson<AgentProfile[]>(
@@ -313,7 +373,12 @@ export default function HomePage() {
       []
     );
     if (Array.isArray(parsedSessions)) {
-      setSessionList(parsedSessions);
+      setSessionList(
+        parsedSessions.map((session) => ({
+          ...session,
+          members: Array.isArray(session.members) ? session.members : []
+        }))
+      );
     }
 
     const activeSession = localStorage.getItem(ACTIVE_SESSION_STORAGE_KEY);
@@ -464,10 +529,12 @@ export default function HomePage() {
       return [];
     }
     const query = mentionQuery.trim().toLowerCase();
-    return participants.filter((participant) =>
+    return activeSessionMembers
+      .filter((participant) => !participant.muted)
+      .filter((participant) =>
       query ? participant.label.toLowerCase().includes(query) : true
     );
-  }, [mentionQuery, participants, sessionMode]);
+  }, [activeSessionMembers, mentionQuery, sessionMode]);
 
   const selectedPromptPreset = useMemo(
     () => promptPresets.find((preset) => preset.id === selectedPromptPresetId),
@@ -562,6 +629,13 @@ export default function HomePage() {
         status: string;
         roundNumber: number;
         mode?: Mode;
+        participants?: Array<{
+          id: string;
+          label: string;
+          avatarUrl?: string;
+          model?: string;
+          muted?: boolean;
+        }>;
         existingMessages?: Message[];
       };
 
@@ -573,6 +647,13 @@ export default function HomePage() {
 
       if (payload.existingMessages) {
         setMessages(payload.existingMessages);
+      }
+      if (payload.participants) {
+        const members = payload.participants.map(participantToSessionMember);
+        setActiveSessionMembers(members);
+        setSessionList((current) =>
+          current.map((item) => (item.id === newSessionId ? { ...item, members } : item))
+        );
       }
     });
 
@@ -610,6 +691,7 @@ export default function HomePage() {
         localStorage.removeItem(ACTIVE_SESSION_STORAGE_KEY);
         setSessionId(null);
         setMessages([]);
+        setActiveSessionMembers([]);
         setStatus("idle");
         setRoundNumber(0);
         setError("Session expired or not found. Please create a new session.");
@@ -752,6 +834,13 @@ export default function HomePage() {
     setError("");
     setSessionId(targetSessionId);
     setMessages([]);
+    setActiveSessionMembers(
+      sessionList.find((item) => item.id === targetSessionId)?.members ?? []
+    );
+    if (isMobileView) {
+      setIsSessionSidebarOpen(false);
+      setIsSetupPanelOpen(false);
+    }
     connectStream(targetSessionId);
   }
 
@@ -765,10 +854,48 @@ export default function HomePage() {
     eventSourceRef.current = null;
     setSessionId(null);
     setMessages([]);
+    setActiveSessionMembers([]);
     setStatus("idle");
     setRoundNumber(0);
     setError("");
     localStorage.removeItem(ACTIVE_SESSION_STORAGE_KEY);
+  }
+
+  function toggleSessionMemberExpansion(targetSessionId: string) {
+    setExpandedSessionMembers((current) => ({
+      ...current,
+      [targetSessionId]: !current[targetSessionId]
+    }));
+  }
+
+  async function toggleParticipantMute(targetSessionId: string, participantId: string, muted: boolean) {
+    const response = await fetch(`/api/session/${targetSessionId}/participant`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ participantId, muted })
+    });
+
+    if (!response.ok) {
+      const json = (await response.json().catch(() => ({}))) as { error?: string };
+      setError(json.error ?? "Failed to update participant mute state.");
+      return;
+    }
+
+    const json = (await response.json()) as {
+      participants: Array<{ id: string; label: string; avatarUrl?: string; model?: string; muted?: boolean }>;
+    };
+    const members = json.participants.map(participantToSessionMember);
+
+    setSessionList((current) =>
+      current.map((item) => (item.id === targetSessionId ? { ...item, members } : item))
+    );
+
+    if (targetSessionId === sessionId) {
+      setActiveSessionMembers(members);
+      setTargetParticipantIds((current) =>
+        current.filter((id) => members.some((member) => member.id === id && !member.muted))
+      );
+    }
   }
 
   async function createSession(event: FormEvent) {
@@ -784,6 +911,7 @@ export default function HomePage() {
         label: item.label,
         avatarUrl: item.avatarUrl || undefined,
         model: item.model,
+        muted: false,
         roleTitle: item.roleTitle || undefined,
         character: item.character || undefined,
         provider: {
@@ -842,6 +970,15 @@ export default function HomePage() {
       roundNumber: number;
       mode?: Mode;
     };
+    const members = participants.map((participant) =>
+      participantToSessionMember({
+        id: participant.id,
+        label: participant.label,
+        avatarUrl: participant.avatarUrl,
+        model: participant.model,
+        muted: false
+      })
+    );
     const sessionTitle = `Session ${new Date().toLocaleString()} · ${participants
       .map((participant) => participant.label)
       .join(", ")}`;
@@ -853,14 +990,21 @@ export default function HomePage() {
       setSessionMode(json.mode);
     }
     setMessages([]);
+    setActiveSessionMembers(members);
+    setIsChatMembersOpen(false);
     setSessionList((current) => [
       {
         id: json.sessionId,
         title: sessionTitle,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        members
       },
       ...current.filter((item) => item.id !== json.sessionId)
     ]);
+    if (isMobileView) {
+      setIsSessionSidebarOpen(false);
+      setIsSetupPanelOpen(false);
+    }
     connectStream(json.sessionId);
   }
 
@@ -932,13 +1076,20 @@ export default function HomePage() {
 
   return (
     <main className="mx-auto h-screen w-full max-w-[1600px] p-4">
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-2 flex items-center gap-2">
         <button
           className="rounded-md border border-slate-300 px-3 py-1 text-xs text-slate-700"
           type="button"
           onClick={() => setIsSessionSidebarOpen((value) => !value)}
         >
           {isSessionSidebarOpen ? "Hide Sessions" : "Show Sessions"}
+        </button>
+        <button
+          className="rounded-md border border-slate-300 px-3 py-1 text-xs text-slate-700 lg:hidden"
+          type="button"
+          onClick={() => setIsSetupPanelOpen((value) => !value)}
+        >
+          {isSetupPanelOpen ? "Hide Setup" : "Show Setup"}
         </button>
       </div>
 
@@ -973,24 +1124,100 @@ export default function HomePage() {
                   onClick={() => openSavedSession(item.id)}
                   type="button"
                 >
+                  <div className="mb-2 flex items-center gap-2">
+                    <div className="flex -space-x-2">
+                      {item.members.slice(0, 4).map((member) => (
+                        <div
+                          key={member.id}
+                          className={`relative h-8 w-8 overflow-hidden rounded-full border-2 border-white ${
+                            member.muted ? "opacity-50" : ""
+                          }`}
+                        >
+                          {member.avatarUrl ? (
+                            <Image
+                              alt={member.label}
+                              className="object-cover"
+                              fill
+                              sizes="32px"
+                              src={member.avatarUrl}
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-slate-200 text-[10px] font-semibold text-slate-700">
+                              {initialsForLabel(member.label)}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-slate-500">{item.members.length} members</p>
+                  </div>
                   <p className="font-medium">{item.title}</p>
                   <p className="mt-1 font-mono text-[10px]">{item.id}</p>
                 </button>
-                <button
-                  className="rounded-md border border-slate-300 px-2 py-1 text-[10px] text-slate-600"
-                  onClick={() => deleteSavedSession(item.id)}
-                  type="button"
-                >
-                  Delete
-                </button>
+                <div className="flex flex-col gap-1">
+                  <button
+                    className="rounded-md border border-slate-300 px-2 py-1 text-[10px] text-slate-600"
+                    onClick={() => toggleSessionMemberExpansion(item.id)}
+                    type="button"
+                  >
+                    {expandedSessionMembers[item.id] ? "Hide" : "Members"}
+                  </button>
+                  <button
+                    className="rounded-md border border-slate-300 px-2 py-1 text-[10px] text-slate-600"
+                    onClick={() => deleteSavedSession(item.id)}
+                    type="button"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
+              {expandedSessionMembers[item.id] && (
+                <div className="mt-3 space-y-2 rounded-lg border border-slate-200 bg-white/70 p-2">
+                  {item.members.map((member) => (
+                    <div key={member.id} className="flex items-center gap-2 rounded-md border border-slate-200 p-2">
+                      <div className={`relative h-10 w-10 overflow-hidden rounded-full bg-slate-100 ${member.muted ? "opacity-50" : ""}`}>
+                        {member.avatarUrl ? (
+                          <Image
+                            alt={member.label}
+                            className="object-cover"
+                            fill
+                            sizes="40px"
+                            src={member.avatarUrl}
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-slate-700">
+                            {initialsForLabel(member.label)}
+                          </div>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-medium text-slate-800">{member.label}</p>
+                        <p className="truncate text-[10px] text-slate-500">{member.model ?? "model not set"}</p>
+                      </div>
+                      <button
+                        className={`rounded-md px-2 py-1 text-[10px] ${
+                          member.muted
+                            ? "border border-emerald-300 bg-emerald-50 text-emerald-700"
+                            : "border border-amber-300 bg-amber-50 text-amber-700"
+                        }`}
+                        onClick={() => toggleParticipantMute(item.id, member.id, !member.muted)}
+                        type="button"
+                      >
+                        {member.muted ? "Unmute" : "Mute"}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
       </section>
       )}
 
-      <section className="h-full min-h-0 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <section
+        className={`${isSetupPanelOpen ? "block" : "hidden"} h-full min-h-0 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-sm lg:block`}
+      >
         <div className="flex items-center gap-4">
           <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
             <Image
@@ -1452,14 +1679,102 @@ export default function HomePage() {
         </form>
       </section>
 
-      <section className="flex h-full min-h-0 flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <section className="order-first flex h-full min-h-0 flex-col rounded-2xl border border-slate-200 bg-white shadow-sm lg:order-none">
         <header className="border-b border-slate-200 p-3">
-          <div className="mb-2 flex items-center justify-between">
-            <p className="text-sm text-slate-600">
-              Session: <span className="font-mono text-xs">{sessionId ?? "not created"}</span> | Status: {status} |
-              Round: {roundNumber}
-            </p>
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm text-slate-600">
+                Session: <span className="font-mono text-xs">{sessionId ?? "not created"}</span> | Status: {status} |
+                Round: {roundNumber}
+              </p>
+              {sessionId && activeSessionMembers.length > 0 && (
+                <div className="mt-3">
+                  <button
+                    className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-left"
+                    type="button"
+                    onClick={() => setIsChatMembersOpen((value) => !value)}
+                  >
+                    <div className="flex -space-x-2">
+                      {activeSessionMembers.slice(0, 5).map((member) => (
+                        <div
+                          key={member.id}
+                          className={`relative h-9 w-9 overflow-hidden rounded-full border-2 border-white ${
+                            member.muted ? "opacity-50" : ""
+                          }`}
+                        >
+                          {member.avatarUrl ? (
+                            <Image
+                              alt={member.label}
+                              className="object-cover"
+                              fill
+                              sizes="36px"
+                              src={member.avatarUrl}
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-slate-200 text-[10px] font-semibold text-slate-700">
+                              {initialsForLabel(member.label)}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-slate-700">
+                        {activeSessionMembers.filter((member) => !member.muted).length} active / {activeSessionMembers.length} members
+                      </p>
+                      <p className="text-[11px] text-slate-500">
+                        {isChatMembersOpen ? "Hide members" : "Show members"}
+                      </p>
+                    </div>
+                  </button>
+                  {isChatMembersOpen && (
+                    <div className="mt-2 space-y-2 rounded-xl border border-slate-200 bg-white p-2">
+                      {activeSessionMembers.map((member) => (
+                        <div key={member.id} className="flex items-center gap-3 rounded-lg border border-slate-200 p-2">
+                          <div className={`relative h-10 w-10 overflow-hidden rounded-full bg-slate-100 ${member.muted ? "opacity-50" : ""}`}>
+                            {member.avatarUrl ? (
+                              <Image
+                                alt={member.label}
+                                className="object-cover"
+                                fill
+                                sizes="40px"
+                                src={member.avatarUrl}
+                              />
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-slate-700">
+                                {initialsForLabel(member.label)}
+                              </div>
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-medium text-slate-800">{member.label}</p>
+                            <p className="truncate text-[11px] text-slate-500">{member.model ?? "model not set"}</p>
+                          </div>
+                          <button
+                            className={`rounded-md px-2 py-1 text-[11px] ${
+                              member.muted
+                                ? "border border-emerald-300 bg-emerald-50 text-emerald-700"
+                                : "border border-amber-300 bg-amber-50 text-amber-700"
+                            }`}
+                            disabled={!sessionId}
+                            onClick={() => {
+                              if (!sessionId) {
+                                return;
+                              }
+                              void toggleParticipantMute(sessionId, member.id, !member.muted);
+                            }}
+                            type="button"
+                          >
+                            {member.muted ? "Unmute" : "Mute"}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="flex items-center gap-2 self-start lg:self-auto">
               <label className="text-xs text-slate-500">Mode</label>
               <select
                 className="rounded-md border border-slate-300 px-2 py-1 text-xs"
@@ -1527,10 +1842,32 @@ export default function HomePage() {
                     {message.sourceRole === "user" &&
                       message.attachments &&
                       message.attachments.length > 0 && (
-                        <div className="mt-2 space-y-1">
+                        <div className="mt-3 space-y-2">
                           {message.attachments.map((attachment) => (
-                            <div key={attachment.attachmentId} className="text-xs opacity-90">
-                              {attachment.kind === "image" ? "Image" : "File"}: {attachment.name}
+                            <div key={attachment.attachmentId}>
+                              {isImageAttachment(attachment) ? (
+                                <button
+                                  type="button"
+                                  className="block overflow-hidden rounded-xl border border-white/20 bg-white/10 text-left"
+                                  onClick={() =>
+                                    setLightboxImage({
+                                      src: attachment.dataUrl!,
+                                      name: attachment.name
+                                    })
+                                  }
+                                >
+                                  <img
+                                    src={attachment.dataUrl}
+                                    alt={attachment.name}
+                                    className="max-h-44 w-full object-cover"
+                                  />
+                                  <div className="px-2 py-1 text-xs opacity-90">{attachment.name}</div>
+                                </button>
+                              ) : (
+                                <div className="rounded-lg border border-white/20 bg-white/10 px-2 py-1 text-xs opacity-90">
+                                  File: {attachment.name}
+                                </div>
+                              )}
                             </div>
                           ))}
                         </div>
@@ -1568,7 +1905,7 @@ export default function HomePage() {
                 <span className="rounded-full bg-slate-100 px-2 py-1 text-slate-600">All agents</span>
               ) : (
                 targetParticipantIds.map((targetId) => {
-                  const target = participants.find((participant) => participant.id === targetId);
+                  const target = activeSessionMembers.find((participant) => participant.id === targetId);
                   if (!target) {
                     return null;
                   }
@@ -1600,23 +1937,51 @@ export default function HomePage() {
           {pendingAttachments.length > 0 && (
             <div className="mb-2 flex flex-wrap gap-2">
               {pendingAttachments.map((attachment) => (
-                <button
+                <div
                   key={attachment.localId}
-                  type="button"
-                  className="rounded-full border border-slate-300 px-2 py-1 text-xs text-slate-700"
-                  onClick={() => removePendingAttachment(attachment.localId)}
+                  className="overflow-hidden rounded-xl border border-slate-300 bg-slate-50"
                 >
-                  {attachment.kind === "image" ? "image" : "file"}: {attachment.name} x
-                </button>
+                  {isImageAttachment(attachment) ? (
+                    <button
+                      type="button"
+                      className="block text-left"
+                      onClick={() =>
+                        setLightboxImage({
+                          src: attachment.dataUrl!,
+                          name: attachment.name
+                        })
+                      }
+                    >
+                      <img
+                        src={attachment.dataUrl}
+                        alt={attachment.name}
+                        className="h-24 w-24 object-cover"
+                      />
+                    </button>
+                  ) : null}
+                  <div className="flex items-center gap-2 px-2 py-1">
+                    <span className="max-w-[120px] truncate text-xs text-slate-700">
+                      {attachment.kind === "image" ? attachment.name : `file: ${attachment.name}`}
+                    </span>
+                    <button
+                      type="button"
+                      className="text-xs text-rose-600"
+                      onClick={() => removePendingAttachment(attachment.localId)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
           )}
-          <form className="flex gap-2" onSubmit={sendMessage}>
+          <form className="flex flex-col gap-2 sm:flex-row" onSubmit={sendMessage}>
             <div className="relative flex-1">
-              <input
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+              <textarea
+                className="min-h-[96px] w-full rounded-xl border border-slate-300 px-3 py-3 text-sm sm:min-h-[44px] sm:py-2"
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
+                rows={isMobileView ? 4 : 2}
                 placeholder={
                   sessionMode === "one_to_one"
                     ? "Type message, use @ to mention a specific agent"
@@ -1624,7 +1989,7 @@ export default function HomePage() {
                 }
               />
               {sessionMode === "one_to_one" && showMentionMenu && mentionCandidates.length > 0 && (
-                <div className="absolute bottom-11 left-0 z-10 w-64 rounded-md border border-slate-200 bg-white p-1 shadow-lg">
+                <div className="absolute bottom-[104px] left-0 z-10 w-64 rounded-md border border-slate-200 bg-white p-1 shadow-lg sm:bottom-14">
                   {mentionCandidates.map((candidate) => (
                     <button
                       key={candidate.id}
@@ -1638,38 +2003,62 @@ export default function HomePage() {
                 </div>
               )}
             </div>
-            <label className="cursor-pointer rounded-md border border-slate-300 px-3 py-2 text-xs text-slate-700">
-              Attach
-              <input
-                className="hidden"
-                type="file"
-                multiple
-                accept="image/*,.txt,.md,.json,.csv"
-                onChange={(event) => {
-                  void addPendingAttachments(event.target.files);
-                  event.target.value = "";
-                }}
-              />
-            </label>
-            <button
-              type="submit"
-              disabled={!sessionId || (!input.trim() && pendingAttachments.length === 0)}
-              className="rounded-md bg-ink px-4 py-2 text-sm text-white disabled:opacity-40"
-            >
-              Send
-            </button>
-            <button
-              type="button"
-              onClick={runSummarizer}
-              disabled={!sessionId || !summarizerEnabled}
-              className="rounded-md bg-accent px-4 py-2 text-sm text-white disabled:opacity-40"
-            >
-              Summarize
-            </button>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <label className="cursor-pointer rounded-md border border-slate-300 px-3 py-2 text-center text-xs text-slate-700">
+                Attach
+                <input
+                  className="hidden"
+                  type="file"
+                  multiple
+                  accept="image/*,.txt,.md,.json,.csv"
+                  onChange={(event) => {
+                    void addPendingAttachments(event.target.files);
+                    event.target.value = "";
+                  }}
+                />
+              </label>
+              <button
+                type="submit"
+                disabled={!sessionId || (!input.trim() && pendingAttachments.length === 0)}
+                className="rounded-md bg-ink px-4 py-2 text-sm text-white disabled:opacity-40"
+              >
+                Send
+              </button>
+              <button
+                type="button"
+                onClick={runSummarizer}
+                disabled={!sessionId || !summarizerEnabled}
+                className="rounded-md bg-accent px-4 py-2 text-sm text-white disabled:opacity-40"
+              >
+                Summarize
+              </button>
+            </div>
           </form>
         </div>
       </section>
       </div>
+      {lightboxImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          onClick={() => setLightboxImage(null)}
+        >
+          <div className="relative max-h-full max-w-5xl" onClick={(event) => event.stopPropagation()}>
+            <button
+              type="button"
+              className="absolute right-2 top-2 rounded-full bg-white/90 px-3 py-1 text-sm text-slate-900"
+              onClick={() => setLightboxImage(null)}
+            >
+              Close
+            </button>
+            <img
+              src={lightboxImage.src}
+              alt={lightboxImage.name}
+              className="max-h-[85vh] max-w-full rounded-2xl object-contain"
+            />
+            <p className="mt-2 text-center text-sm text-white">{lightboxImage.name}</p>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
