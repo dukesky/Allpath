@@ -1,8 +1,23 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-03-11T01:52:38.774Z",
+  "generatedAt": "2026-03-12T01:41:08.615Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "openrouter/hunter-alpha",
+      "label": "Hunter Alpha",
+      "price": "$"
+    },
+    {
+      "id": "openrouter/healer-alpha",
+      "label": "Healer Alpha",
+      "price": "$"
+    },
+    {
+      "id": "nvidia/nemotron-3-super-120b-a12b:free",
+      "label": "NVIDIA: Nemotron 3 Super (free)",
+      "price": "$"
+    },
     {
       "id": "bytedance-seed/seed-2.0-lite",
       "label": "ByteDance Seed: Seed-2.0-Lite",
