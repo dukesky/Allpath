@@ -117,6 +117,23 @@ function isImageAttachment(
   return attachment.kind === "image" && typeof attachment.dataUrl === "string" && attachment.dataUrl.length > 0;
 }
 
+function buildParticipantFromProfile(profile: AgentProfile, index: number): ParticipantForm {
+  return {
+    id: `quick-${profile.id}-${index}`,
+    label: profile.name,
+    avatarUrl: profile.avatarUrl || "",
+    storyFilter: profile.story ? profile.story : "__none__",
+    model: "openai/gpt-5-mini",
+    providerType: "openrouter",
+    useSpecificApiKey: false,
+    apiKey: "",
+    baseUrl: "",
+    roleTitle: profile.roleTitle,
+    character: profile.character,
+    profileId: profile.id
+  };
+}
+
 function ModelPicker(props: {
   selected: string;
   onSelect: (model: string) => void;
@@ -524,6 +541,27 @@ export default function HomePage() {
     return map;
   }, [dynamicCatalogModels]);
 
+  const quickStartStories = useMemo(
+    () =>
+      stories
+        .map((story) => ({
+          story,
+          members: profiles.filter((profile) => profile.story === story)
+        }))
+        .filter((entry) => entry.members.length >= 2),
+    [profiles, stories]
+  );
+
+  const quickStartApiKey = useMemo(() => {
+    if (defaultProfileApiKey.trim()) {
+      return defaultProfileApiKey.trim();
+    }
+    if (unifiedApiKey.trim()) {
+      return unifiedApiKey.trim();
+    }
+    return "";
+  }, [defaultProfileApiKey, unifiedApiKey]);
+
   const mentionCandidates = useMemo(() => {
     if (sessionMode !== "one_to_one") {
       return [];
@@ -545,6 +583,111 @@ export default function HomePage() {
     selectedPromptPresetId === CUSTOM_PROMPT_PRESET_ID
       ? customInitialPrompt
       : selectedPromptPreset?.prompt ?? customInitialPrompt;
+
+  async function createSessionFromParticipants(input: {
+    sessionParticipants: ParticipantForm[];
+    sessionModeOverride?: Mode;
+    agentInitialPromptOverride?: string;
+    globalApiKeyOverride?: string;
+    summarizerOverride?:
+      | {
+          id: string;
+          label: string;
+          avatarUrl?: string;
+          model: string;
+          roleTitle?: string;
+          character?: string;
+          provider: {
+            type: ProviderType;
+            apiKey: string;
+            baseUrl?: string;
+          };
+        }
+      | undefined;
+    sessionTitle: string;
+  }) {
+    const payload = {
+      mode: input.sessionModeOverride ?? sessionMode,
+      globalApiKey: input.globalApiKeyOverride ?? (effectiveGlobalApiKey.trim() || undefined),
+      agentInitialPrompt: input.agentInitialPromptOverride ?? resolvedAgentInitialPrompt,
+      participants: input.sessionParticipants.map((item) => ({
+        id: item.id,
+        label: item.label,
+        avatarUrl: item.avatarUrl || undefined,
+        model: item.model,
+        muted: false,
+        roleTitle: item.roleTitle || undefined,
+        character: item.character || undefined,
+        provider: {
+          type: item.providerType,
+          apiKey:
+            item.providerType === "openrouter" && apiKeyMode === "by_agent"
+              ? item.apiKey
+              : item.providerType === "custom"
+                ? item.apiKey
+                : "",
+          baseUrl: item.baseUrl || undefined
+        }
+      })),
+      summarizer: input.summarizerOverride
+    };
+
+    const response = await fetch("/api/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const json = (await response.json().catch(() => ({}))) as { error?: string; code?: string };
+      setError(json.error ?? "Failed to create session.");
+      if (json.code?.startsWith("trial_")) {
+        await refreshTrialStatus();
+      }
+      return false;
+    }
+
+    const json = (await response.json()) as {
+      sessionId: string;
+      status: string;
+      roundNumber: number;
+      mode?: Mode;
+    };
+    const members = input.sessionParticipants.map((participant) =>
+      participantToSessionMember({
+        id: participant.id,
+        label: participant.label,
+        avatarUrl: participant.avatarUrl,
+        model: participant.model,
+        muted: false
+      })
+    );
+
+    setSessionId(json.sessionId);
+    setStatus(json.status);
+    setRoundNumber(json.roundNumber);
+    if (json.mode) {
+      setSessionMode(json.mode);
+    }
+    setMessages([]);
+    setActiveSessionMembers(members);
+    setIsChatMembersOpen(false);
+    setSessionList((current) => [
+      {
+        id: json.sessionId,
+        title: input.sessionTitle,
+        createdAt: new Date().toISOString(),
+        members
+      },
+      ...current.filter((item) => item.id !== json.sessionId)
+    ]);
+    if (isMobileView) {
+      setIsSessionSidebarOpen(false);
+      setIsSetupPanelOpen(false);
+    }
+    connectStream(json.sessionId);
+    return true;
+  }
 
   function filterProfilesByStory(storyFilter: string): AgentProfile[] {
     if (storyFilter === "all") {
@@ -901,31 +1044,12 @@ export default function HomePage() {
   async function createSession(event: FormEvent) {
     event.preventDefault();
     setError("");
-
-    const payload = {
-      mode: sessionMode,
-      globalApiKey: effectiveGlobalApiKey.trim() || undefined,
-      agentInitialPrompt: resolvedAgentInitialPrompt,
-      participants: participants.map((item) => ({
-        id: item.id,
-        label: item.label,
-        avatarUrl: item.avatarUrl || undefined,
-        model: item.model,
-        muted: false,
-        roleTitle: item.roleTitle || undefined,
-        character: item.character || undefined,
-        provider: {
-          type: item.providerType,
-          apiKey:
-            item.providerType === "openrouter" && apiKeyMode === "by_agent"
-              ? item.apiKey
-              : item.providerType === "custom"
-                ? item.apiKey
-                : "",
-          baseUrl: item.baseUrl || undefined
-        }
-      })),
-      summarizer: summarizerEnabled
+    const sessionTitle = `Session ${new Date().toLocaleString()} · ${participants
+      .map((participant) => participant.label)
+      .join(", ")}`;
+    await createSessionFromParticipants({
+      sessionParticipants: participants,
+      summarizerOverride: summarizerEnabled
         ? {
             id: summarizer.id,
             label: summarizer.label,
@@ -946,66 +1070,42 @@ export default function HomePage() {
               baseUrl: summarizer.baseUrl || undefined
             }
           }
-        : undefined
-    };
-
-    const response = await fetch("/api/session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+        : undefined,
+      sessionTitle
     });
+  }
 
-    if (!response.ok) {
-      const json = (await response.json().catch(() => ({}))) as { error?: string; code?: string };
-      setError(json.error ?? "Failed to create session.");
-      if (json.code?.startsWith("trial_")) {
-        await refreshTrialStatus();
+  async function quickStartStorySession(story: string) {
+    setError("");
+    const storyProfiles = profiles.filter((profile) => profile.story === story);
+    if (storyProfiles.length < 2) {
+      setError("Quick Start requires at least 2 characters in the selected story.");
+      return;
+    }
+
+    if (!quickStartApiKey && !hasServerOpenRouterAccess) {
+      setError("Quick Start needs an OpenRouter API key. Set a default key in User Profile or use guest access first.");
+      if (isMobileView) {
+        setIsSetupPanelOpen(true);
       }
       return;
     }
 
-    const json = (await response.json()) as {
-      sessionId: string;
-      status: string;
-      roundNumber: number;
-      mode?: Mode;
-    };
-    const members = participants.map((participant) =>
-      participantToSessionMember({
-        id: participant.id,
-        label: participant.label,
-        avatarUrl: participant.avatarUrl,
-        model: participant.model,
-        muted: false
-      })
+    const sessionParticipants = storyProfiles.map((profile, index) =>
+      buildParticipantFromProfile(profile, index)
     );
-    const sessionTitle = `Session ${new Date().toLocaleString()} · ${participants
-      .map((participant) => participant.label)
-      .join(", ")}`;
 
-    setSessionId(json.sessionId);
-    setStatus(json.status);
-    setRoundNumber(json.roundNumber);
-    if (json.mode) {
-      setSessionMode(json.mode);
-    }
-    setMessages([]);
-    setActiveSessionMembers(members);
-    setIsChatMembersOpen(false);
-    setSessionList((current) => [
-      {
-        id: json.sessionId,
-        title: sessionTitle,
-        createdAt: new Date().toISOString(),
-        members
-      },
-      ...current.filter((item) => item.id !== json.sessionId)
-    ]);
-    if (isMobileView) {
-      setIsSessionSidebarOpen(false);
-      setIsSetupPanelOpen(false);
-    }
-    connectStream(json.sessionId);
+    setParticipants(sessionParticipants);
+    setSessionMode("roundtable");
+
+    await createSessionFromParticipants({
+      sessionParticipants,
+      sessionModeOverride: "roundtable",
+      agentInitialPromptOverride: DEFAULT_SESSION_RULES,
+      globalApiKeyOverride: quickStartApiKey || undefined,
+      summarizerOverride: undefined,
+      sessionTitle: `Quick Start · ${story} · ${new Date().toLocaleString()}`
+    });
   }
 
   async function sendMessage(event: FormEvent) {
@@ -1295,6 +1395,57 @@ export default function HomePage() {
             </div>
           )}
         </div>
+
+        <section className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-3">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h2 className="text-sm font-semibold text-slate-900">Quick Start</h2>
+              <p className="mt-1 text-xs text-slate-600">
+                Pick a story and create a round-table session instantly. If no OpenRouter key is available, you will be prompted to set one.
+              </p>
+            </div>
+            <span className="rounded-full bg-white px-2 py-1 text-[10px] text-slate-500">
+              One click
+            </span>
+          </div>
+          <div className="mt-3 flex gap-3 overflow-x-auto pb-1">
+            {quickStartStories.map(({ story, members }) => (
+              <div
+                key={story}
+                className="min-w-[240px] shrink-0 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
+              >
+                <div className="flex -space-x-2">
+                  {members.slice(0, 4).map((member) => (
+                    <div key={member.id} className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-white bg-slate-100">
+                      {member.avatarUrl ? (
+                        <Image
+                          alt={member.name}
+                          className="object-cover"
+                          fill
+                          sizes="40px"
+                          src={member.avatarUrl}
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-slate-700">
+                          {initialsForLabel(member.name)}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-sm font-semibold text-slate-900">{story}</p>
+                <p className="mt-1 text-xs text-slate-500">{members.length} characters ready</p>
+                <button
+                  type="button"
+                  className="mt-3 w-full rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white"
+                  onClick={() => void quickStartStorySession(story)}
+                >
+                  Start Chat
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
 
         <form className="mt-4 space-y-4" onSubmit={createSession}>
           <div className="space-y-2 rounded-xl border border-slate-200 p-3">
