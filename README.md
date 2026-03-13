@@ -2,7 +2,7 @@
 
 AllPath is a multi-agent chat prototype where one user coordinates multiple LLM agents in a shared Round Table discussion.
 
-Current release version: `0.0.14`
+Current release version: `0.0.15`
 
 Production URL: `https://all-path.com`
 
@@ -127,7 +127,7 @@ You can upsert one with:
 ```bash
 INVITE_CODE=myfriends \
 INVITE_LABEL="Friends Trial" \
-TRIAL_BUDGET_USD=1 \
+TRIAL_BUDGET_USD=2 \
 FIRESTORE_DATABASE_ID=default \
 npm run trial:invite:init
 ```

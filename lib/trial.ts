@@ -8,7 +8,7 @@ import { ProviderConfig } from "@/lib/types";
 const GUEST_COOKIE_NAME = "allpath_guest";
 const INVITE_CODES_COLLECTION = "trial_invite_codes";
 const GUESTS_COLLECTION = "trial_guests";
-const TRIAL_BUDGET_USD = 1;
+const TRIAL_BUDGET_USD = 2;
 
 export type TrialStatus = "active" | "exhausted" | "revoked";
 

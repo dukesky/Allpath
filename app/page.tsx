@@ -134,6 +134,33 @@ function buildParticipantFromProfile(profile: AgentProfile, index: number): Part
   };
 }
 
+function SetupSection(props: {
+  title: string;
+  summary?: string;
+  open: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+      <button
+        type="button"
+        className="flex w-full items-start justify-between gap-3 text-left"
+        onClick={props.onToggle}
+      >
+        <div>
+          <h2 className="text-sm font-semibold text-slate-900">{props.title}</h2>
+          {props.summary ? <p className="mt-1 text-xs text-slate-600">{props.summary}</p> : null}
+        </div>
+        <span className="rounded-full bg-white px-2 py-1 text-[10px] text-slate-500">
+          {props.open ? "Hide" : "Show"}
+        </span>
+      </button>
+      {props.open ? <div className="mt-3">{props.children}</div> : null}
+    </section>
+  );
+}
+
 function ModelPicker(props: {
   selected: string;
   onSelect: (model: string) => void;
@@ -294,7 +321,14 @@ export default function HomePage() {
   const [isSessionSidebarOpen, setIsSessionSidebarOpen] = useState(false);
   const [isSetupPanelOpen, setIsSetupPanelOpen] = useState(true);
   const [isMobileView, setIsMobileView] = useState(false);
+  const [mobileActivePanel, setMobileActivePanel] = useState<"chat" | "sessions" | "setup">("setup");
   const [isChatMembersOpen, setIsChatMembersOpen] = useState(false);
+  const [setupSections, setSetupSections] = useState({
+    quickStart: true,
+    sessionRules: true,
+    participants: false,
+    summarizer: false
+  });
   const [sessionMode, setSessionMode] = useState<Mode>("roundtable");
   const [apiKeyMode, setApiKeyMode] = useState<ApiKeyMode>("default_profile");
   const [defaultProfileApiKey, setDefaultProfileApiKey] = useState("");
@@ -352,12 +386,14 @@ export default function HomePage() {
       setIsMobileView(mobile);
       if (!mobile) {
         setIsSetupPanelOpen(true);
+      } else if (!sessionId) {
+        setMobileActivePanel("setup");
       }
     };
     syncViewport();
     media.addEventListener("change", syncViewport);
     return () => media.removeEventListener("change", syncViewport);
-  }, []);
+  }, [sessionId]);
 
   useEffect(() => {
     const parsedProfiles = parseLocalJson<AgentProfile[]>(
@@ -402,6 +438,7 @@ export default function HomePage() {
     if (activeSession) {
       setSessionId(activeSession);
       setMessages([]);
+      setMobileActivePanel("chat");
       connectStream(activeSession);
     }
 
@@ -682,8 +719,7 @@ export default function HomePage() {
       ...current.filter((item) => item.id !== json.sessionId)
     ]);
     if (isMobileView) {
-      setIsSessionSidebarOpen(false);
-      setIsSetupPanelOpen(false);
+      setMobileActivePanel("chat");
     }
     connectStream(json.sessionId);
     return true;
@@ -981,8 +1017,7 @@ export default function HomePage() {
       sessionList.find((item) => item.id === targetSessionId)?.members ?? []
     );
     if (isMobileView) {
-      setIsSessionSidebarOpen(false);
-      setIsSetupPanelOpen(false);
+      setMobileActivePanel("chat");
     }
     connectStream(targetSessionId);
   }
@@ -1001,6 +1036,7 @@ export default function HomePage() {
     setStatus("idle");
     setRoundNumber(0);
     setError("");
+    setMobileActivePanel("setup");
     localStorage.removeItem(ACTIVE_SESSION_STORAGE_KEY);
   }
 
@@ -1086,7 +1122,7 @@ export default function HomePage() {
     if (!quickStartApiKey && !hasServerOpenRouterAccess) {
       setError("Quick Start needs an OpenRouter API key. Set a default key in User Profile or use guest access first.");
       if (isMobileView) {
-        setIsSetupPanelOpen(true);
+        setMobileActivePanel("setup");
       }
       return;
     }
@@ -1175,21 +1211,30 @@ export default function HomePage() {
   }
 
   return (
-    <main className="mx-auto h-screen w-full max-w-[1600px] p-4">
-      <div className="mb-2 flex items-center gap-2">
+    <main className="mx-auto h-screen w-full max-w-[1600px] p-4 pb-24 lg:pb-4">
+      <div className="mb-3 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+        <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+          <Image
+            alt="AllPath logo"
+            className="object-contain"
+            fill
+            priority
+            sizes="48px"
+            src="/allpath-logo-mark.png"
+          />
+        </div>
+        <div className="min-w-0">
+          <h1 className="text-xl font-semibold">AllPath</h1>
+          <p className="text-sm text-slate-600">Multi-agent discussion workspace.</p>
+        </div>
+      </div>
+      <div className="mb-2 hidden items-center gap-2 lg:flex">
         <button
           className="rounded-md border border-slate-300 px-3 py-1 text-xs text-slate-700"
           type="button"
           onClick={() => setIsSessionSidebarOpen((value) => !value)}
         >
           {isSessionSidebarOpen ? "Hide Sessions" : "Show Sessions"}
-        </button>
-        <button
-          className="rounded-md border border-slate-300 px-3 py-1 text-xs text-slate-700 lg:hidden"
-          type="button"
-          onClick={() => setIsSetupPanelOpen((value) => !value)}
-        >
-          {isSetupPanelOpen ? "Hide Setup" : "Show Setup"}
         </button>
       </div>
 
@@ -1198,7 +1243,7 @@ export default function HomePage() {
           isSessionSidebarOpen ? "lg:grid-cols-[280px_380px_1fr]" : "lg:grid-cols-[380px_1fr]"
         }`}
       >
-      {isSessionSidebarOpen && (
+      {((isMobileView && mobileActivePanel === "sessions") || (!isMobileView && isSessionSidebarOpen)) && (
       <section className="h-full min-h-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <h2 className="text-sm font-semibold text-slate-700">Sessions</h2>
         <p className="mt-1 text-xs text-slate-500">Open a previous session and continue chatting.</p>
@@ -1316,24 +1361,8 @@ export default function HomePage() {
       )}
 
       <section
-        className={`${isSetupPanelOpen ? "block" : "hidden"} h-full min-h-0 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-sm lg:block`}
+        className={`${(!isMobileView && isSetupPanelOpen) || (isMobileView && mobileActivePanel === "setup") ? "block" : "hidden"} h-full min-h-0 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-sm lg:block`}
       >
-        <div className="flex items-center gap-4">
-          <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
-            <Image
-              alt="AllPath logo"
-              className="object-contain"
-              fill
-              priority
-              sizes="64px"
-              src="/allpath-logo-mark.png"
-            />
-          </div>
-          <div>
-            <h1 className="text-xl font-semibold">AllPath</h1>
-            <p className="mt-1 text-sm text-slate-600">Multi-agent discussion workspace.</p>
-          </div>
-        </div>
         <div className="mt-1 flex gap-3">
           <Link className="inline-block text-sm font-medium text-primary" href="/agents">
             Open Agent Personality Studio
@@ -1396,59 +1425,65 @@ export default function HomePage() {
           )}
         </div>
 
-        <section className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-3">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h2 className="text-sm font-semibold text-slate-900">Quick Start</h2>
-              <p className="mt-1 text-xs text-slate-600">
-                Pick a story and create a round-table session instantly. If no OpenRouter key is available, you will be prompted to set one.
-              </p>
-            </div>
-            <span className="rounded-full bg-white px-2 py-1 text-[10px] text-slate-500">
-              One click
-            </span>
-          </div>
-          <div className="mt-3 flex gap-3 overflow-x-auto pb-1">
-            {quickStartStories.map(({ story, members }) => (
-              <div
-                key={story}
-                className="min-w-[240px] shrink-0 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
-              >
-                <div className="flex -space-x-2">
-                  {members.slice(0, 4).map((member) => (
-                    <div key={member.id} className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-white bg-slate-100">
-                      {member.avatarUrl ? (
-                        <Image
-                          alt={member.name}
-                          className="object-cover"
-                          fill
-                          sizes="40px"
-                          src={member.avatarUrl}
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-slate-700">
-                          {initialsForLabel(member.name)}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <p className="mt-3 text-sm font-semibold text-slate-900">{story}</p>
-                <p className="mt-1 text-xs text-slate-500">{members.length} characters ready</p>
-                <button
-                  type="button"
-                  className="mt-3 w-full rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white"
-                  onClick={() => void quickStartStorySession(story)}
+        <div className="mt-4">
+          <SetupSection
+            title="Quick Start"
+            summary="Pick a story and create a round-table session instantly. If no OpenRouter key is available, you will be prompted to set one."
+            open={setupSections.quickStart}
+            onToggle={() =>
+              setSetupSections((current) => ({ ...current, quickStart: !current.quickStart }))
+            }
+          >
+            <div className="flex gap-3 overflow-x-auto pb-1">
+              {quickStartStories.map(({ story, members }) => (
+                <div
+                  key={story}
+                  className="min-w-[240px] shrink-0 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
                 >
-                  Start Chat
-                </button>
-              </div>
-            ))}
-          </div>
-        </section>
+                  <div className="flex -space-x-2">
+                    {members.slice(0, 4).map((member) => (
+                      <div key={member.id} className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-white bg-slate-100">
+                        {member.avatarUrl ? (
+                          <Image
+                            alt={member.name}
+                            className="object-cover"
+                            fill
+                            sizes="40px"
+                            src={member.avatarUrl}
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-slate-700">
+                            {initialsForLabel(member.name)}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-3 text-sm font-semibold text-slate-900">{story}</p>
+                  <p className="mt-1 text-xs text-slate-500">{members.length} characters ready</p>
+                  <button
+                    type="button"
+                    className="mt-3 w-full rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white"
+                    onClick={() => void quickStartStorySession(story)}
+                  >
+                    Start Chat
+                  </button>
+                </div>
+              ))}
+            </div>
+          </SetupSection>
+        </div>
 
         <form className="mt-4 space-y-4" onSubmit={createSession}>
-          <div className="space-y-2 rounded-xl border border-slate-200 p-3">
+          <SetupSection
+            title="Session Rules"
+            summary="Prompt preset and API key mode used when you create a manual session."
+            open={setupSections.sessionRules}
+            onToggle={() =>
+              setSetupSections((current) => ({ ...current, sessionRules: !current.sessionRules }))
+            }
+          >
+          <div className="space-y-2">
             <p className="text-sm font-semibold">Agent Initial Prompt (Session Rules)</p>
             <select
               className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
@@ -1519,7 +1554,16 @@ export default function HomePage() {
               )}
             </div>
           </div>
+          </SetupSection>
 
+          <SetupSection
+            title="Participants"
+            summary={`${participants.length} configured participants.`}
+            open={setupSections.participants}
+            onToggle={() =>
+              setSetupSections((current) => ({ ...current, participants: !current.participants }))
+            }
+          >
           {participants.map((participant, index) => {
             const selectedProfile =
               profiles.find((profile) => profile.id === participant.profileId) ?? null;
@@ -1665,6 +1709,7 @@ export default function HomePage() {
           >
             Add Participant
           </button>
+          </SetupSection>
 
           <label className="flex items-center gap-2 text-sm">
             <input
@@ -1676,7 +1721,15 @@ export default function HomePage() {
           </label>
 
           {summarizerEnabled && (
-            <div className="space-y-2 rounded-xl border border-slate-200 p-3">
+            <SetupSection
+              title="Summarizer"
+              summary="Optional final synthesis agent."
+              open={setupSections.summarizer}
+              onToggle={() =>
+                setSetupSections((current) => ({ ...current, summarizer: !current.summarizer }))
+              }
+            >
+            <div className="space-y-2">
               <p className="text-sm font-semibold">Summarizer</p>
               {(() => {
                 const selectedProfile =
@@ -1818,6 +1871,7 @@ export default function HomePage() {
                 );
               })()}
             </div>
+            </SetupSection>
           )}
 
           <button
@@ -1830,7 +1884,9 @@ export default function HomePage() {
         </form>
       </section>
 
-      <section className="order-first flex h-full min-h-0 flex-col rounded-2xl border border-slate-200 bg-white shadow-sm lg:order-none">
+      <section
+        className={`${isMobileView && mobileActivePanel !== "chat" ? "hidden" : "flex"} order-first h-full min-h-0 flex-col rounded-2xl border border-slate-200 bg-white shadow-sm lg:order-none`}
+      >
         <header className="border-b border-slate-200 p-3">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
             <div className="min-w-0 flex-1">
@@ -2188,6 +2244,39 @@ export default function HomePage() {
         </div>
       </section>
       </div>
+      {isMobileView && (
+        <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur">
+          <div className="mx-auto flex max-w-[1600px] items-center justify-around gap-2">
+            <button
+              type="button"
+              className={`flex-1 rounded-xl px-3 py-2 text-sm font-medium ${
+                mobileActivePanel === "chat" ? "bg-primary text-white" : "bg-slate-100 text-slate-700"
+              }`}
+              onClick={() => setMobileActivePanel(sessionId ? "chat" : "setup")}
+            >
+              Chat
+            </button>
+            <button
+              type="button"
+              className={`flex-1 rounded-xl px-3 py-2 text-sm font-medium ${
+                mobileActivePanel === "sessions" ? "bg-primary text-white" : "bg-slate-100 text-slate-700"
+              }`}
+              onClick={() => setMobileActivePanel("sessions")}
+            >
+              Sessions
+            </button>
+            <button
+              type="button"
+              className={`flex-1 rounded-xl px-3 py-2 text-sm font-medium ${
+                mobileActivePanel === "setup" ? "bg-primary text-white" : "bg-slate-100 text-slate-700"
+              }`}
+              onClick={() => setMobileActivePanel("setup")}
+            >
+              Setup
+            </button>
+          </div>
+        </nav>
+      )}
       {lightboxImage && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
