@@ -1,8 +1,18 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-03-12T01:41:08.615Z",
+  "generatedAt": "2026-03-13T01:56:50.411Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "x-ai/grok-4.20-multi-agent-beta",
+      "label": "xAI: Grok 4.20 Multi-Agent Beta",
+      "price": "$$"
+    },
+    {
+      "id": "x-ai/grok-4.20-beta",
+      "label": "xAI: Grok 4.20 Beta",
+      "price": "$$"
+    },
     {
       "id": "openrouter/hunter-alpha",
       "label": "Hunter Alpha",
