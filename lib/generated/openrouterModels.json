@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-03-13T01:56:50.411Z",
+  "generatedAt": "2026-03-16T02:12:34.048Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "z-ai/glm-5-turbo",
+      "label": "Z.ai: GLM 5 Turbo",
+      "price": "$$"
+    },
     {
       "id": "x-ai/grok-4.20-multi-agent-beta",
       "label": "xAI: Grok 4.20 Multi-Agent Beta",
@@ -136,6 +141,11 @@
     {
       "id": "minimax/minimax-m2.5",
       "label": "MiniMax: MiniMax M2.5",
+      "price": "$"
+    },
+    {
+      "id": "minimax/minimax-m2.5:free",
+      "label": "MiniMax: MiniMax M2.5 (free)",
       "price": "$"
     },
     {
