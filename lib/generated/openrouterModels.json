@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-03-16T02:12:34.048Z",
+  "generatedAt": "2026-03-17T13:08:46.126Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "mistralai/mistral-small-2603",
+      "label": "Mistral: Mistral Small 4",
+      "price": "$"
+    },
     {
       "id": "z-ai/glm-5-turbo",
       "label": "Z.ai: GLM 5 Turbo",
