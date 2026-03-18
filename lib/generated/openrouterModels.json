@@ -1,8 +1,18 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-03-17T13:08:46.126Z",
+  "generatedAt": "2026-03-18T02:03:38.805Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "openai/gpt-5.4-nano",
+      "label": "OpenAI: GPT-5.4 Nano",
+      "price": "$"
+    },
+    {
+      "id": "openai/gpt-5.4-mini",
+      "label": "OpenAI: GPT-5.4 Mini",
+      "price": "$$"
+    },
     {
       "id": "mistralai/mistral-small-2603",
       "label": "Mistral: Mistral Small 4",
