@@ -1,8 +1,23 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-03-18T02:03:38.805Z",
+  "generatedAt": "2026-03-19T02:04:42.491Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "xiaomi/mimo-v2-omni",
+      "label": "Xiaomi: MiMo-V2-Omni",
+      "price": "$"
+    },
+    {
+      "id": "xiaomi/mimo-v2-pro",
+      "label": "Xiaomi: MiMo-V2-Pro",
+      "price": "$$"
+    },
+    {
+      "id": "minimax/minimax-m2.7",
+      "label": "MiniMax: MiniMax M2.7",
+      "price": "$"
+    },
     {
       "id": "openai/gpt-5.4-nano",
       "label": "OpenAI: GPT-5.4 Nano",
@@ -34,13 +49,8 @@
       "price": "$$"
     },
     {
-      "id": "openrouter/hunter-alpha",
-      "label": "Hunter Alpha",
-      "price": "$"
-    },
-    {
-      "id": "openrouter/healer-alpha",
-      "label": "Healer Alpha",
+      "id": "nvidia/nemotron-3-super-120b-a12b",
+      "label": "NVIDIA: Nemotron 3 Super",
       "price": "$"
     },
     {
