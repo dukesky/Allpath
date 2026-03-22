@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-03-19T02:04:42.491Z",
+  "generatedAt": "2026-03-22T02:04:54.152Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1157,6 +1157,11 @@
       "id": "x-ai/grok-3-beta",
       "label": "xAI: Grok 3 Beta",
       "price": "$$"
+    },
+    {
+      "id": "nvidia/llama-3.1-nemotron-ultra-253b-v1",
+      "label": "NVIDIA: Llama 3.1 Nemotron Ultra 253B v1",
+      "price": "$"
     },
     {
       "id": "meta-llama/llama-4-maverick",
