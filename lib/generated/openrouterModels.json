@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-03-22T02:04:54.152Z",
+  "generatedAt": "2026-03-23T02:05:33.704Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -264,11 +264,6 @@
       "price": "$$"
     },
     {
-      "id": "allenai/molmo-2-8b",
-      "label": "AllenAI: Molmo2 8B",
-      "price": "$"
-    },
-    {
       "id": "allenai/olmo-3.1-32b-instruct",
       "label": "AllenAI: Olmo 3.1 32B Instruct",
       "price": "$"
@@ -431,16 +426,6 @@
     {
       "id": "allenai/olmo-3-32b-think",
       "label": "AllenAI: Olmo 3 32B Think",
-      "price": "$"
-    },
-    {
-      "id": "allenai/olmo-3-7b-instruct",
-      "label": "AllenAI: Olmo 3 7B Instruct",
-      "price": "$"
-    },
-    {
-      "id": "allenai/olmo-3-7b-think",
-      "label": "AllenAI: Olmo 3 7B Think",
       "price": "$"
     },
     {
