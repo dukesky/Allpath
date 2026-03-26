@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-03-23T02:05:33.704Z",
+  "generatedAt": "2026-03-26T02:09:12.081Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "reka/reka-edge",
+      "label": "Reka Edge",
+      "price": "$"
+    },
     {
       "id": "xiaomi/mimo-v2-omni",
       "label": "Xiaomi: MiMo-V2-Omni",
@@ -437,11 +442,6 @@
       "id": "x-ai/grok-4.1-fast",
       "label": "xAI: Grok 4.1 Fast",
       "price": "$"
-    },
-    {
-      "id": "google/gemini-3-pro-preview",
-      "label": "Google: Gemini 3 Pro Preview",
-      "price": "$$"
     },
     {
       "id": "deepcogito/cogito-v2.1-671b",
