@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-03-28T02:01:40.118Z",
+  "generatedAt": "2026-03-29T02:13:06.895Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1059,11 +1059,6 @@
       "price": "$"
     },
     {
-      "id": "qwen/qwen3-4b:free",
-      "label": "Qwen: Qwen3 4B (free)",
-      "price": "$"
-    },
-    {
       "id": "meta-llama/llama-guard-4-12b",
       "label": "Meta: Llama Guard 4 12B",
       "price": "$"
@@ -1181,11 +1176,6 @@
     {
       "id": "mistralai/mistral-small-3.1-24b-instruct",
       "label": "Mistral: Mistral Small 3.1 24B",
-      "price": "$"
-    },
-    {
-      "id": "mistralai/mistral-small-3.1-24b-instruct:free",
-      "label": "Mistral: Mistral Small 3.1 24B (free)",
       "price": "$"
     },
     {
