@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-03-31T02:10:44.266Z",
+  "generatedAt": "2026-03-31T13:15:14.436Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -486,11 +486,6 @@
     {
       "id": "openai/gpt-5.1-codex-mini",
       "label": "OpenAI: GPT-5.1-Codex-Mini",
-      "price": "$"
-    },
-    {
-      "id": "kwaipilot/kat-coder-pro",
-      "label": "Kwaipilot: KAT-Coder-Pro V1",
       "price": "$"
     },
     {
