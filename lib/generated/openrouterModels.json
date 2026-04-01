@@ -1,8 +1,18 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-03-31T13:15:14.436Z",
+  "generatedAt": "2026-04-01T02:28:09.563Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "x-ai/grok-4.20-multi-agent",
+      "label": "xAI: Grok 4.20 Multi-Agent",
+      "price": "$$"
+    },
+    {
+      "id": "x-ai/grok-4.20",
+      "label": "xAI: Grok 4.20",
+      "price": "$$"
+    },
     {
       "id": "google/lyria-3-pro-preview",
       "label": "Google: Lyria 3 Pro Preview",
@@ -61,16 +71,6 @@
     {
       "id": "z-ai/glm-5-turbo",
       "label": "Z.ai: GLM 5 Turbo",
-      "price": "$$"
-    },
-    {
-      "id": "x-ai/grok-4.20-multi-agent-beta",
-      "label": "xAI: Grok 4.20 Multi-Agent Beta",
-      "price": "$$"
-    },
-    {
-      "id": "x-ai/grok-4.20-beta",
-      "label": "xAI: Grok 4.20 Beta",
       "price": "$$"
     },
     {
