@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-02T02:07:12.603Z",
+  "generatedAt": "2026-04-02T13:10:16.338Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "qwen/qwen3.6-plus:free",
+      "label": "Qwen: Qwen3.6 Plus (free)",
+      "price": "$"
+    },
     {
       "id": "z-ai/glm-5v-turbo",
       "label": "Z.ai: GLM 5V Turbo",
