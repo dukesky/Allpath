@@ -1212,20 +1212,35 @@ export default function HomePage() {
 
   return (
     <main className="mx-auto h-screen w-full max-w-[1600px] p-4 pb-24 lg:pb-4">
-      <div className="mb-3 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
-        <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
-          <Image
-            alt="AllPath logo"
-            className="object-contain"
-            fill
-            priority
-            sizes="48px"
-            src="/allpath-logo-mark.png"
-          />
+      <div className="mb-3 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+            <Image
+              alt="AllPath logo"
+              className="object-contain"
+              fill
+              priority
+              sizes="48px"
+              src="/allpath-logo-mark.png"
+            />
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-semibold">AllPath</h1>
+              <span className="rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
+                Beta
+              </span>
+            </div>
+            <p className="text-sm text-slate-600">Multi-agent discussion workspace.</p>
+          </div>
         </div>
-        <div className="min-w-0">
-          <h1 className="text-xl font-semibold">AllPath</h1>
-          <p className="text-sm text-slate-600">Multi-agent discussion workspace.</p>
+        <div className="flex items-center gap-4 text-sm font-medium text-slate-600">
+          <Link className="transition hover:text-primary" href="/about">
+            What is AllPath
+          </Link>
+          <Link className="transition hover:text-primary" href="/contact">
+            Contact
+          </Link>
         </div>
       </div>
       <div className="mb-2 hidden items-center gap-2 lg:flex">
