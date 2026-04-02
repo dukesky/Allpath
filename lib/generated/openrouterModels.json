@@ -1,8 +1,18 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-01T02:28:09.563Z",
+  "generatedAt": "2026-04-02T02:07:12.603Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "z-ai/glm-5v-turbo",
+      "label": "Z.ai: GLM 5V Turbo",
+      "price": "$$"
+    },
+    {
+      "id": "arcee-ai/trinity-large-thinking",
+      "label": "Arcee AI: Trinity Large Thinking",
+      "price": "$"
+    },
     {
       "id": "x-ai/grok-4.20-multi-agent",
       "label": "xAI: Grok 4.20 Multi-Agent",
@@ -34,7 +44,7 @@
       "price": "$"
     },
     {
-      "id": "reka/reka-edge",
+      "id": "rekaai/reka-edge",
       "label": "Reka Edge",
       "price": "$"
     },
@@ -1230,7 +1240,7 @@
     },
     {
       "id": "rekaai/reka-flash-3",
-      "label": "Reka: Flash 3",
+      "label": "Reka Flash 3",
       "price": "$"
     },
     {
