@@ -1,8 +1,18 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-02T02:07:12.603Z",
+  "generatedAt": "2026-04-03T02:09:00.093Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "google/gemma-4-31b-it",
+      "label": "Google: Gemma 4 31B",
+      "price": "$"
+    },
+    {
+      "id": "qwen/qwen3.6-plus:free",
+      "label": "Qwen: Qwen3.6 Plus (free)",
+      "price": "$"
+    },
     {
       "id": "z-ai/glm-5v-turbo",
       "label": "Z.ai: GLM 5V Turbo",
@@ -31,11 +41,6 @@
     {
       "id": "google/lyria-3-clip-preview",
       "label": "Google: Lyria 3 Clip Preview",
-      "price": "$"
-    },
-    {
-      "id": "qwen/qwen3.6-plus-preview:free",
-      "label": "Qwen: Qwen3.6 Plus Preview (free)",
       "price": "$"
     },
     {
@@ -541,16 +546,6 @@
     {
       "id": "qwen/qwen3-vl-32b-instruct",
       "label": "Qwen: Qwen3 VL 32B Instruct",
-      "price": "$"
-    },
-    {
-      "id": "liquid/lfm2-8b-a1b",
-      "label": "LiquidAI: LFM2-8B-A1B",
-      "price": "$"
-    },
-    {
-      "id": "liquid/lfm-2.2-6b",
-      "label": "LiquidAI: LFM2-2.6B",
       "price": "$"
     },
     {
