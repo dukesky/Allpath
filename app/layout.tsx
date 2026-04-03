@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "AllPath",
-  description: "Multi-agent discussion workspace"
+  description: "Where many minds find one path."
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
