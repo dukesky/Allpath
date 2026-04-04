@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const CONTACT_EMAIL = "contact@all-path.com";
+const CONTACT_EMAIL = "0tianzhang0@gmail.com";
 
 export default function ContactPage() {
   const [copied, setCopied] = useState(false);
