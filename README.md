@@ -1,15 +1,16 @@
-# AllPath MVP
+# AllPath
 
 AllPath is a multi-agent chat prototype where one user coordinates multiple LLM agents in a shared Round Table discussion.
 
-Current release version: `0.0.15`
+Current release version: `0.0.16`
 
 Production URL: `https://all-path.com`
 
-## MVP Scope
+## Current Scope
 
 This version focuses on a practical first release:
 
+- Public landing page plus dedicated `/chat`, `/about`, and `/contact` pages
 - Round Table orchestration (sequential multi-agent turns)
 - OpenRouter + custom OpenAI-compatible provider support
 - Real-time token streaming to UI via SSE
@@ -29,7 +30,10 @@ This version focuses on a practical first release:
 
 ## Project Structure
 
-- `app/page.tsx`: main chat + session setup UI
+- `app/page.tsx`: public landing page
+- `app/chat/page.tsx`: main chat + session setup UI
+- `app/about/page.tsx`: product overview and roadmap page
+- `app/contact/page.tsx`: contact and partnership page
 - `app/agents/page.tsx`: personality/role profile editor
 - `app/api/session/route.ts`: create session
 - `app/api/session/[id]/message/route.ts`: post user message and trigger orchestration
@@ -61,7 +65,9 @@ cp .env.example .env
 npm run dev
 ```
 
-Open: `http://localhost:3000`
+Open landing page: `http://localhost:3000`
+
+Interactive chat: `http://localhost:3000/chat`
 
 Production: `https://all-path.com`
 
