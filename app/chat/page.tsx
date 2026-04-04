@@ -54,6 +54,15 @@ interface TrialStatusResponse {
   hasPersonalOpenRouterKey: boolean;
 }
 
+function remainingTrialPercent(status: TrialStatusResponse | null): number {
+  const total = Number(status?.trialBudgetUsd ?? 0);
+  const remaining = Number(status?.remainingBudgetUsd ?? 0);
+  if (!Number.isFinite(total) || total <= 0) {
+    return 0;
+  }
+  return Math.max(0, Math.min(100, Math.round((remaining / total) * 100)));
+}
+
 type ParticipantForm = {
   id: string;
   label: string;
@@ -1395,7 +1404,7 @@ export default function HomePage() {
             >
               <p className="text-sm font-semibold text-amber-900">Friend Trial Access</p>
               <p className="mt-1 text-xs text-amber-800">
-                Enter the invite code to unlock your free starter budget. After that, this browser can try the app without setting an API key.
+                Enter an invite code to unlock trial access. Active browsers cannot redeem again. Exhausted browsers can redeem a new code to refresh access.
               </p>
               <div className="mt-3 flex gap-2">
                 <input
@@ -1431,7 +1440,7 @@ export default function HomePage() {
                     : "Free trial budget is exhausted"}
               </p>
               <p className="mt-1 text-xs">
-                Remaining budget: ${Number(trialStatus.remainingBudgetUsd ?? 0).toFixed(2)}
+                Trial remaining: {remainingTrialPercent(trialStatus)}%
                 {!trialStatus.hasPersonalOpenRouterKey && trialStatus.trialStatus !== "active"
                   ? " . Add your own OpenRouter key in User Profile to continue."
                   : ""}

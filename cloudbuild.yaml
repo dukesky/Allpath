@@ -2,6 +2,12 @@ substitutions:
   _SERVICE_NAME: allpath-web
   _REGION: us-central1
   _IMAGE_TAG: latest
+  _FIRESTORE_DATABASE_ID: default
+  _OPENROUTER_SITE_URL: https://all-path.com
+  _OPENROUTER_APP_NAME: AllPath
+  _OPENROUTER_API_KEY_SECRET: OPENROUTER_API_KEY
+  _TRIAL_COOKIE_SECRET_NAME: TRIAL_COOKIE_SECRET
+  _TRIAL_ENCRYPTION_SECRET_NAME: TRIAL_ENCRYPTION_SECRET
 
 steps:
   - id: build-image
@@ -33,7 +39,9 @@ steps:
       - managed
       - --allow-unauthenticated
       - --set-env-vars
-      - NODE_ENV=production
+      - NODE_ENV=production,FIRESTORE_DATABASE_ID=${_FIRESTORE_DATABASE_ID},OPENROUTER_SITE_URL=${_OPENROUTER_SITE_URL},OPENROUTER_APP_NAME=${_OPENROUTER_APP_NAME}
+      - --set-secrets
+      - OPENROUTER_API_KEY=${_OPENROUTER_API_KEY_SECRET}:latest,TRIAL_COOKIE_SECRET=${_TRIAL_COOKIE_SECRET_NAME}:latest,TRIAL_ENCRYPTION_SECRET=${_TRIAL_ENCRYPTION_SECRET_NAME}:latest
 
 images:
   - gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${_IMAGE_TAG}

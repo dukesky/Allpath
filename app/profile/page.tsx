@@ -20,6 +20,15 @@ interface TrialStatusResponse {
   hasPersonalOpenRouterKey: boolean;
 }
 
+function remainingTrialPercent(status: TrialStatusResponse | null): number {
+  const total = Number(status?.trialBudgetUsd ?? 0);
+  const remaining = Number(status?.remainingBudgetUsd ?? 0);
+  if (!Number.isFinite(total) || total <= 0) {
+    return 0;
+  }
+  return Math.max(0, Math.min(100, Math.round((remaining / total) * 100)));
+}
+
 function uid(): string {
   return Math.random().toString(36).slice(2, 10);
 }
@@ -166,10 +175,7 @@ export default function ProfilePage() {
           {trialStatus?.available && !trialStatus.requiresInviteCode && (
             <>
               <p>Trial status: {trialStatus.trialStatus ?? "unknown"}</p>
-              <p>
-                Remaining trial budget: $
-                {Number(trialStatus.remainingBudgetUsd ?? 0).toFixed(2)}
-              </p>
+              <p>Remaining trial budget: {remainingTrialPercent(trialStatus)}%</p>
               <p>Server-backed personal key saved: {trialStatus.hasPersonalOpenRouterKey ? "yes" : "no"}</p>
             </>
           )}

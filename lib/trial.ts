@@ -61,6 +61,10 @@ function nowIso(): string {
   return new Date().toISOString();
 }
 
+function normalizeInviteCode(code: string): string {
+  return code.trim().toLowerCase();
+}
+
 function roundUsd(amount: number): number {
   if (!Number.isFinite(amount)) {
     return 0;
@@ -73,7 +77,7 @@ function getGuestRef(guestId: string) {
 }
 
 function getInviteCodeRef(code: string) {
-  return getFirestoreDb().collection(INVITE_CODES_COLLECTION).doc(code.trim());
+  return getFirestoreDb().collection(INVITE_CODES_COLLECTION).doc(normalizeInviteCode(code));
 }
 
 export function toStatusPayload(guest: TrialGuestRecord | null, available = true): TrialStatusPayload {
@@ -156,19 +160,75 @@ export async function getTrialStatusForRequest(): Promise<TrialStatusPayload> {
 
 export async function redeemInviteCode(code: string): Promise<{ guest: TrialGuestRecord; cookieValue: string }> {
   const existingGuest = await getGuestFromCookie();
-  if (existingGuest) {
+  const normalizedCode = normalizeInviteCode(code);
+  if (existingGuest && existingGuest.trialStatus === "active") {
+    throw new TrialAccessError(
+      "This browser already has active trial access. Use it up first or add your own OpenRouter key.",
+      "trial_already_active",
+      409
+    );
+  }
+
+  if (existingGuest && existingGuest.trialStatus === "revoked") {
+    throw new TrialAccessError(
+      "This browser's guest trial is revoked and cannot redeem another invite code.",
+      "trial_revoked",
+      403
+    );
+  }
+
+  if (!normalizedCode) {
+    throw new TrialAccessError("Invite code is required.", "invite_code_required", 400);
+  }
+
+  if (
+    existingGuest &&
+    normalizeInviteCode(existingGuest.redeemedCode) === normalizedCode
+  ) {
+    throw new TrialAccessError(
+      "This invite code has already been used in this browser.",
+      "invite_code_already_used",
+      409
+    );
+  }
+
+  if (existingGuest && existingGuest.trialStatus === "exhausted") {
+    const inviteRef = getInviteCodeRef(normalizedCode);
+    const inviteSnapshot = await inviteRef.get();
+    if (!inviteSnapshot.exists) {
+      throw new TrialAccessError("Invite code is invalid.", "invite_code_invalid", 404);
+    }
+
+    const invite = inviteSnapshot.data() as TrialInviteCodeRecord;
+    if (!invite.enabled) {
+      throw new TrialAccessError("Invite code is disabled.", "invite_code_disabled", 403);
+    }
+
+    const nextGuest: TrialGuestRecord = {
+      ...existingGuest,
+      redeemedCode: normalizedCode,
+      trialBudgetUsd: roundUsd(invite.trialBudgetUsd ?? TRIAL_BUDGET_USD),
+      trialSpentUsd: 0,
+      trialStatus: "active",
+      lastSeenAt: nowIso()
+    };
+
+    await getGuestRef(existingGuest.guestId).set(nextGuest, { merge: true });
+    await inviteRef.set(
+      {
+        redeemedCount: FieldValue.increment(1),
+        updatedAt: nowIso()
+      },
+      { merge: true }
+    );
+
     return {
-      guest: existingGuest,
+      guest: nextGuest,
       cookieValue: signGuestCookie(existingGuest.guestId)
     };
   }
 
-  const trimmed = code.trim();
-  if (!trimmed) {
-    throw new TrialAccessError("Invite code is required.", "invite_code_required", 400);
-  }
-
-  const inviteRef = getInviteCodeRef(trimmed);
+  const inviteRef = getInviteCodeRef(normalizedCode);
   const inviteSnapshot = await inviteRef.get();
   if (!inviteSnapshot.exists) {
     throw new TrialAccessError("Invite code is invalid.", "invite_code_invalid", 404);
@@ -182,7 +242,7 @@ export async function redeemInviteCode(code: string): Promise<{ guest: TrialGues
   const guestId = randomUUID();
   const guest: TrialGuestRecord = {
     guestId,
-    redeemedCode: trimmed,
+    redeemedCode: normalizedCode,
     trialBudgetUsd: roundUsd(invite.trialBudgetUsd ?? TRIAL_BUDGET_USD),
     trialSpentUsd: 0,
     trialStatus: "active",

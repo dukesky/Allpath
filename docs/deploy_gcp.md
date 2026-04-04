@@ -35,20 +35,43 @@ PROJECT_ID=allpath REGION=us-central1 SERVICE_NAME=allpath-web ./deploy.sh
 IMAGE_TAG=v0.0.5 ./deploy.sh
 ```
 
-## 3) Set OpenRouter key (recommended via Secret Manager)
+## 3) One-time Secret Manager setup
 
-Create secret:
+Create or update the secrets used by Cloud Run:
 
 ```bash
-echo -n "YOUR_OPENROUTER_API_KEY" | $GCLOUD_BIN secrets create OPENROUTER_API_KEY --data-file=-
+printf '%s' 'YOUR_OPENROUTER_API_KEY' | $GCLOUD_BIN secrets create OPENROUTER_API_KEY --data-file=- 2>/dev/null || \
+printf '%s' 'YOUR_OPENROUTER_API_KEY' | $GCLOUD_BIN secrets versions add OPENROUTER_API_KEY --data-file=-
+
+printf '%s' 'YOUR_TRIAL_COOKIE_SECRET' | $GCLOUD_BIN secrets create TRIAL_COOKIE_SECRET --data-file=- 2>/dev/null || \
+printf '%s' 'YOUR_TRIAL_COOKIE_SECRET' | $GCLOUD_BIN secrets versions add TRIAL_COOKIE_SECRET --data-file=-
+
+printf '%s' 'YOUR_TRIAL_ENCRYPTION_SECRET' | $GCLOUD_BIN secrets create TRIAL_ENCRYPTION_SECRET --data-file=- 2>/dev/null || \
+printf '%s' 'YOUR_TRIAL_ENCRYPTION_SECRET' | $GCLOUD_BIN secrets versions add TRIAL_ENCRYPTION_SECRET --data-file=-
 ```
 
-Grant Cloud Run service account access, then redeploy with:
+Grant the Cloud Run runtime service account access to these secrets if it does not already have it.
+
+After that, every `./deploy.sh` run will automatically configure:
+
+- `NODE_ENV=production`
+- `FIRESTORE_DATABASE_ID=default`
+- `OPENROUTER_SITE_URL=https://all-path.com`
+- `OPENROUTER_APP_NAME=AllPath`
+- `OPENROUTER_API_KEY` from Secret Manager
+- `TRIAL_COOKIE_SECRET` from Secret Manager
+- `TRIAL_ENCRYPTION_SECRET` from Secret Manager
+
+Optional overrides for custom secret names or values:
 
 ```bash
-$GCLOUD_BIN run services update allpath-web \
-  --region us-central1 \
-  --set-secrets OPENROUTER_API_KEY=OPENROUTER_API_KEY:latest
+FIRESTORE_DATABASE_ID=default \
+OPENROUTER_SITE_URL=https://all-path.com \
+OPENROUTER_APP_NAME=AllPath \
+OPENROUTER_API_KEY_SECRET=OPENROUTER_API_KEY \
+TRIAL_COOKIE_SECRET_NAME=TRIAL_COOKIE_SECRET \
+TRIAL_ENCRYPTION_SECRET_NAME=TRIAL_ENCRYPTION_SECRET \
+./deploy.sh
 ```
 
 ## Notes

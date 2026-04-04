@@ -23,7 +23,7 @@ function optionalNumber(name, fallback) {
 }
 
 async function main() {
-  const code = required("INVITE_CODE");
+  const code = required("INVITE_CODE").toLowerCase();
   const enabled = (process.env.INVITE_ENABLED ?? "true").trim().toLowerCase() !== "false";
   const label = (process.env.INVITE_LABEL ?? "Friends Trial").trim();
   const trialBudgetUsd = optionalNumber("TRIAL_BUDGET_USD", 2);
