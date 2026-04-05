@@ -40,6 +40,11 @@ interface SessionMeta {
   members: SessionMemberMeta[];
 }
 
+interface StoryExperience {
+  tagline: string;
+  prompts: string[];
+}
+
 type PendingAttachment = Omit<MessageAttachment, "attachmentId"> & { localId: string };
 
 type ApiKeyMode = "default_profile" | "unified" | "by_agent";
@@ -126,13 +131,17 @@ function isImageAttachment(
   return attachment.kind === "image" && typeof attachment.dataUrl === "string" && attachment.dataUrl.length > 0;
 }
 
-function buildParticipantFromProfile(profile: AgentProfile, index: number): ParticipantForm {
+function buildParticipantFromProfile(
+  profile: AgentProfile,
+  index: number,
+  model = "openai/gpt-5-mini"
+): ParticipantForm {
   return {
     id: `quick-${profile.id}-${index}`,
     label: profile.name,
     avatarUrl: profile.avatarUrl || "",
     storyFilter: profile.story ? profile.story : "__none__",
-    model: "openai/gpt-5-mini",
+    model,
     providerType: "openrouter",
     useSpecificApiKey: false,
     apiKey: "",
@@ -141,6 +150,61 @@ function buildParticipantFromProfile(profile: AgentProfile, index: number): Part
     character: profile.character,
     profileId: profile.id
   };
+}
+
+const QUICK_START_STORY_CONTENT: Record<string, StoryExperience> = {
+  "Historical Figures": {
+    tagline: "Debate values, meaning, ethics, and hard decisions from timeless perspectives.",
+    prompts: [
+      "Who are you, and how does each of you think?",
+      "What can this team help me reason through?",
+      "What makes a life meaningful in modern society?",
+      "How should freedom and responsibility be balanced today?"
+    ]
+  },
+  "Journey to the West": {
+    tagline: "A lively mix of discipline, provocation, tactics, and mythic personalities.",
+    prompts: [
+      "Who are you, and how would each of you introduce yourselves?",
+      "What kinds of conflicts or dilemmas can this team help me solve?",
+      "Who is more effective under pressure: Tang Seng or Sun Wukong?",
+      "How would this team solve a startup conflict?"
+    ]
+  },
+  "Dragon Ball": {
+    tagline: "High-energy strategy, rivalry, execution, and inventive problem-solving.",
+    prompts: [
+      "Who are you, and what does each of you bring to the team?",
+      "What can this team help me do better than a single assistant?",
+      "How would this team prepare for a high-stakes launch?",
+      "Who should lead when speed matters more than consensus?"
+    ]
+  },
+  "Meteor Garden (Taiwan 2001)": {
+    tagline: "Read people, pressure-test relationships, and unpack emotional dynamics fast.",
+    prompts: [
+      "Who are you, and how would each of you describe your role in the group?",
+      "What kinds of social or relationship questions are you best at?",
+      "How would this group judge a messy relationship conflict?",
+      "Who gives the bluntest advice, and who gives the most balanced advice?"
+    ]
+  }
+};
+
+const GENERIC_STARTER_PROMPTS = [
+  "Who are you?",
+  "What can you do?",
+  "How should I use this team well?",
+  "Show me how your viewpoints differ."
+];
+
+function storyExperience(story: string): StoryExperience {
+  return (
+    QUICK_START_STORY_CONTENT[story] ?? {
+      tagline: "A reusable agent team with contrasting personalities and viewpoints.",
+      prompts: GENERIC_STARTER_PROMPTS
+    }
+  );
 }
 
 function SetupSection(props: {
@@ -372,6 +436,8 @@ export default function HomePage() {
   const [trialStatus, setTrialStatus] = useState<TrialStatusResponse | null>(null);
   const [inviteCode, setInviteCode] = useState("");
   const [isRedeemingInvite, setIsRedeemingInvite] = useState(false);
+  const [isModeHelpOpen, setIsModeHelpOpen] = useState(false);
+  const [quickStartModel, setQuickStartModel] = useState("openai/gpt-5-mini");
   const [error, setError] = useState("");
   const eventSourceRef = useRef<EventSource | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
@@ -608,6 +674,45 @@ export default function HomePage() {
     return "";
   }, [defaultProfileApiKey, unifiedApiKey]);
 
+  const activeStory = useMemo(() => {
+    if (activeSessionMembers.length === 0) {
+      return "";
+    }
+
+    const memberLabels = new Set(
+      activeSessionMembers
+        .filter((member) => !member.muted)
+        .map((member) => member.label.trim().toLowerCase())
+    );
+
+    const matchingStory = stories.find((story) => {
+      const storyMembers = profiles.filter((profile) => profile.story === story);
+      if (storyMembers.length === 0) {
+        return false;
+      }
+
+      const overlap = storyMembers.filter((profile) =>
+        memberLabels.has(profile.name.trim().toLowerCase())
+      ).length;
+
+      return overlap >= Math.min(2, storyMembers.length);
+    });
+
+    return matchingStory ?? "";
+  }, [activeSessionMembers, profiles, stories]);
+
+  const starterPrompts = useMemo(() => {
+    if (!sessionId) {
+      return GENERIC_STARTER_PROMPTS;
+    }
+    return storyExperience(activeStory).prompts;
+  }, [activeStory, sessionId]);
+
+  const showStarterPrompts = useMemo(
+    () => !!sessionId && !groupedMessages.some((message) => message.sourceRole === "user"),
+    [groupedMessages, sessionId]
+  );
+
   const mentionCandidates = useMemo(() => {
     if (sessionMode !== "one_to_one") {
       return [];
@@ -729,6 +834,8 @@ export default function HomePage() {
     ]);
     if (isMobileView) {
       setMobileActivePanel("chat");
+    } else {
+      setIsSetupPanelOpen(false);
     }
     connectStream(json.sessionId);
     return true;
@@ -1027,6 +1134,8 @@ export default function HomePage() {
     );
     if (isMobileView) {
       setMobileActivePanel("chat");
+    } else {
+      setIsSetupPanelOpen(false);
     }
     connectStream(targetSessionId);
   }
@@ -1046,6 +1155,7 @@ export default function HomePage() {
     setRoundNumber(0);
     setError("");
     setMobileActivePanel("setup");
+    setIsSetupPanelOpen(true);
     localStorage.removeItem(ACTIVE_SESSION_STORAGE_KEY);
   }
 
@@ -1122,6 +1232,10 @@ export default function HomePage() {
 
   async function quickStartStorySession(story: string) {
     setError("");
+    if (!quickStartModel.trim()) {
+      setError("Choose a model for Quick Start before creating a session.");
+      return;
+    }
     const storyProfiles = profiles.filter((profile) => profile.story === story);
     if (storyProfiles.length < 2) {
       setError("Quick Start requires at least 2 characters in the selected story.");
@@ -1137,7 +1251,7 @@ export default function HomePage() {
     }
 
     const sessionParticipants = storyProfiles.map((profile, index) =>
-      buildParticipantFromProfile(profile, index)
+      buildParticipantFromProfile(profile, index, quickStartModel || "openai/gpt-5-mini")
     );
 
     setParticipants(sessionParticipants);
@@ -1153,16 +1267,15 @@ export default function HomePage() {
     });
   }
 
-  async function sendMessage(event: FormEvent) {
-    event.preventDefault();
-    if (!sessionId || (!input.trim() && pendingAttachments.length === 0)) {
+  async function submitMessageRequest(content: string, attachments: PendingAttachment[] = []) {
+    if (!sessionId || (!content.trim() && attachments.length === 0)) {
       return;
     }
 
     const requestPayload = JSON.stringify({
-      content: input,
+      content,
       mode: sessionMode,
-      attachments: pendingAttachments.map((attachment) => ({
+      attachments: attachments.map((attachment) => ({
         name: attachment.name,
         mimeType: attachment.mimeType,
         kind: attachment.kind,
@@ -1202,6 +1315,11 @@ export default function HomePage() {
     setPendingAttachments([]);
     setShowMentionMenu(false);
     setMentionQuery("");
+  }
+
+  async function sendMessage(event: FormEvent) {
+    event.preventDefault();
+    await submitMessageRequest(input, pendingAttachments);
   }
 
   async function runSummarizer() {
@@ -1260,11 +1378,24 @@ export default function HomePage() {
         >
           {isSessionSidebarOpen ? "Hide Sessions" : "Show Sessions"}
         </button>
+        <button
+          className="rounded-md border border-slate-300 px-3 py-1 text-xs text-slate-700"
+          type="button"
+          onClick={() => setIsSetupPanelOpen((value) => !value)}
+        >
+          {isSetupPanelOpen ? "Hide Settings" : "Show Settings"}
+        </button>
       </div>
 
       <div
         className={`grid h-[calc(100%-2.5rem)] gap-4 ${
-          isSessionSidebarOpen ? "lg:grid-cols-[280px_380px_1fr]" : "lg:grid-cols-[380px_1fr]"
+          isSessionSidebarOpen
+            ? !sessionId
+              ? "lg:grid-cols-[280px_1fr_1fr]"
+              : "lg:grid-cols-[280px_380px_1fr]"
+            : !sessionId
+              ? "lg:grid-cols-[1fr_1fr]"
+              : "lg:grid-cols-[380px_1fr]"
         }`}
       >
       {((isMobileView && mobileActivePanel === "sessions") || (!isMobileView && isSessionSidebarOpen)) && (
@@ -1385,7 +1516,7 @@ export default function HomePage() {
       )}
 
       <section
-        className={`${(!isMobileView && isSetupPanelOpen) || (isMobileView && mobileActivePanel === "setup") ? "block" : "hidden"} h-full min-h-0 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-sm lg:block`}
+        className={`${(!isMobileView && isSetupPanelOpen) || (isMobileView && mobileActivePanel === "setup") ? "block" : "hidden"} h-full min-h-0 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-sm`}
       >
         <div className="mt-1 flex gap-3">
           <Link className="inline-block text-sm font-medium text-primary" href="/agents">
@@ -1458,11 +1589,32 @@ export default function HomePage() {
               setSetupSections((current) => ({ ...current, quickStart: !current.quickStart }))
             }
           >
+            <div className="space-y-3">
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {modelPickerCatalog.featuredModels.map((model) => {
+                  const active = quickStartModel === model.id;
+                  return (
+                    <button
+                      key={`quick-start-${model.id}`}
+                      className={`whitespace-nowrap rounded-full border px-3 py-1 text-xs ${
+                        active
+                          ? "border-primary bg-primary text-white"
+                          : "border-slate-300 bg-white text-slate-700"
+                      }`}
+                      onClick={() => setQuickStartModel(model.id)}
+                      type="button"
+                    >
+                      {model.label} {model.price}
+                    </button>
+                  );
+                })}
+              </div>
+
             <div className="flex gap-3 overflow-x-auto pb-1">
               {quickStartStories.map(({ story, members }) => (
                 <div
                   key={story}
-                  className="min-w-[240px] shrink-0 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
+                  className="w-[240px] min-w-[240px] max-w-[240px] shrink-0 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
                 >
                   <div className="flex -space-x-2">
                     {members.slice(0, 4).map((member) => (
@@ -1485,6 +1637,9 @@ export default function HomePage() {
                   </div>
                   <p className="mt-3 text-sm font-semibold text-slate-900">{story}</p>
                   <p className="mt-1 text-xs text-slate-500">{members.length} characters ready</p>
+                  <p className="mt-2 min-h-[52px] whitespace-normal break-words text-xs leading-5 text-slate-600">
+                    {storyExperience(story).tagline}
+                  </p>
                   <button
                     type="button"
                     className="mt-3 w-full rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white"
@@ -1494,6 +1649,7 @@ export default function HomePage() {
                   </button>
                 </div>
               ))}
+            </div>
             </div>
           </SetupSection>
         </div>
@@ -2005,7 +2161,7 @@ export default function HomePage() {
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-2 self-start lg:self-auto">
+            <div className="relative flex items-center gap-2 self-start lg:self-auto">
               <label className="text-xs text-slate-500">Mode</label>
               <select
                 className="rounded-md border border-slate-300 px-2 py-1 text-xs"
@@ -2015,11 +2171,72 @@ export default function HomePage() {
                 <option value="roundtable">Round Table</option>
                 <option value="one_to_one">One to One</option>
               </select>
+              <button
+                type="button"
+                className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-semibold text-slate-500"
+                onClick={() => setIsModeHelpOpen((value) => !value)}
+                aria-label="Explain chat modes"
+              >
+                ?
+              </button>
+              {isModeHelpOpen && (
+                <div className="absolute right-0 top-9 z-10 w-64 rounded-xl border border-slate-200 bg-white p-3 text-xs text-slate-600 shadow-lg">
+                  <p>
+                    <span className="font-semibold text-slate-800">Round Table:</span> every agent sees the shared conversation and answers in context.
+                  </p>
+                  <p className="mt-2">
+                    <span className="font-semibold text-slate-800">One-to-One:</span> agents only see you, unless you target them with <span className="font-mono">@</span>.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </header>
 
         <div ref={chatScrollRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
+          {!sessionId && (
+            <section className="mx-auto flex max-w-3xl flex-col items-center rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 via-white to-white px-6 py-10 text-center shadow-sm">
+              <div className="relative h-16 w-16 overflow-hidden rounded-2xl border border-amber-200 bg-white p-3 shadow-sm">
+                <Image alt="AllPath logo" className="object-contain" fill sizes="64px" src="/allpath-logo-mark.png" />
+              </div>
+              <h2 className="mt-5 text-2xl font-semibold text-slate-900">Start fast</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                Pick a story, choose a model, and open a conversation in one tap. Use Quick Start for the fastest demo, or open Setup to build your own team.
+              </p>
+              <div className="mt-6 flex flex-wrap justify-center gap-2">
+                {quickStartStories.slice(0, 3).map(({ story, members }) => (
+                  <button
+                    key={story}
+                    type="button"
+                    className="rounded-full border border-amber-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm"
+                    onClick={() => {
+                      setMobileActivePanel("setup");
+                      setSetupSections((current) => ({ ...current, quickStart: true }));
+                    }}
+                  >
+                    {story} · {members.length} characters
+                  </button>
+                ))}
+              </div>
+              <div className="mt-6 flex flex-wrap justify-center gap-2">
+                {GENERIC_STARTER_PROMPTS.map((prompt) => (
+                  <button
+                    key={prompt}
+                    type="button"
+                    className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600"
+                    onClick={() => {
+                      setInput(prompt);
+                      if (isMobileView) {
+                        setMobileActivePanel("setup");
+                      }
+                    }}
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
           {groupedMessages.map((message) => (
             <article
               key={message.messageId}
@@ -2129,6 +2346,30 @@ export default function HomePage() {
         {error && <p className="border-t border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>}
 
         <div className="border-t border-slate-200 p-3">
+          {showStarterPrompts && (
+            <div className="mb-3 rounded-2xl border border-slate-200 bg-slate-50 p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                {activeStory ? `${activeStory} starter prompts` : "Starter prompts"}
+              </p>
+              <p className="mt-1 text-xs text-slate-500">
+                {activeStory
+                  ? storyExperience(activeStory).tagline
+                  : "Ask one of these to get the conversation moving."}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {starterPrompts.slice(0, 4).map((prompt) => (
+                  <button
+                    key={prompt}
+                    type="button"
+                    className="rounded-full border border-slate-300 bg-white px-3 py-2 text-xs text-slate-700"
+                    onClick={() => void submitMessageRequest(prompt)}
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           {sessionMode === "one_to_one" && (
             <div className="mb-2 flex items-center gap-2 text-xs">
               <span className="text-slate-500">Targets:</span>
