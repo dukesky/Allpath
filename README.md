@@ -2,7 +2,7 @@
 
 AllPath is a multi-agent chat prototype where one user coordinates multiple LLM agents in a shared Round Table discussion.
 
-Current release version: `0.0.17`
+Current release version: `0.0.18`
 
 Production URL: `https://all-path.com`
 
