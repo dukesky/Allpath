@@ -503,8 +503,25 @@ export default function HomePage() {
     if (Array.isArray(parsedSessions)) {
       setSessionList(
         parsedSessions.map((session) => ({
-          ...session,
-          members: Array.isArray(session.members) ? session.members : []
+          id: typeof session.id === "string" ? session.id : crypto.randomUUID(),
+          title: typeof session.title === "string" ? session.title : "Saved session",
+          createdAt:
+            typeof session.createdAt === "string" ? session.createdAt : new Date().toISOString(),
+          members: Array.isArray(session.members)
+            ? session.members.map((member, index) => ({
+                id:
+                  typeof member?.id === "string" && member.id.trim()
+                    ? member.id
+                    : `member-${index}`,
+                label:
+                  typeof member?.label === "string" && member.label.trim()
+                    ? member.label
+                    : `Agent ${index + 1}`,
+                avatarUrl: typeof member?.avatarUrl === "string" ? member.avatarUrl : "",
+                model: typeof member?.model === "string" ? member.model : "",
+                muted: member?.muted === true
+              }))
+            : []
         }))
       );
     }
@@ -1434,11 +1451,9 @@ export default function HomePage() {
                           }`}
                         >
                           {member.avatarUrl ? (
-                            <Image
+                            <img
                               alt={member.label}
-                              className="object-cover"
-                              fill
-                              sizes="32px"
+                              className="h-full w-full object-cover"
                               src={member.avatarUrl}
                             />
                           ) : (
@@ -1477,11 +1492,9 @@ export default function HomePage() {
                     <div key={member.id} className="flex items-center gap-2 rounded-md border border-slate-200 p-2">
                       <div className={`relative h-10 w-10 overflow-hidden rounded-full bg-slate-100 ${member.muted ? "opacity-50" : ""}`}>
                         {member.avatarUrl ? (
-                          <Image
+                          <img
                             alt={member.label}
-                            className="object-cover"
-                            fill
-                            sizes="40px"
+                            className="h-full w-full object-cover"
                             src={member.avatarUrl}
                           />
                         ) : (
@@ -1620,11 +1633,9 @@ export default function HomePage() {
                     {members.slice(0, 4).map((member) => (
                       <div key={member.id} className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-white bg-slate-100">
                         {member.avatarUrl ? (
-                          <Image
+                          <img
                             alt={member.name}
-                            className="object-cover"
-                            fill
-                            sizes="40px"
+                            className="h-full w-full object-cover"
                             src={member.avatarUrl}
                           />
                         ) : (
@@ -2090,11 +2101,9 @@ export default function HomePage() {
                           }`}
                         >
                           {member.avatarUrl ? (
-                            <Image
+                            <img
                               alt={member.label}
-                              className="object-cover"
-                              fill
-                              sizes="36px"
+                              className="h-full w-full object-cover"
                               src={member.avatarUrl}
                             />
                           ) : (
@@ -2120,11 +2129,9 @@ export default function HomePage() {
                         <div key={member.id} className="flex items-center gap-3 rounded-lg border border-slate-200 p-2">
                           <div className={`relative h-10 w-10 overflow-hidden rounded-full bg-slate-100 ${member.muted ? "opacity-50" : ""}`}>
                             {member.avatarUrl ? (
-                              <Image
+                              <img
                                 alt={member.label}
-                                className="object-cover"
-                                fill
-                                sizes="40px"
+                                className="h-full w-full object-cover"
                                 src={member.avatarUrl}
                               />
                             ) : (
@@ -2453,6 +2460,13 @@ export default function HomePage() {
                 className="min-h-[96px] w-full rounded-xl border border-slate-300 px-3 py-3 text-sm sm:min-h-[44px] sm:py-2"
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key !== "Enter" || event.shiftKey || event.nativeEvent.isComposing) {
+                    return;
+                  }
+                  event.preventDefault();
+                  void submitMessageRequest(input, pendingAttachments);
+                }}
                 rows={isMobileView ? 4 : 2}
                 placeholder={
                   sessionMode === "one_to_one"

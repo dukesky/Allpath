@@ -154,7 +154,7 @@ export default function AgentsPage() {
           Create stories and profiles. In chat setup, choose story first, then profile.
         </p>
         <div className="mt-2 flex gap-3">
-          <Link className="text-sm font-medium text-primary" href="/">
+          <Link className="text-sm font-medium text-primary" href="/chat">
             Back to Chat
           </Link>
           <Link className="text-sm font-medium text-primary" href="/profile">

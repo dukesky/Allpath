@@ -153,7 +153,7 @@ export default function ProfilePage() {
           Save reusable preferences for chat setup: API key and session-rule presets.
         </p>
         <div className="mt-2 flex gap-3">
-          <Link className="text-sm font-medium text-primary" href="/">
+          <Link className="text-sm font-medium text-primary" href="/chat">
             Back to Chat
           </Link>
           <Link className="text-sm font-medium text-primary" href="/agents">
