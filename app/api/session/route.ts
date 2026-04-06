@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createSession } from "@/lib/store";
-import { Mode, ParticipantConfig, SessionConfig } from "@/lib/types";
+import { Message, Mode, ParticipantConfig, SessionConfig } from "@/lib/types";
 import { getGuestFromCookie } from "@/lib/trial";
 import { DEFAULT_SESSION_RULES } from "@/lib/userPreferences";
 
@@ -25,6 +25,17 @@ function validateParticipant(raw: unknown): raw is ParticipantConfig {
   );
 }
 
+function isValidMessage(raw: unknown): raw is Message {
+  if (!raw || typeof raw !== "object") return false;
+  const m = raw as Record<string, unknown>;
+  return (
+    typeof m.messageId === "string" &&
+    typeof m.sourceRole === "string" &&
+    typeof m.sourceLabel === "string" &&
+    typeof m.content === "string"
+  );
+}
+
 export async function POST(request: NextRequest) {
   const body = (await request.json()) as {
     participants?: unknown[];
@@ -32,6 +43,7 @@ export async function POST(request: NextRequest) {
     agentInitialPrompt?: unknown;
     globalApiKey?: unknown;
     mode?: unknown;
+    initialMessages?: unknown[];
   };
 
   const participants = (body.participants ?? []).filter(validateParticipant);
@@ -59,6 +71,10 @@ export async function POST(request: NextRequest) {
 
   const mode: Mode = body.mode === "one_to_one" ? "one_to_one" : "roundtable";
 
+  const initialMessages: Message[] = Array.isArray(body.initialMessages)
+    ? body.initialMessages.filter(isValidMessage)
+    : [];
+
   const session: SessionConfig = {
     sessionId: randomUUID(),
     mode,
@@ -73,9 +89,9 @@ export async function POST(request: NextRequest) {
     trialGuestId: guest?.guestId,
     participants,
     summarizer,
-    roundNumber: 0,
+    roundNumber: initialMessages.length > 0 ? Math.max(...initialMessages.map((m) => m.roundId), 0) : 0,
     status: "idle",
-    messages: []
+    messages: initialMessages
   };
 
   createSession(session);
