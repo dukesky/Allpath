@@ -24,6 +24,7 @@ const PROFILE_STORAGE_KEY = "allpath-agent-profiles";
 const STORY_STORAGE_KEY = "allpath-agent-stories";
 const SESSION_LIST_STORAGE_KEY = "allpath-session-list";
 const ACTIVE_SESSION_STORAGE_KEY = "allpath-active-session";
+const SHARE_LINKS_STORAGE_KEY = "allpath-share-links";
 
 interface SessionMemberMeta {
   id: string;
@@ -484,6 +485,8 @@ export default function HomePage() {
   const [isModeHelpOpen, setIsModeHelpOpen] = useState(false);
   const [quickStartModel, setQuickStartModel] = useState("openai/gpt-5-mini");
   const [error, setError] = useState("");
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [isSharing, setIsSharing] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
   const effectiveGlobalApiKey =
@@ -569,6 +572,51 @@ export default function HomePage() {
             : []
         }))
       );
+    }
+
+    const fromShareId = sessionStorage.getItem("allpath-from-share-id");
+    if (fromShareId) {
+      sessionStorage.removeItem("allpath-from-share-id");
+      void (async () => {
+        try {
+          const res = await fetch(`/api/share/${fromShareId}`);
+          if (!res.ok) return;
+          const record = (await res.json()) as {
+            mode: string;
+            agentConfig: Array<{
+              id: string;
+              label: string;
+              avatarUrl?: string;
+              model: string;
+              roleTitle?: string;
+              character?: string;
+            }>;
+            transcript: Message[];
+          };
+          const preloadedParticipants: ParticipantForm[] = record.agentConfig.map(
+            (agent, index) => ({
+              ...defaultParticipant(`share-${agent.id}-${index}`, agent.label),
+              avatarUrl: agent.avatarUrl ?? "",
+              roleTitle: agent.roleTitle ?? "",
+              character: agent.character ?? "",
+              model: quickStartModel || "openai/gpt-5-mini"
+            })
+          );
+          setParticipants(preloadedParticipants);
+          await createSessionFromParticipants({
+            sessionParticipants: preloadedParticipants,
+            sessionModeOverride: record.mode === "one_to_one" ? "one_to_one" : "roundtable",
+            agentInitialPromptOverride: DEFAULT_SESSION_RULES,
+            globalApiKeyOverride: quickStartApiKey || undefined,
+            summarizerOverride: undefined,
+            sessionTitle: `Continued · ${new Date().toLocaleString()}`,
+            initialMessages: record.transcript
+          });
+        } catch {
+          // Failed to restore from share — continue normally
+        }
+      })();
+      return;
     }
 
     const activeSession = localStorage.getItem(ACTIVE_SESSION_STORAGE_KEY);
@@ -818,6 +866,7 @@ export default function HomePage() {
         }
       | undefined;
     sessionTitle: string;
+    initialMessages?: Message[];
   }) {
     const payload = {
       mode: input.sessionModeOverride ?? sessionMode,
@@ -842,7 +891,8 @@ export default function HomePage() {
           baseUrl: item.baseUrl || undefined
         }
       })),
-      summarizer: input.summarizerOverride
+      summarizer: input.summarizerOverride,
+      initialMessages: input.initialMessages
     };
 
     const response = await fetch("/api/session", {
@@ -1327,6 +1377,44 @@ export default function HomePage() {
       summarizerOverride: undefined,
       sessionTitle: `Quick Start · ${story} · ${new Date().toLocaleString()}`
     });
+  }
+
+  async function handleShare() {
+    if (!sessionId || isSharing) return;
+    setIsSharing(true);
+    setShareUrl(null);
+    try {
+      const res = await fetch("/api/share", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId })
+      });
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        setError(data.error ?? "Failed to create share link.");
+        return;
+      }
+      const data = (await res.json()) as { shareId: string; url: string };
+      setShareUrl(data.url);
+      try {
+        const stored = JSON.parse(
+          localStorage.getItem(SHARE_LINKS_STORAGE_KEY) ?? "{}"
+        ) as Record<string, { shareId: string; url: string; createdAt: string }>;
+        stored[sessionId] = {
+          shareId: data.shareId,
+          url: data.url,
+          createdAt: new Date().toISOString()
+        };
+        localStorage.setItem(SHARE_LINKS_STORAGE_KEY, JSON.stringify(stored));
+      } catch {
+        // localStorage unavailable — ignore
+      }
+      await navigator.clipboard.writeText(data.url).catch(() => undefined);
+    } catch {
+      setError("Failed to create share link.");
+    } finally {
+      setIsSharing(false);
+    }
   }
 
   async function submitMessageRequest(content: string, attachments: PendingAttachment[] = []) {
@@ -2213,6 +2301,40 @@ export default function HomePage() {
                 </div>
               )}
             </div>
+              {sessionId && groupedMessages.some((m) => m.sourceRole !== "user" && m.status === "completed") && (
+                <div className="relative self-start lg:self-auto">
+                  <button
+                    type="button"
+                    onClick={() => void handleShare()}
+                    disabled={isSharing}
+                    className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm hover:bg-slate-50 disabled:opacity-50"
+                  >
+                    {isSharing ? "Sharing…" : "Share"}
+                  </button>
+                  {shareUrl && (
+                    <div className="absolute right-0 top-full z-20 mt-1 w-72 rounded-xl border border-slate-200 bg-white p-3 shadow-lg">
+                      <p className="text-xs font-semibold text-slate-700">Link copied to clipboard</p>
+                      <p className="mt-1 break-all text-xs text-slate-500">{shareUrl}</p>
+                      <div className="mt-2 flex items-center gap-3">
+                        <button
+                          type="button"
+                          className="text-xs text-indigo-600 hover:underline"
+                          onClick={() => void navigator.clipboard.writeText(shareUrl)}
+                        >
+                          Copy again
+                        </button>
+                        <button
+                          type="button"
+                          className="text-xs text-slate-400 hover:underline"
+                          onClick={() => setShareUrl(null)}
+                        >
+                          Dismiss
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             <div className="relative flex items-center gap-2 self-start lg:self-auto">
               <label className="text-xs text-slate-500">Mode</label>
               <select
