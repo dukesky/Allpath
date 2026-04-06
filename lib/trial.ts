@@ -1,6 +1,5 @@
 import { randomUUID } from "crypto";
 import { cookies } from "next/headers";
-import { FieldValue } from "@google-cloud/firestore";
 import { getFirestoreDb } from "@/lib/firestore";
 import { decryptSecret, encryptSecret, signGuestCookie, verifyGuestCookie } from "@/lib/trialCrypto";
 import { ProviderConfig } from "@/lib/types";
@@ -216,7 +215,7 @@ export async function redeemInviteCode(code: string): Promise<{ guest: TrialGues
     await getGuestRef(existingGuest.guestId).set(nextGuest, { merge: true });
     await inviteRef.set(
       {
-        redeemedCount: FieldValue.increment(1),
+        redeemedCount: (invite.redeemedCount ?? 0) + 1,
         updatedAt: nowIso()
       },
       { merge: true }
@@ -253,7 +252,7 @@ export async function redeemInviteCode(code: string): Promise<{ guest: TrialGues
   await getGuestRef(guestId).set(guest);
   await inviteRef.set(
     {
-      redeemedCount: FieldValue.increment(1),
+      redeemedCount: (invite.redeemedCount ?? 0) + 1,
       updatedAt: nowIso()
     },
     { merge: true }
@@ -286,13 +285,10 @@ export async function saveGuestPersonalOpenRouterKey(guestId: string, apiKey: st
 
 export async function clearGuestPersonalOpenRouterKey(guestId: string): Promise<TrialGuestRecord> {
   const ref = getGuestRef(guestId);
-  await ref.set(
-    {
-      userProvidedOpenRouterKeyEncrypted: FieldValue.delete(),
-      lastSeenAt: nowIso()
-    },
-    { merge: true }
-  );
+  await ref.update({
+    userProvidedOpenRouterKeyEncrypted: null,
+    lastSeenAt: nowIso()
+  });
 
   const snapshot = await ref.get();
   return snapshot.data() as TrialGuestRecord;

@@ -38,7 +38,10 @@ export async function createShareRecord(input: {
     agentConfig: input.agentConfig
   };
 
-  await db.collection(SHARES_COLLECTION).doc(shareId).set(record);
+  // JSON round-trip strips undefined fields (e.g. optional Message.attachments)
+  // which Firestore rejects without ignoreUndefinedProperties.
+  const sanitized = JSON.parse(JSON.stringify(record)) as ShareRecord;
+  await db.collection(SHARES_COLLECTION).doc(shareId).set(sanitized);
   return record;
 }
 
