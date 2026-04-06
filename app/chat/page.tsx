@@ -7,8 +7,11 @@ import {
   CatalogModel,
   FEATURED_MODELS,
   MORE_MODELS,
+  isNew,
+  isPopular,
   modelPriceTag
 } from "@/lib/modelCatalog";
+import { ModelPicker } from "@/app/chat/ModelPicker";
 import { Message, MessageAttachment, Mode, ProviderType } from "@/lib/types";
 import { AgentProfile, normalizeAgentLibrary } from "@/lib/agentProfiles";
 import {
@@ -280,72 +283,6 @@ function SetupSection(props: {
   );
 }
 
-function ModelPicker(props: {
-  selected: string;
-  onSelect: (model: string) => void;
-  featuredModels: CatalogModel[];
-  moreModels: CatalogModel[];
-  disabled?: boolean;
-}) {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <div className="space-y-2">
-      <div className="flex gap-2 overflow-x-auto pb-1">
-        {props.featuredModels.map((model) => {
-          const active = props.selected === model.id;
-          return (
-            <button
-              key={model.id}
-              className={`whitespace-nowrap rounded-full border px-3 py-1 text-xs ${
-                active
-                  ? "border-primary bg-primary text-white"
-                  : "border-slate-300 bg-white text-slate-700"
-              }`}
-              disabled={props.disabled}
-              onClick={() => props.onSelect(model.id)}
-              type="button"
-            >
-              {model.label} {model.price}
-            </button>
-          );
-        })}
-      </div>
-
-      <button
-        className="text-xs font-medium text-primary"
-        disabled={props.disabled}
-        onClick={() => setExpanded((value) => !value)}
-        type="button"
-      >
-        {expanded ? "Hide more models" : "Show more models"}
-      </button>
-
-      {expanded && (
-        <select
-          className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
-          onChange={(event) => props.onSelect(event.target.value)}
-          value={props.selected}
-        >
-          <option value="">Select model</option>
-          {[...props.featuredModels, ...props.moreModels].map((model) => (
-            <option key={model.id} value={model.id}>
-              {model.label} ({model.id}) {model.price}
-            </option>
-          ))}
-        </select>
-      )}
-
-      <input
-        className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
-        onChange={(event) => props.onSelect(event.target.value)}
-        placeholder="Custom model ID"
-        value={props.selected}
-      />
-      <p className="text-xs text-slate-500">Price tag: $ cheap, $$ normal, $$$ expensive.</p>
-    </div>
-  );
-}
 
 function renderInlineMarkdown(text: string): ReactNode[] {
   const nodes: ReactNode[] = [];
@@ -1750,7 +1687,20 @@ export default function HomePage() {
                       onClick={() => setQuickStartModel(model.id)}
                       type="button"
                     >
-                      {model.label} {model.price}
+                      <span className="flex items-center gap-1">
+                        {model.label}
+                        {isNew(model) && (
+                          <span className="rounded-full bg-teal-100 px-1.5 py-0.5 text-[10px] font-medium text-teal-700">
+                            New
+                          </span>
+                        )}
+                        {isPopular(model) && (
+                          <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">
+                            Popular
+                          </span>
+                        )}
+                        <span className="opacity-60">{model.price}</span>
+                      </span>
                     </button>
                   );
                 })}
