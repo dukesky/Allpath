@@ -98,3 +98,23 @@ export interface ProviderAdapter {
   }): AsyncGenerator<ProviderStreamEvent>;
   listModels?(provider: ProviderConfig): Promise<Array<{ id: string; name: string }>>;
 }
+
+// Shareable session types — API keys are always excluded
+export interface ShareableParticipant {
+  id: string;
+  label: string;
+  avatarUrl?: string;
+  model: string;
+  roleTitle?: string;
+  character?: string;
+}
+
+export interface ShareRecord {
+  shareId: string;
+  createdAt: string;
+  expiresAt: string;
+  mode: Mode;
+  title: string;
+  transcript: Message[];
+  agentConfig: ShareableParticipant[];
+}
