@@ -180,13 +180,58 @@ const QUICK_START_STORY_CONTENT: Record<string, StoryExperience> = {
       "Who should lead when speed matters more than consensus?"
     ]
   },
-  "Meteor Garden (Taiwan 2001)": {
-    tagline: "Read people, pressure-test relationships, and unpack emotional dynamics fast.",
+  "Life Coaches Panel": {
+    tagline: "Get real, balanced life advice — practical, emotional, strategic, and challenging.",
     prompts: [
-      "Who are you, and how would each of you describe your role in the group?",
-      "What kinds of social or relationship questions are you best at?",
-      "How would this group judge a messy relationship conflict?",
-      "Who gives the bluntest advice, and who gives the most balanced advice?"
+      "Should I quit my job to pursue my passion?",
+      "I'm stuck in a major life decision — help me think through it.",
+      "How do I know if I'm playing it too safe or taking too much risk?",
+      "What would each of you say to someone who feels lost at 30?"
+    ]
+  },
+  "Financial Advisors Board": {
+    tagline: "Investment, risk, psychology, and entrepreneurship — four angles on your money.",
+    prompts: [
+      "Should I invest my savings in index funds, real estate, or my own business?",
+      "Help me evaluate this financial decision from all angles.",
+      "What should I do with my first $10,000?",
+      "Is it smart to take on debt to invest right now?"
+    ]
+  },
+  "Writers' Room": {
+    tagline: "Structure, character, world-building, and voice — everything your story needs.",
+    prompts: [
+      "Help me develop the main character in my story.",
+      "My story feels flat — what's missing?",
+      "I have a world and characters but no plot. Where do I start?",
+      "How do I write dialogue that sounds natural and reveals character?"
+    ]
+  },
+  "Philosophy Circle": {
+    tagline: "Logic, meaning, consequences, and doubt — four philosophical traditions in dialogue.",
+    prompts: [
+      "Is it ever morally justified to lie?",
+      "What is the meaning of life, and how would each of you answer?",
+      "Do humans have free will, or is everything determined?",
+      "What does it mean to live a good life?"
+    ]
+  },
+  "Devil's Advocates": {
+    tagline: "The best counterargument, the worst-case scenario, and every assumption challenged.",
+    prompts: [
+      "Here's my plan — tear it apart.",
+      "Why might my business idea fail?",
+      "Challenge the assumptions behind my decision.",
+      "What's the strongest argument against my position?"
+    ]
+  },
+  "Roast Panel": {
+    tagline: "Brutal honesty, sharp wit, a defender, and a final verdict. Bring your best ideas.",
+    prompts: [
+      "Roast my business idea.",
+      "Here's my plan — give me your most honest feedback.",
+      "What's wrong with my approach? Don't hold back.",
+      "Rate this idea out of 10 and explain why."
     ]
   }
 };
