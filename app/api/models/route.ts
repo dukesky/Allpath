@@ -4,16 +4,15 @@ import { ProviderType } from "@/lib/types";
 
 function toPriceTier(prompt: number, completion: number): PriceTier {
   const avg = (prompt + completion) / 2;
-
-  if (avg <= 0.0000015) {
-    return "$";
-  }
-
-  if (avg <= 0.00001) {
-    return "$$";
-  }
-
+  if (avg <= 0.0000015) return "$";
+  if (avg <= 0.00001) return "$$";
   return "$$$";
+}
+
+// Strip variant suffixes to get the base model ID for grouping.
+// e.g. "google/gemini-2.5-flash:free" -> "google/gemini-2.5-flash"
+function baseModelId(id: string): string {
+  return id.split(":")[0] ?? id;
 }
 
 export async function GET(request: NextRequest) {
@@ -46,28 +45,34 @@ export async function GET(request: NextRequest) {
 
     const minCreatedUnix = Math.floor(new Date("2025-03-01T00:00:00Z").getTime() / 1000);
 
-    const models = (json.data ?? [])
+    const raw = (json.data ?? [])
       .filter((model) => !!model.id)
-      .filter((model) => !model.created || model.created >= minCreatedUnix)
+      .filter((model) => !model.created || model.created >= minCreatedUnix);
+
+    // Count how many models share each base ID (proxy for popularity/adoption).
+    const variantCounts = new Map<string, number>();
+    for (const model of raw) {
+      const base = baseModelId(model.id);
+      variantCounts.set(base, (variantCounts.get(base) ?? 0) + 1);
+    }
+
+    const models: CatalogModel[] = raw
       .map((model) => {
         const prompt = Number(model.pricing?.prompt ?? "0");
         const completion = Number(model.pricing?.completion ?? "0");
-
         return {
           id: model.id,
           label: model.name?.trim() || model.id,
           price: toPriceTier(prompt, completion),
-          created: model.created ?? 0
+          created: model.created ?? 0,
+          variantCount: variantCounts.get(baseModelId(model.id)) ?? 1,
         };
       })
       .sort((a, b) => {
-        if (b.created !== a.created) {
-          return b.created - a.created;
-        }
+        if ((b.created ?? 0) !== (a.created ?? 0)) return (b.created ?? 0) - (a.created ?? 0);
         return a.id.localeCompare(b.id);
       })
-      .slice(0, 500)
-      .map(({ id, label, price }) => ({ id, label, price })) as CatalogModel[];
+      .slice(0, 500);
 
     return NextResponse.json({ models });
   } catch (error) {
