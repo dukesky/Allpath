@@ -25,14 +25,19 @@ function validateParticipant(raw: unknown): raw is ParticipantConfig {
   );
 }
 
+const VALID_SOURCE_ROLES = new Set(["user", "assistant", "summarizer"]);
+
 function isValidMessage(raw: unknown): raw is Message {
   if (!raw || typeof raw !== "object") return false;
   const m = raw as Record<string, unknown>;
   return (
     typeof m.messageId === "string" &&
     typeof m.sourceRole === "string" &&
+    VALID_SOURCE_ROLES.has(m.sourceRole) &&
     typeof m.sourceLabel === "string" &&
-    typeof m.content === "string"
+    typeof m.content === "string" &&
+    typeof m.roundId === "number" &&
+    typeof m.createdAt === "string"
   );
 }
 
@@ -72,7 +77,7 @@ export async function POST(request: NextRequest) {
   const mode: Mode = body.mode === "one_to_one" ? "one_to_one" : "roundtable";
 
   const initialMessages: Message[] = Array.isArray(body.initialMessages)
-    ? body.initialMessages.filter(isValidMessage)
+    ? body.initialMessages.slice(0, 500).filter(isValidMessage)
     : [];
 
   const session: SessionConfig = {

@@ -8,11 +8,13 @@ export async function GET(
 ) {
   const { id } = await params;
 
-  if (!id) {
-    return NextResponse.json({ error: "Share ID is required." }, { status: 400 });
+  let record;
+  try {
+    record = await getShareRecord(id);
+  } catch (err) {
+    console.error("[share] Firestore read failed:", err);
+    return NextResponse.json({ error: "Failed to load share record." }, { status: 500 });
   }
-
-  const record = await getShareRecord(id);
 
   if (!record) {
     return NextResponse.json({ error: "Share not found or expired." }, { status: 404 });

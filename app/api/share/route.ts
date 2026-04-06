@@ -34,13 +34,19 @@ export async function POST(request: NextRequest) {
     character: p.character
   }));
 
-  const record = await createShareRecord({
-    mode: config.mode,
-    transcript: completedMessages,
-    agentConfig
-  });
+  let record;
+  try {
+    record = await createShareRecord({
+      mode: config.mode,
+      transcript: completedMessages,
+      agentConfig
+    });
+  } catch (err) {
+    console.error("[share] Firestore write failed:", err);
+    return NextResponse.json({ error: "Failed to save share record." }, { status: 500 });
+  }
 
-  const baseUrl = process.env.OPENROUTER_SITE_URL ?? "https://all-path.com";
+  const baseUrl = process.env.APP_BASE_URL ?? process.env.OPENROUTER_SITE_URL ?? "https://all-path.com";
   const url = `${baseUrl}/share/${record.shareId}`;
 
   return NextResponse.json({ shareId: record.shareId, url });
