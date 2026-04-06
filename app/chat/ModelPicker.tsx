@@ -51,11 +51,11 @@ export function ModelPicker(props: {
 
   const providers = useMemo(() => {
     const seen = new Set<string>();
-    for (const model of filteredModels) {
+    for (const model of allModels) {
       seen.add(providerFromId(model.id));
     }
     return Array.from(seen).sort();
-  }, [filteredModels]);
+  }, [allModels]);
 
   // If providerFilter no longer matches any results (e.g. search narrowed it out), fall back to "all"
   const effectiveProvider = providers.includes(providerFilter) ? providerFilter : "all";
@@ -101,6 +101,7 @@ export function ModelPicker(props: {
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 space-y-2">
           {/* Search */}
           <input
+            aria-label="Search models"
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-primary"
             placeholder="Search models…"
             value={search}
@@ -167,6 +168,7 @@ export function ModelPicker(props: {
 
       {/* Custom model ID input */}
       <input
+        aria-label="Custom model ID"
         className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm"
         onChange={(event) => props.onSelect(event.target.value)}
         placeholder="Custom model ID"
