@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-04T02:01:19.331Z",
+  "generatedAt": "2026-04-06T02:24:23.440Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -341,11 +341,6 @@
     {
       "id": "mistralai/mistral-small-creative",
       "label": "Mistral: Mistral Small Creative",
-      "price": "$"
-    },
-    {
-      "id": "allenai/olmo-3.1-32b-think",
-      "label": "AllenAI: Olmo 3.1 32B Think",
       "price": "$"
     },
     {
