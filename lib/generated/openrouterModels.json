@@ -1,11 +1,26 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-06T15:14:52.208Z",
+  "generatedAt": "2026-04-08T02:12:15.580Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
+      "id": "anthropic/claude-opus-4.6-fast",
+      "label": "Anthropic: Claude Opus 4.6 (Fast)",
+      "price": "$$$"
+    },
+    {
+      "id": "z-ai/glm-5.1",
+      "label": "Z.ai: GLM 5.1",
+      "price": "$$"
+    },
+    {
       "id": "google/gemma-4-26b-a4b-it",
       "label": "Google: Gemma 4 26B A4B",
+      "price": "$"
+    },
+    {
+      "id": "google/gemma-4-26b-a4b-it:free",
+      "label": "Google: Gemma 4 26B A4B  (free)",
       "price": "$"
     },
     {
@@ -14,9 +29,14 @@
       "price": "$"
     },
     {
-      "id": "qwen/qwen3.6-plus:free",
-      "label": "Qwen: Qwen3.6 Plus (free)",
+      "id": "google/gemma-4-31b-it:free",
+      "label": "Google: Gemma 4 31B (free)",
       "price": "$"
+    },
+    {
+      "id": "qwen/qwen3.6-plus",
+      "label": "Qwen: Qwen3.6 Plus",
+      "price": "$$"
     },
     {
       "id": "z-ai/glm-5v-turbo",
