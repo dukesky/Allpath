@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-08T13:17:43.365Z",
+  "generatedAt": "2026-04-09T02:05:49.011Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -266,11 +266,6 @@
     {
       "id": "stepfun/step-3.5-flash",
       "label": "StepFun: Step 3.5 Flash",
-      "price": "$"
-    },
-    {
-      "id": "stepfun/step-3.5-flash:free",
-      "label": "StepFun: Step 3.5 Flash (free)",
       "price": "$"
     },
     {
