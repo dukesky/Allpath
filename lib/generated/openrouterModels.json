@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-10T02:25:41.769Z",
+  "generatedAt": "2026-04-13T02:32:15.592Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1146,11 +1146,6 @@
     {
       "id": "openai/gpt-4.1-nano",
       "label": "OpenAI: GPT-4.1 Nano",
-      "price": "$"
-    },
-    {
-      "id": "eleutherai/llemma_7b",
-      "label": "EleutherAI: Llemma 7b",
       "price": "$"
     },
     {
