@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-13T02:32:15.592Z",
+  "generatedAt": "2026-04-14T02:26:12.737Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "openrouter/elephant-alpha",
+      "label": "Elephant",
+      "price": "$"
+    },
     {
       "id": "anthropic/claude-opus-4.6-fast",
       "label": "Anthropic: Claude Opus 4.6 (Fast)",
