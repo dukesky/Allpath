@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-14T02:26:12.737Z",
+  "generatedAt": "2026-04-14T13:22:13.698Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -724,11 +724,6 @@
       "price": "$"
     },
     {
-      "id": "meituan/longcat-flash-chat",
-      "label": "Meituan: LongCat Flash Chat",
-      "price": "$"
-    },
-    {
       "id": "qwen/qwen-plus-2025-07-28",
       "label": "Qwen: Qwen Plus 0728",
       "price": "$"
@@ -1167,11 +1162,6 @@
       "id": "x-ai/grok-3-beta",
       "label": "xAI: Grok 3 Beta",
       "price": "$$"
-    },
-    {
-      "id": "nvidia/llama-3.1-nemotron-ultra-253b-v1",
-      "label": "NVIDIA: Llama 3.1 Nemotron Ultra 253B v1",
-      "price": "$"
     },
     {
       "id": "meta-llama/llama-4-maverick",
