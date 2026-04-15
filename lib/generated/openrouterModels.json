@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-14T13:22:13.698Z",
+  "generatedAt": "2026-04-15T02:24:15.896Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -979,11 +979,6 @@
       "price": "$"
     },
     {
-      "id": "inception/mercury",
-      "label": "Inception: Mercury",
-      "price": "$"
-    },
-    {
       "id": "mistralai/mistral-small-3.2-24b-instruct",
       "label": "Mistral: Mistral Small 3.2 24B",
       "price": "$"
@@ -1079,11 +1074,6 @@
       "price": "$"
     },
     {
-      "id": "inception/mercury-coder",
-      "label": "Inception: Mercury Coder",
-      "price": "$"
-    },
-    {
       "id": "meta-llama/llama-guard-4-12b",
       "label": "Meta: Llama Guard 4 12B",
       "price": "$"
@@ -1127,11 +1117,6 @@
       "id": "openai/o4-mini",
       "label": "OpenAI: o4 Mini",
       "price": "$$"
-    },
-    {
-      "id": "qwen/qwen2.5-coder-7b-instruct",
-      "label": "Qwen: Qwen2.5 Coder 7B Instruct",
-      "price": "$"
     },
     {
       "id": "openai/gpt-4.1",
