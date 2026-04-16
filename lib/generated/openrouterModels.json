@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-15T02:24:15.896Z",
+  "generatedAt": "2026-04-16T02:31:22.512Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1076,6 +1076,11 @@
     {
       "id": "meta-llama/llama-guard-4-12b",
       "label": "Meta: Llama Guard 4 12B",
+      "price": "$"
+    },
+    {
+      "id": "meta-llama/llama-guard-4-12b:free",
+      "label": "Meta: Llama Guard 4 12B (free)",
       "price": "$"
     },
     {
