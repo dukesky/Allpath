@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-16T02:31:22.512Z",
+  "generatedAt": "2026-04-17T02:27:37.909Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "anthropic/claude-opus-4.7",
+      "label": "Anthropic: Claude Opus 4.7",
+      "price": "$$$"
+    },
     {
       "id": "openrouter/elephant-alpha",
       "label": "Elephant",
@@ -1181,11 +1186,6 @@
     {
       "id": "mistralai/mistral-small-3.1-24b-instruct",
       "label": "Mistral: Mistral Small 3.1 24B",
-      "price": "$"
-    },
-    {
-      "id": "allenai/olmo-2-0325-32b-instruct",
-      "label": "AllenAI: Olmo 2 32B Instruct",
       "price": "$"
     },
     {
