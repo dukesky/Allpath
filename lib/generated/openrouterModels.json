@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-17T02:27:37.909Z",
+  "generatedAt": "2026-04-18T02:10:11.395Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1084,11 +1084,6 @@
       "price": "$"
     },
     {
-      "id": "meta-llama/llama-guard-4-12b:free",
-      "label": "Meta: Llama Guard 4 12B (free)",
-      "price": "$"
-    },
-    {
       "id": "qwen/qwen3-30b-a3b",
       "label": "Qwen: Qwen3 30B A3B",
       "price": "$"
@@ -1166,11 +1161,6 @@
     {
       "id": "meta-llama/llama-4-scout",
       "label": "Meta: Llama 4 Scout",
-      "price": "$"
-    },
-    {
-      "id": "qwen/qwen2.5-vl-32b-instruct",
-      "label": "Qwen: Qwen2.5 VL 32B Instruct",
       "price": "$"
     },
     {
