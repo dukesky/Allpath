@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-18T02:10:11.395Z",
+  "generatedAt": "2026-04-21T02:28:14.899Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "moonshotai/kimi-k2.6",
+      "label": "MoonshotAI: Kimi K2.6",
+      "price": "$$"
+    },
     {
       "id": "anthropic/claude-opus-4.7",
       "label": "Anthropic: Claude Opus 4.7",
