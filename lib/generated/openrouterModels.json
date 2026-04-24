@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-23T13:25:06.090Z",
+  "generatedAt": "2026-04-24T02:30:36.820Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "inclusionai/ling-2.6-1t:free",
+      "label": "inclusionAI: Ling-2.6-1T (free)",
+      "price": "$"
+    },
     {
       "id": "tencent/hy3-preview:free",
       "label": "Tencent: Hy3 preview (free)",
@@ -536,6 +541,11 @@
     {
       "id": "x-ai/grok-4.1-fast",
       "label": "xAI: Grok 4.1 Fast",
+      "price": "$"
+    },
+    {
+      "id": "deepcogito/cogito-v2.1-671b",
+      "label": "Deep Cogito: Cogito v2.1 671B",
       "price": "$"
     },
     {
