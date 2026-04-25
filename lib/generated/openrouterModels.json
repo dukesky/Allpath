@@ -1,8 +1,18 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-24T13:20:34.242Z",
+  "generatedAt": "2026-04-25T02:12:24.193Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "openai/gpt-5.5-pro",
+      "label": "OpenAI: GPT-5.5 Pro",
+      "price": "$$$"
+    },
+    {
+      "id": "openai/gpt-5.5",
+      "label": "OpenAI: GPT-5.5",
+      "price": "$$$"
+    },
     {
       "id": "deepseek/deepseek-v4-pro",
       "label": "DeepSeek: DeepSeek V4 Pro",
