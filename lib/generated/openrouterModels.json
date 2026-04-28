@@ -1,8 +1,43 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-27T13:49:18.271Z",
+  "generatedAt": "2026-04-28T02:44:43.614Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "~anthropic/claude-haiku-latest",
+      "label": "Anthropic Claude Haiku Latest",
+      "price": "$$"
+    },
+    {
+      "id": "~openai/gpt-mini-latest",
+      "label": "OpenAI GPT Mini Latest",
+      "price": "$$"
+    },
+    {
+      "id": "~google/gemini-pro-latest",
+      "label": "Google Gemini Pro Latest",
+      "price": "$$"
+    },
+    {
+      "id": "~moonshotai/kimi-latest",
+      "label": "MoonshotAI Kimi Latest",
+      "price": "$$"
+    },
+    {
+      "id": "~google/gemini-flash-latest",
+      "label": "Google Gemini Flash Latest",
+      "price": "$$"
+    },
+    {
+      "id": "~anthropic/claude-sonnet-latest",
+      "label": "Anthropic Claude Sonnet Latest",
+      "price": "$$"
+    },
+    {
+      "id": "~openai/gpt-latest",
+      "label": "OpenAI GPT Latest",
+      "price": "$$$"
+    },
     {
       "id": "qwen/qwen3.5-plus-20260420",
       "label": "Qwen: Qwen3.5 Plus 2026-04-20",
