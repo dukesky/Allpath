@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-29T02:44:28.641Z",
+  "generatedAt": "2026-04-30T02:45:46.650Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -502,11 +502,6 @@
       "id": "google/gemini-3-flash-preview",
       "label": "Google: Gemini 3 Flash Preview",
       "price": "$$"
-    },
-    {
-      "id": "mistralai/mistral-small-creative",
-      "label": "Mistral: Mistral Small Creative",
-      "price": "$"
     },
     {
       "id": "xiaomi/mimo-v2-flash",
