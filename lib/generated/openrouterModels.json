@@ -1,8 +1,23 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-04-30T02:45:46.650Z",
+  "generatedAt": "2026-05-01T02:52:29.861Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "x-ai/grok-4.3",
+      "label": "xAI: Grok 4.3",
+      "price": "$$"
+    },
+    {
+      "id": "ibm-granite/granite-4.1-8b",
+      "label": "IBM: Granite 4.1 8B",
+      "price": "$"
+    },
+    {
+      "id": "openrouter/owl-alpha",
+      "label": "Owl Alpha",
+      "price": "$"
+    },
     {
       "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
       "label": "NVIDIA: Nemotron 3 Nano Omni (free)",
