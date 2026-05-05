@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-01T02:52:29.861Z",
+  "generatedAt": "2026-05-05T02:35:30.853Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -12,6 +12,11 @@
       "id": "ibm-granite/granite-4.1-8b",
       "label": "IBM: Granite 4.1 8B",
       "price": "$"
+    },
+    {
+      "id": "mistralai/mistral-medium-3-5",
+      "label": "Mistral: Mistral Medium 3.5",
+      "price": "$$"
     },
     {
       "id": "openrouter/owl-alpha",
