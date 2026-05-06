@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-06T02:39:57.479Z",
+  "generatedAt": "2026-05-06T14:05:53.473Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "baidu/cobuddy:free",
+      "label": "Baidu Qianfan: CoBuddy (free)",
+      "price": "$"
+    },
     {
       "id": "openai/gpt-chat-latest",
       "label": "OpenAI: GPT Chat Latest",
