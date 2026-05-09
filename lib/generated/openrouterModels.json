@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-08T02:46:49.951Z",
+  "generatedAt": "2026-05-09T02:41:18.291Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "inclusionai/ring-2.6-1t:free",
+      "label": "inclusionAI: Ring-2.6-1T (free)",
+      "price": "$"
+    },
     {
       "id": "google/gemini-3.1-flash-lite",
       "label": "Google: Gemini 3.1 Flash Lite",
@@ -139,8 +144,8 @@
       "price": "$"
     },
     {
-      "id": "tencent/hy3-preview:free",
-      "label": "Tencent: Hy3 preview (free)",
+      "id": "tencent/hy3-preview",
+      "label": "Tencent: Hy3 preview",
       "price": "$"
     },
     {
@@ -1116,11 +1121,6 @@
     {
       "id": "tencent/hunyuan-a13b-instruct",
       "label": "Tencent: Hunyuan A13B Instruct",
-      "price": "$"
-    },
-    {
-      "id": "tngtech/deepseek-r1t2-chimera",
-      "label": "TNG: DeepSeek R1T2 Chimera",
       "price": "$"
     },
     {
