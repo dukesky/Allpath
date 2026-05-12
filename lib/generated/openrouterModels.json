@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-09T02:41:18.291Z",
+  "generatedAt": "2026-05-12T02:48:06.078Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -236,6 +236,11 @@
     {
       "id": "arcee-ai/trinity-large-thinking",
       "label": "Arcee AI: Trinity Large Thinking",
+      "price": "$"
+    },
+    {
+      "id": "arcee-ai/trinity-large-thinking:free",
+      "label": "Arcee AI: Trinity Large Thinking (free)",
       "price": "$"
     },
     {
