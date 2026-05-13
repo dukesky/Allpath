@@ -1,8 +1,18 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-12T02:48:06.078Z",
+  "generatedAt": "2026-05-13T02:53:14.281Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "anthropic/claude-opus-4.7-fast",
+      "label": "Anthropic: Claude Opus 4.7 (Fast)",
+      "price": "$$$"
+    },
+    {
+      "id": "perceptron/perceptron-mk1",
+      "label": "Perceptron: Perceptron Mk1",
+      "price": "$"
+    },
     {
       "id": "inclusionai/ring-2.6-1t:free",
       "label": "inclusionAI: Ring-2.6-1T (free)",
