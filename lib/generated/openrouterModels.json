@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-14T02:55:33.338Z",
+  "generatedAt": "2026-05-14T14:06:34.976Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -191,11 +191,6 @@
     {
       "id": "openrouter/pareto-code",
       "label": "Pareto Code Router",
-      "price": "$"
-    },
-    {
-      "id": "baidu/qianfan-ocr-fast:free",
-      "label": "Baidu: Qianfan-OCR-Fast (free)",
       "price": "$"
     },
     {
