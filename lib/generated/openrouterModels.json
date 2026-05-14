@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-13T02:53:14.281Z",
+  "generatedAt": "2026-05-14T02:55:33.338Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -146,6 +146,11 @@
     {
       "id": "deepseek/deepseek-v4-flash",
       "label": "DeepSeek: DeepSeek V4 Flash",
+      "price": "$"
+    },
+    {
+      "id": "deepseek/deepseek-v4-flash:free",
+      "label": "DeepSeek: DeepSeek V4 Flash (free)",
       "price": "$"
     },
     {
@@ -936,7 +941,7 @@
     {
       "id": "moonshotai/kimi-k2-0905",
       "label": "MoonshotAI: Kimi K2 0905",
-      "price": "$"
+      "price": "$$"
     },
     {
       "id": "qwen/qwen3-30b-a3b-thinking-2507",
