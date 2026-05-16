@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-15T02:56:05.708Z",
+  "generatedAt": "2026-05-16T02:44:37.802Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -14,8 +14,8 @@
       "price": "$"
     },
     {
-      "id": "inclusionai/ring-2.6-1t:free",
-      "label": "inclusionAI: Ring-2.6-1T (free)",
+      "id": "inclusionai/ring-2.6-1t",
+      "label": "inclusionAI: Ring-2.6-1T",
       "price": "$"
     },
     {
@@ -684,11 +684,6 @@
       "price": "$$"
     },
     {
-      "id": "x-ai/grok-4.1-fast",
-      "label": "xAI: Grok 4.1 Fast",
-      "price": "$"
-    },
-    {
       "id": "deepcogito/cogito-v2.1-671b",
       "label": "Deep Cogito: Cogito v2.1 671B",
       "price": "$"
@@ -889,11 +884,6 @@
       "price": "$"
     },
     {
-      "id": "x-ai/grok-4-fast",
-      "label": "xAI: Grok 4 Fast",
-      "price": "$"
-    },
-    {
       "id": "alibaba/tongyi-deepresearch-30b-a3b",
       "label": "Tongyi DeepResearch 30B A3B",
       "price": "$"
@@ -946,11 +936,6 @@
     {
       "id": "qwen/qwen3-30b-a3b-thinking-2507",
       "label": "Qwen: Qwen3 30B A3B Thinking 2507",
-      "price": "$"
-    },
-    {
-      "id": "x-ai/grok-code-fast-1",
-      "label": "xAI: Grok Code Fast 1",
       "price": "$"
     },
     {
@@ -1134,11 +1119,6 @@
       "price": "$"
     },
     {
-      "id": "x-ai/grok-4",
-      "label": "xAI: Grok 4",
-      "price": "$$"
-    },
-    {
       "id": "tencent/hunyuan-a13b-instruct",
       "label": "Tencent: Hunyuan A13B Instruct",
       "price": "$"
@@ -1187,16 +1167,6 @@
       "id": "openai/o3-pro",
       "label": "OpenAI: o3 Pro",
       "price": "$$$"
-    },
-    {
-      "id": "x-ai/grok-3-mini",
-      "label": "xAI: Grok 3 Mini",
-      "price": "$"
-    },
-    {
-      "id": "x-ai/grok-3",
-      "label": "xAI: Grok 3",
-      "price": "$$"
     },
     {
       "id": "google/gemini-2.5-pro-preview",
@@ -1317,16 +1287,6 @@
       "id": "alfredpros/codellama-7b-instruct-solidity",
       "label": "AlfredPros: CodeLLaMa 7B Instruct Solidity",
       "price": "$"
-    },
-    {
-      "id": "x-ai/grok-3-mini-beta",
-      "label": "xAI: Grok 3 Mini Beta",
-      "price": "$"
-    },
-    {
-      "id": "x-ai/grok-3-beta",
-      "label": "xAI: Grok 3 Beta",
-      "price": "$$"
     },
     {
       "id": "meta-llama/llama-4-maverick",
