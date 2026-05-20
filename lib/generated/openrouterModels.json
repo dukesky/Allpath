@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-16T02:44:37.802Z",
+  "generatedAt": "2026-05-20T03:24:22.348Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "google/gemini-3.5-flash",
+      "label": "Google: Gemini 3.5 Flash",
+      "price": "$$"
+    },
     {
       "id": "anthropic/claude-opus-4.7-fast",
       "label": "Anthropic: Claude Opus 4.7 (Fast)",
@@ -216,7 +221,7 @@
     {
       "id": "z-ai/glm-5.1",
       "label": "Z.ai: GLM 5.1",
-      "price": "$$"
+      "price": "$"
     },
     {
       "id": "google/gemma-4-26b-a4b-it",
