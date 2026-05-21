@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-20T03:24:22.348Z",
+  "generatedAt": "2026-05-21T03:30:52.432Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "x-ai/grok-build-0.1",
+      "label": "xAI: Grok Build 0.1",
+      "price": "$"
+    },
     {
       "id": "google/gemini-3.5-flash",
       "label": "Google: Gemini 3.5 Flash",
