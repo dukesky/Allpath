@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-21T03:30:52.432Z",
+  "generatedAt": "2026-05-21T15:20:28.923Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -226,7 +226,7 @@
     {
       "id": "z-ai/glm-5.1",
       "label": "Z.ai: GLM 5.1",
-      "price": "$"
+      "price": "$$"
     },
     {
       "id": "google/gemma-4-26b-a4b-it",
@@ -486,11 +486,6 @@
     {
       "id": "stepfun/step-3.5-flash",
       "label": "StepFun: Step 3.5 Flash",
-      "price": "$"
-    },
-    {
-      "id": "arcee-ai/trinity-large-preview",
-      "label": "Arcee AI: Trinity Large Preview",
       "price": "$"
     },
     {
