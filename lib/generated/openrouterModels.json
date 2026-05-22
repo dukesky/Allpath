@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-21T15:20:28.923Z",
+  "generatedAt": "2026-05-22T03:29:44.735Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "qwen/qwen3.7-max",
+      "label": "Qwen: Qwen3.7 Max",
+      "price": "$$"
+    },
     {
       "id": "x-ai/grok-build-0.1",
       "label": "xAI: Grok Build 0.1",
