@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-22T03:29:44.735Z",
+  "generatedAt": "2026-05-25T14:50:33.639Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -891,11 +891,6 @@
     {
       "id": "deepseek/deepseek-v3.1-terminus",
       "label": "DeepSeek: DeepSeek V3.1 Terminus",
-      "price": "$"
-    },
-    {
-      "id": "alibaba/tongyi-deepresearch-30b-a3b",
-      "label": "Tongyi DeepResearch 30B A3B",
       "price": "$"
     },
     {
