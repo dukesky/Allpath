@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-27T15:36:33.953Z",
+  "generatedAt": "2026-05-28T02:56:03.142Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -212,6 +212,11 @@
       "id": "moonshotai/kimi-k2.6",
       "label": "MoonshotAI: Kimi K2.6",
       "price": "$$"
+    },
+    {
+      "id": "moonshotai/kimi-k2.6:free",
+      "label": "MoonshotAI: Kimi K2.6 (free)",
+      "price": "$"
     },
     {
       "id": "anthropic/claude-opus-4.7",
