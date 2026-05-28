@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-28T02:56:03.142Z",
+  "generatedAt": "2026-05-28T15:48:20.672Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -202,11 +202,6 @@
       "id": "openrouter/pareto-code",
       "label": "Pareto Code Router",
       "price": "$"
-    },
-    {
-      "id": "baidu/qianfan-ocr-fast",
-      "label": "Baidu: Qianfan-OCR-Fast",
-      "price": "$$"
     },
     {
       "id": "moonshotai/kimi-k2.6",
