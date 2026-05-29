@@ -1,8 +1,23 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-28T15:48:20.672Z",
+  "generatedAt": "2026-05-29T03:25:11.351Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "stepfun/step-3.7-flash",
+      "label": "StepFun: Step 3.7 Flash",
+      "price": "$"
+    },
+    {
+      "id": "anthropic/claude-opus-4.8-fast",
+      "label": "Anthropic: Claude Opus 4.8 (Fast)",
+      "price": "$$$"
+    },
+    {
+      "id": "anthropic/claude-opus-4.8",
+      "label": "Anthropic: Claude Opus 4.8",
+      "price": "$$$"
+    },
     {
       "id": "qwen/qwen3.7-max",
       "label": "Qwen: Qwen3.7 Max",
@@ -651,11 +666,6 @@
     {
       "id": "arcee-ai/trinity-mini",
       "label": "Arcee AI: Trinity Mini",
-      "price": "$"
-    },
-    {
-      "id": "deepseek/deepseek-v3.2-speciale",
-      "label": "DeepSeek: DeepSeek V3.2 Speciale",
       "price": "$"
     },
     {
