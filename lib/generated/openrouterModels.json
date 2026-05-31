@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-31T03:38:10.642Z",
+  "generatedAt": "2026-05-31T13:41:20.725Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -307,16 +307,6 @@
       "id": "rekaai/reka-edge",
       "label": "Reka Edge",
       "price": "$"
-    },
-    {
-      "id": "xiaomi/mimo-v2-omni",
-      "label": "Xiaomi: MiMo-V2-Omni",
-      "price": "$"
-    },
-    {
-      "id": "xiaomi/mimo-v2-pro",
-      "label": "Xiaomi: MiMo-V2-Pro",
-      "price": "$$"
     },
     {
       "id": "minimax/minimax-m2.7",
@@ -1081,16 +1071,6 @@
     {
       "id": "moonshotai/kimi-k2",
       "label": "MoonshotAI: Kimi K2 0711",
-      "price": "$"
-    },
-    {
-      "id": "mistralai/devstral-medium",
-      "label": "Mistral: Devstral Medium",
-      "price": "$"
-    },
-    {
-      "id": "mistralai/devstral-small",
-      "label": "Mistral: Devstral Small 1.1",
       "price": "$"
     },
     {
