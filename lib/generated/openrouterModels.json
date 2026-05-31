@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-30T02:52:40.802Z",
+  "generatedAt": "2026-05-31T03:38:10.642Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -464,11 +464,6 @@
       "price": "$"
     },
     {
-      "id": "minimax/minimax-m2.5:free",
-      "label": "MiniMax: MiniMax M2.5 (free)",
-      "price": "$"
-    },
-    {
       "id": "z-ai/glm-5",
       "label": "Z.ai: GLM 5",
       "price": "$"
@@ -501,11 +496,6 @@
     {
       "id": "moonshotai/kimi-k2.5",
       "label": "MoonshotAI: Kimi K2.5",
-      "price": "$"
-    },
-    {
-      "id": "upstage/solar-pro-3",
-      "label": "Upstage: Solar Pro 3",
       "price": "$"
     },
     {
@@ -809,11 +799,6 @@
       "price": "$"
     },
     {
-      "id": "baidu/ernie-4.5-21b-a3b-thinking",
-      "label": "Baidu: ERNIE 4.5 21B A3B Thinking",
-      "price": "$"
-    },
-    {
       "id": "google/gemini-2.5-flash-image",
       "label": "Google: Nano Banana (Gemini 2.5 Flash Image)",
       "price": "$"
@@ -961,11 +946,6 @@
     {
       "id": "mistralai/mistral-medium-3.1",
       "label": "Mistral: Mistral Medium 3.1",
-      "price": "$"
-    },
-    {
-      "id": "baidu/ernie-4.5-21b-a3b",
-      "label": "Baidu: ERNIE 4.5 21B A3B",
       "price": "$"
     },
     {
@@ -1281,11 +1261,6 @@
     {
       "id": "openai/gpt-4.1-nano",
       "label": "OpenAI: GPT-4.1 Nano",
-      "price": "$"
-    },
-    {
-      "id": "alfredpros/codellama-7b-instruct-solidity",
-      "label": "AlfredPros: CodeLLaMa 7B Instruct Solidity",
       "price": "$"
     },
     {
