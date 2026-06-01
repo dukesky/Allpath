@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-05-31T13:41:20.725Z",
+  "generatedAt": "2026-06-01T03:52:53.310Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "minimax/minimax-m3",
+      "label": "MiniMax: MiniMax M3",
+      "price": "$"
+    },
     {
       "id": "stepfun/step-3.7-flash",
       "label": "StepFun: Step 3.7 Flash",
@@ -171,11 +176,6 @@
     {
       "id": "deepseek/deepseek-v4-flash",
       "label": "DeepSeek: DeepSeek V4 Flash",
-      "price": "$"
-    },
-    {
-      "id": "deepseek/deepseek-v4-flash:free",
-      "label": "DeepSeek: DeepSeek V4 Flash (free)",
       "price": "$"
     },
     {
@@ -486,6 +486,11 @@
     {
       "id": "moonshotai/kimi-k2.5",
       "label": "MoonshotAI: Kimi K2.5",
+      "price": "$"
+    },
+    {
+      "id": "upstage/solar-pro-3",
+      "label": "Upstage: Solar Pro 3",
       "price": "$"
     },
     {
