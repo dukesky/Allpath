@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-01T03:52:53.310Z",
+  "generatedAt": "2026-06-02T16:20:31.132Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1101,11 +1101,6 @@
     {
       "id": "baidu/ernie-4.5-vl-424b-a47b",
       "label": "Baidu: ERNIE 4.5 VL 424B A47B",
-      "price": "$"
-    },
-    {
-      "id": "baidu/ernie-4.5-300b-a47b",
-      "label": "Baidu: ERNIE 4.5 300B A47B",
       "price": "$"
     },
     {
