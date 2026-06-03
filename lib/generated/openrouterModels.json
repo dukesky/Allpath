@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-02T16:20:31.132Z",
+  "generatedAt": "2026-06-03T03:54:37.185Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -42,6 +42,11 @@
       "id": "anthropic/claude-opus-4.7-fast",
       "label": "Anthropic: Claude Opus 4.7 (Fast)",
       "price": "$$$"
+    },
+    {
+      "id": "openrouter/fusion",
+      "label": "OpenRouter: Fusion",
+      "price": "$"
     },
     {
       "id": "perceptron/perceptron-mk1",
