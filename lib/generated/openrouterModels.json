@@ -1,11 +1,16 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-04T14:55:29.783Z",
+  "generatedAt": "2026-06-05T03:35:06.280Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
       "id": "nvidia/nemotron-3.5-content-safety:free",
       "label": "NVIDIA: Nemotron 3.5 Content Safety (free)",
+      "price": "$"
+    },
+    {
+      "id": "nvidia/nemotron-3-ultra-550b-a55b",
+      "label": "NVIDIA: Nemotron 3 Ultra",
       "price": "$"
     },
     {
