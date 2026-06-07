@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-05T03:35:06.280Z",
+  "generatedAt": "2026-06-07T03:41:50.364Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -181,7 +181,7 @@
     {
       "id": "qwen/qwen3.6-27b",
       "label": "Qwen: Qwen3.6 27B",
-      "price": "$$"
+      "price": "$"
     },
     {
       "id": "openai/gpt-5.5-pro",
@@ -969,11 +969,6 @@
       "price": "$"
     },
     {
-      "id": "baidu/ernie-4.5-vl-28b-a3b",
-      "label": "Baidu: ERNIE 4.5 VL 28B A3B",
-      "price": "$"
-    },
-    {
       "id": "z-ai/glm-4.5v",
       "label": "Z.ai: GLM 4.5V",
       "price": "$"
@@ -1187,11 +1182,6 @@
       "id": "google/gemini-2.5-pro-preview-05-06",
       "label": "Google: Gemini 2.5 Pro Preview 05-06",
       "price": "$$"
-    },
-    {
-      "id": "arcee-ai/spotlight",
-      "label": "Arcee AI: Spotlight",
-      "price": "$"
     },
     {
       "id": "arcee-ai/maestro-reasoning",
