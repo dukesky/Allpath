@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-07T03:41:50.364Z",
+  "generatedAt": "2026-06-08T15:47:22.150Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -626,11 +626,6 @@
     {
       "id": "z-ai/glm-4.6v",
       "label": "Z.ai: GLM 4.6V",
-      "price": "$"
-    },
-    {
-      "id": "nex-agi/deepseek-v3.1-nex-n1",
-      "label": "Nex AGI: DeepSeek V3.1 Nex N1",
       "price": "$"
     },
     {
