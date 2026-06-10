@@ -1,8 +1,18 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-09T14:46:16.308Z",
+  "generatedAt": "2026-06-10T03:32:50.333Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "~anthropic/claude-fable-latest",
+      "label": "Anthropic: Claude Fable Latest",
+      "price": "$$$"
+    },
+    {
+      "id": "anthropic/claude-fable-5",
+      "label": "Anthropic: Claude Fable 5",
+      "price": "$$$"
+    },
     {
       "id": "nex-agi/nex-n2-pro:free",
       "label": "Nex AGI: Nex-N2-Pro (free)",
@@ -297,11 +307,6 @@
       "id": "qwen/qwen3.6-plus",
       "label": "Qwen: Qwen3.6 Plus",
       "price": "$"
-    },
-    {
-      "id": "z-ai/glm-5v-turbo",
-      "label": "Z.ai: GLM 5V Turbo",
-      "price": "$$"
     },
     {
       "id": "arcee-ai/trinity-large-thinking",
@@ -1049,18 +1054,8 @@
       "price": "$"
     },
     {
-      "id": "z-ai/glm-4.5-air:free",
-      "label": "Z.ai: GLM 4.5 Air (free)",
-      "price": "$"
-    },
-    {
       "id": "qwen/qwen3-235b-a22b-thinking-2507",
       "label": "Qwen: Qwen3 235B A22B Thinking 2507",
-      "price": "$"
-    },
-    {
-      "id": "z-ai/glm-4-32b",
-      "label": "Z.ai: GLM 4 32B",
       "price": "$"
     },
     {
