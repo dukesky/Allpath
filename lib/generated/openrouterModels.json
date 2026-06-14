@@ -1,8 +1,13 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-12T14:54:35.613Z",
+  "generatedAt": "2026-06-14T03:52:43.781Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "openrouter/fusion",
+      "label": "OpenRouter: Fusion",
+      "price": "$"
+    },
     {
       "id": "moonshotai/kimi-k2.7-code",
       "label": "MoonshotAI: Kimi K2.7 Code",
@@ -82,11 +87,6 @@
       "id": "anthropic/claude-opus-4.7-fast",
       "label": "Anthropic: Claude Opus 4.7 (Fast)",
       "price": "$$$"
-    },
-    {
-      "id": "openrouter/fusion",
-      "label": "OpenRouter: Fusion",
-      "price": "$"
     },
     {
       "id": "perceptron/perceptron-mk1",
