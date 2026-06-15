@@ -6,6 +6,8 @@ export interface SessionMemberMeta {
   avatarUrl?: string;
   model?: string;
   muted?: boolean;
+  roleTitle?: string;
+  character?: string;
 }
 
 export interface SessionMeta {

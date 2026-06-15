@@ -3,7 +3,8 @@
 import { FormEvent, Dispatch, SetStateAction } from "react";
 import { Mode } from "@/lib/types";
 import { SessionMemberMeta, PendingAttachment } from "./types";
-import { isImageAttachment, storyExperience } from "./utils";
+import { isImageAttachment } from "./utils";
+import { ModeSwitcher } from "./ModeSwitcher";
 
 interface ChatInputProps {
   sessionId: string | null;
@@ -15,9 +16,6 @@ interface ChatInputProps {
   mentionCandidates: SessionMemberMeta[];
   showMentionMenu: boolean;
   activeSessionMembers: SessionMemberMeta[];
-  activeStory: string;
-  starterPrompts: string[];
-  showStarterPrompts: boolean;
   isMobileView: boolean;
   onInputChange: (value: string) => void;
   onSendMessage: (event: FormEvent) => void;
@@ -28,6 +26,7 @@ interface ChatInputProps {
   onSetTargetParticipantIds: Dispatch<SetStateAction<string[]>>;
   onRunSummarizer: () => Promise<void>;
   onSetLightbox: (image: { src: string; name: string } | null) => void;
+  onChangeMode: (mode: Mode) => void;
 }
 
 export function ChatInput({
@@ -40,9 +39,6 @@ export function ChatInput({
   mentionCandidates,
   showMentionMenu,
   activeSessionMembers,
-  activeStory,
-  starterPrompts,
-  showStarterPrompts,
   isMobileView,
   onInputChange,
   onSendMessage,
@@ -53,33 +49,15 @@ export function ChatInput({
   onSetTargetParticipantIds,
   onRunSummarizer,
   onSetLightbox,
+  onChangeMode,
 }: ChatInputProps) {
   return (
     <div className="border-t border-slate-200 p-3">
-      {showStarterPrompts && (
-        <div className="mb-3 rounded-2xl border border-slate-200 bg-slate-50 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            {activeStory ? `${activeStory} starter prompts` : "Starter prompts"}
-          </p>
-          <p className="mt-1 text-xs text-slate-500">
-            {activeStory
-              ? storyExperience(activeStory).tagline
-              : "Ask one of these to get the conversation moving."}
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {starterPrompts.slice(0, 4).map((prompt) => (
-              <button
-                key={prompt}
-                type="button"
-                className="rounded-full border border-slate-300 bg-white px-3 py-2 text-xs text-slate-700"
-                onClick={() => void onSubmitMessageRequest(prompt)}
-              >
-                {prompt}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      <ModeSwitcher
+        sessionMode={sessionMode}
+        onChangeMode={onChangeMode}
+        disabled={!sessionId}
+      />
       {sessionMode === "one_to_one" && (
         <div className="mb-2 flex items-center gap-2 text-xs">
           <span className="text-slate-500">Targets:</span>

@@ -101,6 +101,67 @@ export function MessageFeed({
           </div>
         </section>
       )}
+
+      {showStarterPrompts && (
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 py-8">
+          {/* 成员卡片行 */}
+          {activeSessionMembers.filter((m) => !m.muted).length > 0 && (
+            <div className="w-full">
+              <p className="mb-3 text-center text-xs font-semibold uppercase tracking-wide text-slate-400">
+                当前对话阵容
+              </p>
+              <div className="flex flex-wrap justify-center gap-3">
+                {activeSessionMembers.filter((m) => !m.muted).map((member, idx) => {
+                  const bio =
+                    member.roleTitle ||
+                    (member.character ? member.character.slice(0, 40) : "");
+                  return (
+                    <div
+                      key={member.id}
+                      className="flex w-32 flex-col items-center rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
+                    >
+                      <div className="h-14 w-14 overflow-hidden rounded-full border border-slate-200">
+                        <img
+                          src={member.avatarUrl || getDefaultAvatarUrl(idx)}
+                          alt={member.label}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <p className="mt-2 text-center text-xs font-semibold text-slate-800">
+                        {member.label}
+                      </p>
+                      {bio && (
+                        <p className="mt-1 line-clamp-2 text-center text-[10px] leading-4 text-slate-500">
+                          {bio}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          {/* Starter prompts */}
+          <div className="w-full">
+            <p className="mb-2 text-center text-xs font-semibold uppercase tracking-wide text-slate-400">
+              {activeStory ? `${activeStory} · 开始提问` : "开始提问"}
+            </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {starterPrompts.slice(0, 4).map((prompt) => (
+                <button
+                  key={prompt}
+                  type="button"
+                  className="rounded-full border border-slate-300 bg-white px-4 py-2 text-xs text-slate-700 shadow-sm hover:bg-slate-50"
+                  onClick={() => void onSubmitPrompt(prompt)}
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {groupedMessages.map((message) => (
         <article
           key={message.messageId}

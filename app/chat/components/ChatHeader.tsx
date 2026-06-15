@@ -1,6 +1,6 @@
 "use client";
 
-import { Message, Mode } from "@/lib/types";
+import { Message } from "@/lib/types";
 import { getDefaultAvatarUrl } from "@/lib/avatar";
 import { SessionMemberMeta } from "./types";
 
@@ -8,16 +8,12 @@ interface ChatHeaderProps {
   sessionId: string | null;
   status: string;
   roundNumber: number;
-  sessionMode: Mode;
   activeSessionMembers: SessionMemberMeta[];
   isChatMembersOpen: boolean;
-  isModeHelpOpen: boolean;
   isSharing: boolean;
   shareUrl: string | null;
   groupedMessages: Message[];
   onToggleChatMembers: () => void;
-  onToggleModeHelp: () => void;
-  onChangeMode: (mode: Mode) => void;
   onToggleMute: (sessionId: string, participantId: string, muted: boolean) => void;
   onShare: () => void;
   onDismissShare: () => void;
@@ -28,16 +24,12 @@ export function ChatHeader({
   sessionId,
   status,
   roundNumber,
-  sessionMode,
   activeSessionMembers,
   isChatMembersOpen,
-  isModeHelpOpen,
   isSharing,
   shareUrl,
   groupedMessages,
   onToggleChatMembers,
-  onToggleModeHelp,
-  onChangeMode,
   onToggleMute,
   onShare,
   onDismissShare,
@@ -122,69 +114,40 @@ export function ChatHeader({
             </div>
           )}
         </div>
-          {sessionId && groupedMessages.some((m) => m.sourceRole !== "user" && m.status === "completed") && (
-            <div className="relative self-start lg:self-auto">
-              <button
-                type="button"
-                onClick={onShare}
-                disabled={isSharing}
-                className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm hover:bg-slate-50 disabled:opacity-50"
-              >
-                {isSharing ? "Sharing…" : "Share"}
-              </button>
-              {shareUrl && (
-                <div className="absolute right-0 top-full z-20 mt-1 w-72 rounded-xl border border-slate-200 bg-white p-3 shadow-lg">
-                  <p className="text-xs font-semibold text-slate-700">Link copied to clipboard</p>
-                  <p className="mt-1 break-all text-xs text-slate-500">{shareUrl}</p>
-                  <div className="mt-2 flex items-center gap-3">
-                    <button
-                      type="button"
-                      className="text-xs text-indigo-600 hover:underline"
-                      onClick={onCopyShare}
-                    >
-                      Copy again
-                    </button>
-                    <button
-                      type="button"
-                      className="text-xs text-slate-400 hover:underline"
-                      onClick={onDismissShare}
-                    >
-                      Dismiss
-                    </button>
-                  </div>
+        {sessionId && groupedMessages.some((m) => m.sourceRole !== "user" && m.status === "completed") && (
+          <div className="relative self-start lg:self-auto">
+            <button
+              type="button"
+              onClick={onShare}
+              disabled={isSharing}
+              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm hover:bg-slate-50 disabled:opacity-50"
+            >
+              {isSharing ? "Sharing…" : "Share"}
+            </button>
+            {shareUrl && (
+              <div className="absolute right-0 top-full z-20 mt-1 w-72 rounded-xl border border-slate-200 bg-white p-3 shadow-lg">
+                <p className="text-xs font-semibold text-slate-700">Link copied to clipboard</p>
+                <p className="mt-1 break-all text-xs text-slate-500">{shareUrl}</p>
+                <div className="mt-2 flex items-center gap-3">
+                  <button
+                    type="button"
+                    className="text-xs text-indigo-600 hover:underline"
+                    onClick={onCopyShare}
+                  >
+                    Copy again
+                  </button>
+                  <button
+                    type="button"
+                    className="text-xs text-slate-400 hover:underline"
+                    onClick={onDismissShare}
+                  >
+                    Dismiss
+                  </button>
                 </div>
-              )}
-            </div>
-          )}
-        <div className="relative flex items-center gap-2 self-start lg:self-auto">
-          <label className="text-xs text-slate-500">Mode</label>
-          <select
-            className="rounded-md border border-slate-300 px-2 py-1 text-xs"
-            value={sessionMode}
-            onChange={(event) => void onChangeMode(event.target.value as Mode)}
-          >
-            <option value="roundtable">Round Table</option>
-            <option value="one_to_one">One to One</option>
-          </select>
-          <button
-            type="button"
-            className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-300 text-xs font-semibold text-slate-500"
-            onClick={onToggleModeHelp}
-            aria-label="Explain chat modes"
-          >
-            ?
-          </button>
-          {isModeHelpOpen && (
-            <div className="absolute right-0 top-9 z-10 w-64 rounded-xl border border-slate-200 bg-white p-3 text-xs text-slate-600 shadow-lg">
-              <p>
-                <span className="font-semibold text-slate-800">Round Table:</span> every agent sees the shared conversation and answers in context.
-              </p>
-              <p className="mt-2">
-                <span className="font-semibold text-slate-800">One-to-One:</span> agents only see you, unless you target them with <span className="font-mono">@</span>.
-              </p>
-            </div>
-          )}
-        </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </header>
   );

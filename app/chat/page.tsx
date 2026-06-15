@@ -64,6 +64,9 @@ export default function HomePage() {
     participants: false,
     summarizer: false
   });
+  const [setupStep, setSetupStep] = useState<1 | 2 | 3>(1);
+  const [selectedStory, setSelectedStory] = useState<string>("");
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [sessionMode, setSessionMode] = useState<Mode>("roundtable");
   const [apiKeyMode, setApiKeyMode] = useState<ApiKeyMode>("default_profile");
   const [defaultProfileApiKey, setDefaultProfileApiKey] = useState("");
@@ -98,7 +101,6 @@ export default function HomePage() {
   const [trialStatus, setTrialStatus] = useState<TrialStatusResponse | null>(null);
   const [inviteCode, setInviteCode] = useState("");
   const [isRedeemingInvite, setIsRedeemingInvite] = useState(false);
-  const [isModeHelpOpen, setIsModeHelpOpen] = useState(false);
   const [quickStartModel, setQuickStartModel] = useState("openai/gpt-5-mini");
   const [error, setError] = useState("");
   const [shareUrl, setShareUrl] = useState<string | null>(null);
@@ -538,7 +540,9 @@ export default function HomePage() {
         label: participant.label,
         avatarUrl: participant.avatarUrl || getDefaultAvatarUrl(index),
         model: participant.model,
-        muted: false
+        muted: false,
+        roleTitle: participant.roleTitle || undefined,
+        character: participant.character || undefined,
       })
     );
 
@@ -1185,10 +1189,12 @@ export default function HomePage() {
           isRedeemingInvite={isRedeemingInvite}
           onInviteCodeChange={setInviteCode}
           onRedeemInvite={redeemTrialInvite}
-          setupSections={setupSections}
-          onToggleSection={(section) =>
-            setSetupSections((current) => ({ ...current, [section]: !current[section] }))
-          }
+          setupStep={setupStep}
+          selectedStory={selectedStory}
+          isAdvancedOpen={isAdvancedOpen}
+          onSetupStepChange={setSetupStep}
+          onSelectedStoryChange={setSelectedStory}
+          onAdvancedToggle={() => setIsAdvancedOpen((v) => !v)}
           quickStartModel={quickStartModel}
           quickStartStories={quickStartStories}
           modelPickerCatalog={modelPickerCatalog}
@@ -1233,16 +1239,12 @@ export default function HomePage() {
           sessionId={sessionId}
           status={status}
           roundNumber={roundNumber}
-          sessionMode={sessionMode}
           activeSessionMembers={activeSessionMembers}
           isChatMembersOpen={isChatMembersOpen}
-          isModeHelpOpen={isModeHelpOpen}
           isSharing={isSharing}
           shareUrl={shareUrl}
           groupedMessages={groupedMessages}
           onToggleChatMembers={() => setIsChatMembersOpen((value) => !value)}
-          onToggleModeHelp={() => setIsModeHelpOpen((value) => !value)}
-          onChangeMode={changeSessionMode}
           onToggleMute={toggleParticipantMute}
           onShare={() => void handleShare()}
           onDismissShare={() => setShareUrl(null)}
@@ -1285,9 +1287,6 @@ export default function HomePage() {
           mentionCandidates={mentionCandidates}
           showMentionMenu={showMentionMenu}
           activeSessionMembers={activeSessionMembers}
-          activeStory={activeStory}
-          starterPrompts={starterPrompts}
-          showStarterPrompts={showStarterPrompts}
           isMobileView={isMobileView}
           onInputChange={setInput}
           onSendMessage={sendMessage}
@@ -1298,6 +1297,7 @@ export default function HomePage() {
           onSetTargetParticipantIds={setTargetParticipantIds}
           onRunSummarizer={runSummarizer}
           onSetLightbox={setLightboxImage}
+          onChangeMode={changeSessionMode}
         />
       </section>
       </div>

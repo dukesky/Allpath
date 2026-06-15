@@ -25,13 +25,17 @@ export function participantToSessionMember(participant: {
   avatarUrl?: string;
   model?: string;
   muted?: boolean;
+  roleTitle?: string;
+  character?: string;
 }): SessionMemberMeta {
   return {
     id: participant.id,
     label: participant.label,
     avatarUrl: participant.avatarUrl || "",
     model: participant.model,
-    muted: participant.muted ?? false
+    muted: participant.muted ?? false,
+    roleTitle: participant.roleTitle,
+    character: participant.character,
   };
 }
 
