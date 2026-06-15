@@ -19,14 +19,19 @@ function toPriceTier(prompt, completion) {
   return "$$$";
 }
 
-function normalizeModel(model) {
+function baseModelId(id) {
+  return id.split(":")[0] ?? id;
+}
+
+function normalizeModel(model, variantCounts) {
   const prompt = Number(model.pricing?.prompt ?? "0");
   const completion = Number(model.pricing?.completion ?? "0");
   return {
     id: model.id,
     label: (model.name ?? "").trim() || model.id,
     price: toPriceTier(prompt, completion),
-    created: model.created ?? 0
+    created: model.created ?? 0,
+    variantCount: variantCounts.get(baseModelId(model.id)) ?? 1
   };
 }
 
@@ -42,16 +47,24 @@ async function fetchOpenRouterModels() {
   }
 
   const json = await response.json();
-  const models = (json.data ?? [])
+  const raw = (json.data ?? [])
     .filter((model) => !!model?.id)
-    .filter((model) => !model.created || model.created >= MIN_CREATED_UNIX)
-    .map(normalizeModel)
+    .filter((model) => !model.created || model.created >= MIN_CREATED_UNIX);
+
+  // Count how many models share each base ID (proxy for popularity/adoption).
+  const variantCounts = new Map();
+  for (const model of raw) {
+    const base = baseModelId(model.id);
+    variantCounts.set(base, (variantCounts.get(base) ?? 0) + 1);
+  }
+
+  const models = raw
+    .map((model) => normalizeModel(model, variantCounts))
     .sort((a, b) => {
       if (b.created !== a.created) return b.created - a.created;
       return a.id.localeCompare(b.id);
     })
-    .slice(0, MAX_MODELS)
-    .map(({ id, label, price }) => ({ id, label, price }));
+    .slice(0, MAX_MODELS);
 
   return models;
 }

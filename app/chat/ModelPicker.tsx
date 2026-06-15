@@ -16,8 +16,8 @@ function ModelBadges({ model }: { model: CatalogModel }) {
         </span>
       )}
       {popular && (
-        <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">
-          Popular
+        <span className="text-[11px]" title="Popular">
+          🔥
         </span>
       )}
     </span>

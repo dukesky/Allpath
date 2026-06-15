@@ -22,6 +22,7 @@ import {
   defaultUserPreferences,
   normalizeUserPreferences
 } from "@/lib/userPreferences";
+import { getDefaultAvatarUrl } from "@/lib/avatar";
 
 const PROFILE_STORAGE_KEY = "allpath-agent-profiles";
 const STORY_STORAGE_KEY = "allpath-agent-stories";
@@ -809,10 +810,10 @@ export default function HomePage() {
       mode: input.sessionModeOverride ?? sessionMode,
       globalApiKey: input.globalApiKeyOverride ?? (effectiveGlobalApiKey.trim() || undefined),
       agentInitialPrompt: input.agentInitialPromptOverride ?? resolvedAgentInitialPrompt,
-      participants: input.sessionParticipants.map((item) => ({
+      participants: input.sessionParticipants.map((item, index) => ({
         id: item.id,
         label: item.label,
-        avatarUrl: item.avatarUrl || undefined,
+        avatarUrl: item.avatarUrl || getDefaultAvatarUrl(index),
         model: item.model,
         muted: false,
         roleTitle: item.roleTitle || undefined,
@@ -853,11 +854,11 @@ export default function HomePage() {
       roundNumber: number;
       mode?: Mode;
     };
-    const members = input.sessionParticipants.map((participant) =>
+    const members = input.sessionParticipants.map((participant, index) =>
       participantToSessionMember({
         id: participant.id,
         label: participant.label,
-        avatarUrl: participant.avatarUrl,
+        avatarUrl: participant.avatarUrl || getDefaultAvatarUrl(index),
         model: participant.model,
         muted: false
       })
@@ -1513,24 +1514,18 @@ export default function HomePage() {
                 >
                   <div className="mb-2 flex items-center gap-2">
                     <div className="flex -space-x-2">
-                      {item.members.slice(0, 4).map((member) => (
+                      {item.members.slice(0, 4).map((member, memberIndex) => (
                         <div
                           key={member.id}
                           className={`relative h-8 w-8 overflow-hidden rounded-full border-2 border-white ${
                             member.muted ? "opacity-50" : ""
                           }`}
                         >
-                          {member.avatarUrl ? (
-                            <img
-                              alt={member.label}
-                              className="h-full w-full object-cover"
-                              src={member.avatarUrl}
-                            />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-slate-200 text-[10px] font-semibold text-slate-700">
-                              {initialsForLabel(member.label)}
-                            </div>
-                          )}
+                          <img
+                            alt={member.label}
+                            className="h-full w-full object-cover"
+                            src={member.avatarUrl || getDefaultAvatarUrl(memberIndex)}
+                          />
                         </div>
                       ))}
                     </div>
@@ -1695,8 +1690,8 @@ export default function HomePage() {
                           </span>
                         )}
                         {isPopular(model) && (
-                          <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">
-                            Popular
+                          <span className="text-[11px]" title="Popular">
+                            🔥
                           </span>
                         )}
                         <span className="opacity-60">{model.price}</span>
@@ -1713,19 +1708,13 @@ export default function HomePage() {
                   className="w-[240px] min-w-[240px] max-w-[240px] shrink-0 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
                 >
                   <div className="flex -space-x-2">
-                    {members.slice(0, 4).map((member) => (
+                    {members.slice(0, 4).map((member, memberIndex) => (
                       <div key={member.id} className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-white bg-slate-100">
-                        {member.avatarUrl ? (
-                          <img
-                            alt={member.name}
-                            className="h-full w-full object-cover"
-                            src={member.avatarUrl}
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-slate-700">
-                            {initialsForLabel(member.name)}
-                          </div>
-                        )}
+                        <img
+                          alt={member.name}
+                          className="h-full w-full object-cover"
+                          src={member.avatarUrl || getDefaultAvatarUrl(memberIndex)}
+                        />
                       </div>
                     ))}
                   </div>
@@ -2176,24 +2165,18 @@ export default function HomePage() {
                     onClick={() => setIsChatMembersOpen((value) => !value)}
                   >
                     <div className="flex -space-x-2">
-                      {activeSessionMembers.slice(0, 5).map((member) => (
+                      {activeSessionMembers.slice(0, 5).map((member, memberIndex) => (
                         <div
                           key={member.id}
                           className={`relative h-9 w-9 overflow-hidden rounded-full border-2 border-white ${
                             member.muted ? "opacity-50" : ""
                           }`}
                         >
-                          {member.avatarUrl ? (
-                            <img
-                              alt={member.label}
-                              className="h-full w-full object-cover"
-                              src={member.avatarUrl}
-                            />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-slate-200 text-[10px] font-semibold text-slate-700">
-                              {initialsForLabel(member.label)}
-                            </div>
-                          )}
+                          <img
+                            alt={member.label}
+                            className="h-full w-full object-cover"
+                            src={member.avatarUrl || getDefaultAvatarUrl(memberIndex)}
+                          />
                         </div>
                       ))}
                     </div>
@@ -2208,20 +2191,14 @@ export default function HomePage() {
                   </button>
                   {isChatMembersOpen && (
                     <div className="mt-2 space-y-2 rounded-xl border border-slate-200 bg-white p-2">
-                      {activeSessionMembers.map((member) => (
+                      {activeSessionMembers.map((member, memberIndex) => (
                         <div key={member.id} className="flex items-center gap-3 rounded-lg border border-slate-200 p-2">
                           <div className={`relative h-10 w-10 overflow-hidden rounded-full bg-slate-100 ${member.muted ? "opacity-50" : ""}`}>
-                            {member.avatarUrl ? (
-                              <img
-                                alt={member.label}
-                                className="h-full w-full object-cover"
-                                src={member.avatarUrl}
-                              />
-                            ) : (
-                              <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-slate-700">
-                                {initialsForLabel(member.label)}
-                              </div>
-                            )}
+                            <img
+                              alt={member.label}
+                              className="h-full w-full object-cover"
+                              src={member.avatarUrl || getDefaultAvatarUrl(memberIndex)}
+                            />
                           </div>
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-sm font-medium text-slate-800">{member.label}</p>
@@ -2380,14 +2357,17 @@ export default function HomePage() {
                       : "bg-slate-100 text-slate-700"
                   }`}
                 >
-                  {message.sourceRole !== "user" && message.sourceAvatarUrl ? (
+                  {message.sourceRole !== "user" ? (
                     <img
-                      src={message.sourceAvatarUrl}
+                      src={message.sourceAvatarUrl ?? (() => {
+                        const idx = activeSessionMembers.findIndex(m => m.label === message.sourceLabel);
+                        return getDefaultAvatarUrl(idx >= 0 ? idx : 0);
+                      })()}
                       alt={`${message.sourceLabel} avatar`}
                       className="h-full w-full rounded-full object-contain"
                     />
                   ) : (
-                    avatarLabel(message.sourceRole === "user" ? "You" : message.sourceLabel)
+                    avatarLabel("You")
                   )}
                 </div>
 
