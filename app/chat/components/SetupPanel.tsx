@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { CatalogModel, isNew, isPopular } from "@/lib/modelCatalog";
 import { ModelPicker } from "@/app/chat/ModelPicker";
@@ -21,6 +21,8 @@ import {
   remainingTrialPercent,
   storyExperience,
 } from "./utils";
+
+const CUSTOMIZED_STORY = "__customized__";
 
 interface SetupPanelProps {
   // Trial
@@ -109,6 +111,9 @@ export function SetupPanel(props: SetupPanelProps) {
     summarizer,
     canCreate,
   } = props;
+
+  const [expandedDetailStory, setExpandedDetailStory] = useState<string | null>(null);
+  const [showMoreModels, setShowMoreModels] = useState(false);
 
   const selectedStoryMembers =
     quickStartStories.find((s) => s.story === selectedStory)?.members ?? [];
@@ -249,11 +254,78 @@ export function SetupPanel(props: SetupPanelProps) {
                 {selectedStory === story && <span className="text-primary">✓</span>}
               </button>
             ))}
+            {/* 自定义选项 */}
+            <button
+              type="button"
+              onClick={() => props.onSelectedStoryChange(CUSTOMIZED_STORY)}
+              className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-all ${
+                selectedStory === CUSTOMIZED_STORY
+                  ? "border-primary bg-blue-50"
+                  : "border-dashed border-slate-300 bg-white hover:border-slate-400"
+              }`}
+            >
+              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-dashed border-slate-400 text-slate-500 text-sm">
+                ✏
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-slate-700">自定义配置</p>
+                <p className="text-[11px] text-slate-500">手动配置角色、模型和提示词</p>
+              </div>
+              {selectedStory === CUSTOMIZED_STORY && <span className="text-primary">✓</span>}
+            </button>
           </div>
+
+          {/* 角色详情展开（仅选择非自定义剧本后显示） */}
+          {selectedStory && selectedStory !== CUSTOMIZED_STORY && selectedStoryMembers.length > 0 && (
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={() =>
+                  setExpandedDetailStory(
+                    expandedDetailStory === selectedStory ? null : selectedStory
+                  )
+                }
+                className="flex w-full items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50"
+              >
+                <span>查看角色详情</span>
+                <span>{expandedDetailStory === selectedStory ? "▲" : "▼"}</span>
+              </button>
+              {expandedDetailStory === selectedStory && (
+                <div className="mt-2 space-y-2">
+                  {selectedStoryMembers.map((m, i) => (
+                    <div key={m.id} className="flex gap-3 rounded-xl border border-slate-200 p-3">
+                      <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-200">
+                        <img
+                          src={m.avatarUrl || getDefaultAvatarUrl(i)}
+                          alt={m.name}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-semibold text-slate-800">{m.name}</p>
+                        {m.roleTitle && (
+                          <p className="text-[11px] font-medium text-primary">{m.roleTitle}</p>
+                        )}
+                        {m.character && (
+                          <p className="mt-1 text-[11px] leading-4 text-slate-500">{m.character}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           <button
             type="button"
             disabled={!selectedStory}
-            onClick={() => props.onSetupStepChange(2)}
+            onClick={() => {
+              props.onSetupStepChange(2);
+              if (selectedStory === CUSTOMIZED_STORY && !isAdvancedOpen) {
+                props.onAdvancedToggle();
+              }
+            }}
             className="mt-4 w-full rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white disabled:opacity-40"
           >
             下一步 →
@@ -301,6 +373,45 @@ export function SetupPanel(props: SetupPanelProps) {
                 </button>
               );
             })}
+          </div>
+
+          {/* 更多模型 */}
+          <div className="mt-3">
+            <button
+              type="button"
+              onClick={() => setShowMoreModels(!showMoreModels)}
+              className="flex w-full items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-xs text-slate-600 hover:bg-slate-50"
+            >
+              <span>更多模型</span>
+              <span>{showMoreModels ? "▲" : "▼"}</span>
+            </button>
+            {showMoreModels && (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {modelPickerCatalog.moreModels.map((model) => {
+                  const active = quickStartModel === model.id;
+                  return (
+                    <button
+                      key={model.id}
+                      type="button"
+                      onClick={() => props.onQuickStartModelChange(model.id)}
+                      className={`rounded-full border px-3 py-1.5 text-xs transition-all ${
+                        active
+                          ? "border-primary bg-primary text-white"
+                          : "border-slate-300 bg-white text-slate-700 hover:border-slate-400"
+                      }`}
+                    >
+                      {model.label}{" "}
+                      {isNew(model) && (
+                        <span className="rounded-full bg-teal-100 px-1 text-[10px] font-medium text-teal-700">
+                          New
+                        </span>
+                      )}
+                      <span className="opacity-60">{model.price}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* 高级设置折叠 */}
@@ -675,14 +786,16 @@ export function SetupPanel(props: SetupPanelProps) {
             </div>
           )}
 
-          <button
-            type="button"
-            disabled={!quickStartModel}
-            onClick={() => props.onSetupStepChange(3)}
-            className="mt-4 w-full rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white disabled:opacity-40"
-          >
-            下一步 →
-          </button>
+          {selectedStory !== CUSTOMIZED_STORY && (
+            <button
+              type="button"
+              disabled={!quickStartModel}
+              onClick={() => props.onSetupStepChange(3)}
+              className="mt-4 w-full rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white disabled:opacity-40"
+            >
+              下一步 →
+            </button>
+          )}
         </div>
       )}
 
