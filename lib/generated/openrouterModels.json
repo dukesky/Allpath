@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-15T03:58:40.868Z",
+  "generatedAt": "2026-06-17T03:56:21.527Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "z-ai/glm-5.2",
+      "label": "Z.ai: GLM 5.2",
+      "price": "$$",
+      "created": 1781631930,
+      "variantCount": 1
+    },
     {
       "id": "openrouter/fusion",
       "label": "OpenRouter: Fusion",
