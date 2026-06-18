@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-18T03:43:12.063Z",
+  "generatedAt": "2026-06-18T15:19:43.623Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "google/gemini-3.1-flash-image",
+      "label": "Google: Nano Banana 2 (Gemini 3.1 Flash Image)",
+      "price": "$$",
+      "created": 1781754065,
+      "variantCount": 1
+    },
+    {
+      "id": "google/gemini-3-pro-image",
+      "label": "Google: Nano Banana Pro (Gemini 3 Pro Image)",
+      "price": "$$",
+      "created": 1781754054,
+      "variantCount": 1
+    },
     {
       "id": "cohere/north-mini-code:free",
       "label": "Cohere: North Mini Code (free)",
@@ -200,18 +214,32 @@
       "variantCount": 1
     },
     {
+      "id": "poolside/laguna-xs.2",
+      "label": "Poolside: Laguna XS.2",
+      "price": "$",
+      "created": 1777389604,
+      "variantCount": 2
+    },
+    {
       "id": "poolside/laguna-xs.2:free",
       "label": "Poolside: Laguna XS.2 (free)",
       "price": "$",
       "created": 1777389604,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "poolside/laguna-m.1",
+      "label": "Poolside: Laguna M.1",
+      "price": "$",
+      "created": 1777388504,
+      "variantCount": 2
     },
     {
       "id": "poolside/laguna-m.1:free",
       "label": "Poolside: Laguna M.1 (free)",
       "price": "$",
       "created": 1777388504,
-      "variantCount": 1
+      "variantCount": 2
     },
     {
       "id": "~anthropic/claude-haiku-latest",
