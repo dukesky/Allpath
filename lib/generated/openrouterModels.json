@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-17T03:56:21.527Z",
+  "generatedAt": "2026-06-18T03:43:12.063Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "cohere/north-mini-code:free",
+      "label": "Cohere: North Mini Code (free)",
+      "price": "$",
+      "created": 1781723748,
+      "variantCount": 1
+    },
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
@@ -834,13 +841,6 @@
       "label": "Google: Gemini 3 Flash Preview",
       "price": "$$",
       "created": 1765987078,
-      "variantCount": 1
-    },
-    {
-      "id": "xiaomi/mimo-v2-flash",
-      "label": "Xiaomi: MiMo-V2-Flash",
-      "price": "$",
-      "created": 1765731308,
       "variantCount": 1
     },
     {
