@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-22T04:01:37.687Z",
+  "generatedAt": "2026-06-22T16:52:24.537Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -64,14 +64,7 @@
       "label": "Nex AGI: Nex-N2-Pro",
       "price": "$",
       "created": 1780937140,
-      "variantCount": 2
-    },
-    {
-      "id": "nex-agi/nex-n2-pro:free",
-      "label": "Nex AGI: Nex-N2-Pro (free)",
-      "price": "$",
-      "created": 1780937140,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "nvidia/nemotron-3.5-content-safety:free",
