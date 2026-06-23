@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-23T03:23:14.251Z",
+  "generatedAt": "2026-06-23T14:43:50.952Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -935,13 +935,6 @@
       "variantCount": 1
     },
     {
-      "id": "essentialai/rnj-1-instruct",
-      "label": "EssentialAI: Rnj 1 Instruct",
-      "price": "$",
-      "created": 1765094847,
-      "variantCount": 1
-    },
-    {
       "id": "openrouter/bodybuilder",
       "label": "Body Builder (beta)",
       "price": "$",
@@ -1002,13 +995,6 @@
       "label": "DeepSeek: DeepSeek V3.2",
       "price": "$",
       "created": 1764594642,
-      "variantCount": 1
-    },
-    {
-      "id": "prime-intellect/intellect-3",
-      "label": "Prime Intellect: INTELLECT-3",
-      "price": "$",
-      "created": 1764212534,
       "variantCount": 1
     },
     {
