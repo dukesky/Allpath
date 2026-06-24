@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-23T14:43:50.952Z",
+  "generatedAt": "2026-06-24T14:25:15.591Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "sakana/fugu-ultra",
+      "label": "Sakana: Fugu Ultra",
+      "price": "$$$",
+      "created": 1782276303,
+      "variantCount": 1
+    },
     {
       "id": "google/gemini-3.1-flash-image",
       "label": "Google: Nano Banana 2 (Gemini 3.1 Flash Image)",
