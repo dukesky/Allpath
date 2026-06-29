@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-27T02:54:01.172Z",
+  "generatedAt": "2026-06-29T15:42:23.750Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -428,13 +428,6 @@
       "label": "Anthropic: Claude Opus 4.7",
       "price": "$$$",
       "created": 1776351100,
-      "variantCount": 1
-    },
-    {
-      "id": "anthropic/claude-opus-4.6-fast",
-      "label": "Anthropic: Claude Opus 4.6 (Fast)",
-      "price": "$$$",
-      "created": 1775592472,
       "variantCount": 1
     },
     {
