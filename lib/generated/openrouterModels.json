@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-29T15:42:23.750Z",
+  "generatedAt": "2026-06-30T14:14:43.273Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -204,13 +204,6 @@
       "label": "Mistral: Mistral Medium 3.5",
       "price": "$$",
       "created": 1777570439,
-      "variantCount": 1
-    },
-    {
-      "id": "openrouter/owl-alpha",
-      "label": "Owl Alpha",
-      "price": "$",
-      "created": 1777398589,
       "variantCount": 1
     },
     {
