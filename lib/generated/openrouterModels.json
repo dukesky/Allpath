@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-06-30T14:14:43.273Z",
+  "generatedAt": "2026-07-01T03:37:51.561Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "anthropic/claude-sonnet-5",
+      "label": "Anthropic: Claude Sonnet 5",
+      "price": "$$",
+      "created": 1782843083,
+      "variantCount": 1
+    },
+    {
+      "id": "google/gemini-3.1-flash-lite-image",
+      "label": "Google: Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)",
+      "price": "$",
+      "created": 1782837225,
+      "variantCount": 1
+    },
     {
       "id": "sakana/fugu-ultra",
       "label": "Sakana: Fugu Ultra",
@@ -1107,13 +1121,6 @@
       "label": "IBM: Granite 4.0 Micro",
       "price": "$",
       "created": 1760927695,
-      "variantCount": 1
-    },
-    {
-      "id": "microsoft/phi-4-mini-instruct",
-      "label": "Microsoft: Phi 4 Mini Instruct",
-      "price": "$",
-      "created": 1760726049,
       "variantCount": 1
     },
     {
