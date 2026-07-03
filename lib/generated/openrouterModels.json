@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-01T03:37:51.561Z",
+  "generatedAt": "2026-07-03T02:46:22.042Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "poolside/laguna-xs-2.1",
+      "label": "Poolside: Laguna XS 2.1",
+      "price": "$",
+      "created": 1783002429,
+      "variantCount": 2
+    },
+    {
+      "id": "poolside/laguna-xs-2.1:free",
+      "label": "Poolside: Laguna XS 2.1 (free)",
+      "price": "$",
+      "created": 1783002429,
+      "variantCount": 2
+    },
     {
       "id": "anthropic/claude-sonnet-5",
       "label": "Anthropic: Claude Sonnet 5",
