@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-05T13:26:14.135Z",
+  "generatedAt": "2026-07-06T15:27:21.335Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "tencent/hy3",
+      "label": "Tencent: Hy3",
+      "price": "$",
+      "created": 1783344048,
+      "variantCount": 2
+    },
+    {
+      "id": "tencent/hy3:free",
+      "label": "Tencent: Hy3 (free)",
+      "price": "$",
+      "created": 1783344048,
+      "variantCount": 2
+    },
     {
       "id": "poolside/laguna-xs-2.1",
       "label": "Poolside: Laguna XS 2.1",
@@ -62,7 +76,7 @@
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
-      "price": "$",
+      "price": "$$",
       "created": 1781631930,
       "variantCount": 1
     },
