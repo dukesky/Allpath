@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-06T15:27:21.335Z",
+  "generatedAt": "2026-07-07T02:53:17.244Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -43,6 +43,13 @@
       "label": "Google: Nano Banana 2 Lite (Gemini 3.1 Flash Lite Image)",
       "price": "$",
       "created": 1782837225,
+      "variantCount": 1
+    },
+    {
+      "id": "nex-agi/nex-n2-mini",
+      "label": "Nex AGI: Nex-N2-Mini",
+      "price": "$",
+      "created": 1782312964,
       "variantCount": 1
     },
     {
