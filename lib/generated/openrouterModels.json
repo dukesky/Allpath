@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-09T02:46:57.211Z",
+  "generatedAt": "2026-07-09T14:53:54.747Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -111,7 +111,7 @@
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
-      "price": "$$",
+      "price": "$",
       "created": 1781631930,
       "variantCount": 1
     },
@@ -289,20 +289,6 @@
       "price": "$",
       "created": 1777393095,
       "variantCount": 1
-    },
-    {
-      "id": "poolside/laguna-xs.2",
-      "label": "Poolside: Laguna XS.2",
-      "price": "$",
-      "created": 1777389604,
-      "variantCount": 2
-    },
-    {
-      "id": "poolside/laguna-xs.2:free",
-      "label": "Poolside: Laguna XS.2 (free)",
-      "price": "$",
-      "created": 1777389604,
-      "variantCount": 2
     },
     {
       "id": "poolside/laguna-m.1",
@@ -736,13 +722,6 @@
       "label": "Qwen: Qwen3.5-Flash",
       "price": "$",
       "created": 1772053776,
-      "variantCount": 1
-    },
-    {
-      "id": "liquid/lfm-2-24b-a2b",
-      "label": "LiquidAI: LFM2-24B-A2B",
-      "price": "$",
-      "created": 1772048711,
       "variantCount": 1
     },
     {
@@ -1303,13 +1282,6 @@
       "label": "Relace: Relace Apply 3",
       "price": "$",
       "created": 1758891572,
-      "variantCount": 1
-    },
-    {
-      "id": "google/gemini-2.5-flash-lite-preview-09-2025",
-      "label": "Google: Gemini 2.5 Flash Lite Preview 09-2025",
-      "price": "$",
-      "created": 1758819686,
       "variantCount": 1
     },
     {
