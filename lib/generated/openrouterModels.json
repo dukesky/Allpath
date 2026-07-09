@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-08T02:30:16.864Z",
+  "generatedAt": "2026-07-09T02:46:57.211Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "x-ai/grok-4.5",
+      "label": "xAI: Grok 4.5",
+      "price": "$$",
+      "created": 1783523154,
+      "variantCount": 1
+    },
+    {
+      "id": "~x-ai/grok-latest",
+      "label": "xAI: Grok Latest",
+      "price": "$$",
+      "created": 1783519360,
+      "variantCount": 1
+    },
     {
       "id": "aion-labs/aion-3.0-mini",
       "label": "AionLabs: Aion-3.0-Mini",
@@ -1583,13 +1597,6 @@
       "label": "Qwen: Qwen3 235B A22B Instruct 2507",
       "price": "$",
       "created": 1753119555,
-      "variantCount": 1
-    },
-    {
-      "id": "switchpoint/router",
-      "label": "Switchpoint Router",
-      "price": "$$",
-      "created": 1752272899,
       "variantCount": 1
     },
     {
