@@ -1,8 +1,50 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-09T14:53:54.747Z",
+  "generatedAt": "2026-07-10T02:49:46.984Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "openai/gpt-5.6-luna-pro",
+      "label": "OpenAI: GPT-5.6 Luna Pro",
+      "price": "$$",
+      "created": 1783590867,
+      "variantCount": 1
+    },
+    {
+      "id": "openai/gpt-5.6-luna",
+      "label": "OpenAI: GPT-5.6 Luna",
+      "price": "$$",
+      "created": 1783590864,
+      "variantCount": 1
+    },
+    {
+      "id": "openai/gpt-5.6-terra-pro",
+      "label": "OpenAI: GPT-5.6 Terra Pro",
+      "price": "$$",
+      "created": 1783590861,
+      "variantCount": 1
+    },
+    {
+      "id": "openai/gpt-5.6-terra",
+      "label": "OpenAI: GPT-5.6 Terra",
+      "price": "$$",
+      "created": 1783590857,
+      "variantCount": 1
+    },
+    {
+      "id": "openai/gpt-5.6-sol-pro",
+      "label": "OpenAI: GPT-5.6 Sol Pro",
+      "price": "$$$",
+      "created": 1783590854,
+      "variantCount": 1
+    },
+    {
+      "id": "openai/gpt-5.6-sol",
+      "label": "OpenAI: GPT-5.6 Sol",
+      "price": "$$$",
+      "created": 1783590850,
+      "variantCount": 1
+    },
     {
       "id": "x-ai/grok-4.5",
       "label": "xAI: Grok 4.5",
@@ -1579,11 +1621,18 @@
       "variantCount": 1
     },
     {
+      "id": "cognitivecomputations/dolphin-mistral-24b-venice-edition",
+      "label": "Venice: Uncensored",
+      "price": "$",
+      "created": 1752094966,
+      "variantCount": 2
+    },
+    {
       "id": "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
       "label": "Venice: Uncensored (free)",
       "price": "$",
       "created": 1752094966,
-      "variantCount": 1
+      "variantCount": 2
     },
     {
       "id": "tencent/hunyuan-a13b-instruct",
