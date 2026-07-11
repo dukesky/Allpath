@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-10T02:49:46.984Z",
+  "generatedAt": "2026-07-11T02:27:57.207Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1072,13 +1072,6 @@
       "label": "Mistral: Mistral Large 3 2512",
       "price": "$",
       "created": 1764624472,
-      "variantCount": 1
-    },
-    {
-      "id": "arcee-ai/trinity-mini",
-      "label": "Arcee AI: Trinity Mini",
-      "price": "$",
-      "created": 1764601720,
       "variantCount": 1
     },
     {
