@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-13T14:28:56.102Z",
+  "generatedAt": "2026-07-14T02:13:51.130Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1485,14 +1485,7 @@
       "label": "OpenAI: gpt-oss-120b",
       "price": "$",
       "created": 1754414231,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-oss-120b:free",
-      "label": "OpenAI: gpt-oss-120b (free)",
-      "price": "$",
-      "created": 1754414231,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-oss-20b",
