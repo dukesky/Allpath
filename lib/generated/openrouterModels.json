@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-14T02:13:51.130Z",
+  "generatedAt": "2026-07-14T13:38:15.874Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "kwaipilot/kat-coder-air-v2.5",
+      "label": "Kwaipilot: KAT-Coder-Air V2.5",
+      "price": "$",
+      "created": 1783714590,
+      "variantCount": 1
+    },
+    {
+      "id": "kwaipilot/kat-coder-pro-v2.5",
+      "label": "Kwaipilot: KAT-Coder-Pro V2.5",
+      "price": "$$",
+      "created": 1783714589,
+      "variantCount": 1
+    },
     {
       "id": "openai/gpt-5.6-luna-pro",
       "label": "OpenAI: GPT-5.6 Luna Pro",
