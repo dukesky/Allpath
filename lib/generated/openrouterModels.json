@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-15T13:39:09.520Z",
+  "generatedAt": "2026-07-16T02:25:07.645Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1737,13 +1737,6 @@
       "label": "Arcee AI: Virtuoso Large",
       "price": "$",
       "created": 1746478885,
-      "variantCount": 1
-    },
-    {
-      "id": "arcee-ai/coder-large",
-      "label": "Arcee AI: Coder Large",
-      "price": "$",
-      "created": 1746478663,
       "variantCount": 1
     },
     {
