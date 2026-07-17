@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-17T02:27:40.005Z",
+  "generatedAt": "2026-07-17T13:22:54.378Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1261,13 +1261,6 @@
       "label": "OpenAI: o4 Mini Deep Research",
       "price": "$$",
       "created": 1760129642,
-      "variantCount": 1
-    },
-    {
-      "id": "nvidia/llama-3.3-nemotron-super-49b-v1.5",
-      "label": "NVIDIA: Llama 3.3 Nemotron Super 49B V1.5",
-      "price": "$",
-      "created": 1760101395,
       "variantCount": 1
     },
     {
