@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-17T13:22:54.378Z",
+  "generatedAt": "2026-07-18T02:12:40.170Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "thinkingmachines/inkling",
+      "label": "Thinking Machines: Inkling",
+      "price": "$$",
+      "created": 1784325956,
+      "variantCount": 1
+    },
+    {
+      "id": "openrouter/auto-beta",
+      "label": "Auto Router (Beta)",
+      "price": "$",
+      "created": 1784311165,
+      "variantCount": 1
+    },
     {
       "id": "moonshotai/kimi-k3",
       "label": "MoonshotAI: Kimi K3",
@@ -181,7 +195,7 @@
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
-      "price": "$$",
+      "price": "$",
       "created": 1781631930,
       "variantCount": 1
     },
