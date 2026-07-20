@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-18T02:12:40.170Z",
+  "generatedAt": "2026-07-20T03:22:48.516Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -195,7 +195,7 @@
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
-      "price": "$",
+      "price": "$$",
       "created": 1781631930,
       "variantCount": 1
     },
@@ -1401,14 +1401,7 @@
       "label": "Qwen: Qwen3 Next 80B A3B Instruct",
       "price": "$",
       "created": 1757612213,
-      "variantCount": 2
-    },
-    {
-      "id": "qwen/qwen3-next-80b-a3b-instruct:free",
-      "label": "Qwen: Qwen3 Next 80B A3B Instruct (free)",
-      "price": "$",
-      "created": 1757612213,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "qwen/qwen-plus-2025-07-28",
@@ -1581,7 +1574,7 @@
     {
       "id": "qwen/qwen3-235b-a22b-thinking-2507",
       "label": "Qwen: Qwen3 235B A22B Thinking 2507",
-      "price": "$",
+      "price": "$$",
       "created": 1753449557,
       "variantCount": 1
     },
@@ -1590,14 +1583,7 @@
       "label": "Qwen: Qwen3 Coder 480B A35B",
       "price": "$",
       "created": 1753230546,
-      "variantCount": 2
-    },
-    {
-      "id": "qwen/qwen3-coder:free",
-      "label": "Qwen: Qwen3 Coder 480B A35B (free)",
-      "price": "$",
-      "created": 1753230546,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "bytedance/ui-tars-1.5-7b",
@@ -1632,14 +1618,7 @@
       "label": "Venice: Uncensored",
       "price": "$",
       "created": 1752094966,
-      "variantCount": 2
-    },
-    {
-      "id": "cognitivecomputations/dolphin-mistral-24b-venice-edition:free",
-      "label": "Venice: Uncensored (free)",
-      "price": "$",
-      "created": 1752094966,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "tencent/hunyuan-a13b-instruct",
