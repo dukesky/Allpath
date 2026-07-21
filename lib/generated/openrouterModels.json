@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-20T14:00:58.140Z",
+  "generatedAt": "2026-07-21T02:28:42.700Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -127,14 +127,7 @@
       "label": "Tencent: Hy3",
       "price": "$",
       "created": 1783344048,
-      "variantCount": 2
-    },
-    {
-      "id": "tencent/hy3:free",
-      "label": "Tencent: Hy3 (free)",
-      "price": "$",
-      "created": 1783344048,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "poolside/laguna-xs-2.1",
