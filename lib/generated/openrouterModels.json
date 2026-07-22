@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-22T02:27:41.004Z",
+  "generatedAt": "2026-07-22T13:46:48.642Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -26,7 +26,7 @@
     },
     {
       "id": "google/gemini-3.5-flash-lite",
-      "label": "Google: Gemini 3.5 Flash-Lite",
+      "label": "Google: Gemini 3.5 Flash Lite",
       "price": "$",
       "created": 1784646726,
       "variantCount": 1
