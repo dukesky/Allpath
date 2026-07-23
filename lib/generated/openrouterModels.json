@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-22T13:46:48.642Z",
+  "generatedAt": "2026-07-23T02:32:11.351Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -272,7 +272,7 @@
     {
       "id": "nvidia/nemotron-3-ultra-550b-a55b",
       "label": "NVIDIA: Nemotron 3 Ultra",
-      "price": "$$",
+      "price": "$",
       "created": 1780551208,
       "variantCount": 2
     },
