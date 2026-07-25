@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-24T02:29:26.400Z",
+  "generatedAt": "2026-07-25T02:27:54.047Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "anthropic/claude-opus-5-fast",
+      "label": "Claude Opus 5 (Fast)",
+      "price": "$$$",
+      "created": 1784912546,
+      "variantCount": 1
+    },
+    {
+      "id": "anthropic/claude-opus-5",
+      "label": "Claude Opus 5",
+      "price": "$$$",
+      "created": 1784912544,
+      "variantCount": 1
+    },
     {
       "id": "inclusionai/ling-3.0-flash:free",
       "label": "Ling-3.0-flash (free)",
@@ -279,7 +293,7 @@
     {
       "id": "nvidia/nemotron-3-ultra-550b-a55b",
       "label": "NVIDIA: Nemotron 3 Ultra",
-      "price": "$",
+      "price": "$$",
       "created": 1780551208,
       "variantCount": 2
     },
