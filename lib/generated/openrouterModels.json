@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-07-25T13:20:15.697Z",
+  "generatedAt": "2026-07-27T14:28:07.153Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -244,7 +244,7 @@
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
-      "price": "$",
+      "price": "$$",
       "created": 1781631930,
       "variantCount": 1
     },
@@ -293,7 +293,7 @@
     {
       "id": "nvidia/nemotron-3-ultra-550b-a55b",
       "label": "NVIDIA: Nemotron 3 Ultra",
-      "price": "$$",
+      "price": "$",
       "created": 1780551208,
       "variantCount": 2
     },
@@ -1926,13 +1926,6 @@
       "label": "Cohere: Command A",
       "price": "$$",
       "created": 1741894342,
-      "variantCount": 1
-    },
-    {
-      "id": "openai/gpt-4o-mini-search-preview",
-      "label": "OpenAI: GPT-4o-mini Search Preview",
-      "price": "$",
-      "created": 1741818122,
       "variantCount": 1
     },
     {
