@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-04T02:20:28.222Z",
+  "generatedAt": "2026-08-05T02:17:56.049Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -180,7 +180,7 @@
     },
     {
       "id": "x-ai/grok-4.5",
-      "label": "xAI: Grok 4.5",
+      "label": "SpaceXAI: Grok 4.5",
       "price": "$$",
       "created": 1783523154,
       "variantCount": 1
@@ -383,7 +383,7 @@
     },
     {
       "id": "x-ai/grok-build-0.1",
-      "label": "xAI: Grok Build 0.1",
+      "label": "SpaceXAI: Grok Build 0.1",
       "price": "$",
       "created": 1779298123,
       "variantCount": 1
@@ -432,7 +432,7 @@
     },
     {
       "id": "x-ai/grok-4.3",
-      "label": "xAI: Grok 4.3",
+      "label": "SpaceXAI: Grok 4.3",
       "price": "$$",
       "created": 1777591821,
       "variantCount": 1
@@ -698,14 +698,14 @@
     },
     {
       "id": "x-ai/grok-4.20-multi-agent",
-      "label": "xAI: Grok 4.20 Multi-Agent",
+      "label": "SpaceXAI: Grok 4.20 Multi-Agent",
       "price": "$$",
       "created": 1774979158,
       "variantCount": 1
     },
     {
       "id": "x-ai/grok-4.20",
-      "label": "xAI: Grok 4.20",
+      "label": "SpaceXAI: Grok 4.20",
       "price": "$$",
       "created": 1774979019,
       "variantCount": 1
