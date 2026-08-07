@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-06T14:02:09.036Z",
+  "generatedAt": "2026-08-07T02:32:39.426Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "inclusionai/ling-3.0-tiny:free",
+      "label": "inclusionAI: Ling 3.0 Tiny (free)",
+      "price": "$",
+      "created": 1786034890,
+      "variantCount": 1
+    },
     {
       "id": "meta/muse-spark-1.2",
       "label": "Meta: Muse Spark 1.2",
@@ -71,14 +78,7 @@
       "label": "Ling-3.0-flash",
       "price": "$",
       "created": 1784818580,
-      "variantCount": 2
-    },
-    {
-      "id": "inclusionai/ling-3.0-flash:free",
-      "label": "Ling-3.0-flash (free)",
-      "price": "$",
-      "created": 1784818580,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "poolside/laguna-s-2.1",
