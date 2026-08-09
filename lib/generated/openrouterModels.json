@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-09T01:27:36.243Z",
+  "generatedAt": "2026-08-09T12:44:26.023Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1133,7 +1133,7 @@
     {
       "id": "qwen/qwen3.5-397b-a17b",
       "label": "Qwen: Qwen3.5 397B A17B",
-      "price": "$$",
+      "price": "$",
       "created": 1771223018,
       "variantCount": 1
     },
