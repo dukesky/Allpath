@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { redeemInviteCode, trialCookieName } from "@/lib/trial";
+import { getAuthUser } from "@/lib/serverAuth";
+import { linkGuestToUser, redeemInviteCode, trialCookieName } from "@/lib/trial";
 
 export async function POST(request: NextRequest) {
   const body = (await request.json().catch(() => ({}))) as { code?: string };
 
   try {
     const result = await redeemInviteCode(body.code ?? "");
+
+    const user = await getAuthUser(request);
+    if (user) {
+      await linkGuestToUser(result.guest.guestId, user.uid).catch(() => undefined);
+    }
     const response = NextResponse.json({
       available: true,
       requiresInviteCode: false,

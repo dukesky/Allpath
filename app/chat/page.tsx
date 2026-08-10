@@ -286,6 +286,9 @@ export default function HomePage() {
     }
 
     let active = true;
+    // Signed in: refresh trial status with the token so the guest trial gets
+    // linked to the account (or the cookie recovered on a new device).
+    void refreshTrialStatus();
     void (async () => {
       const headers = await buildAuthHeaders(auth.getIdToken);
       if (!headers.Authorization) {
@@ -979,7 +982,7 @@ export default function HomePage() {
   }
 
   async function refreshTrialStatus() {
-    const nextStatus = await fetchTrialStatus();
+    const nextStatus = await fetchTrialStatus(await buildAuthHeaders(auth.getIdToken));
     if (nextStatus) {
       setTrialStatus(nextStatus);
     }
@@ -997,7 +1000,7 @@ export default function HomePage() {
     try {
       const response = await fetch("/api/trial/redeem", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...(await buildAuthHeaders(auth.getIdToken)) },
         body: JSON.stringify({ code: inviteCode })
       });
       const json = (await response.json().catch(() => ({}))) as
