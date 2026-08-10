@@ -39,6 +39,8 @@ import {
   readFileAsDataUrl,
   storyExperience,
 } from "./components/utils";
+import { AuthControls } from "./components/AuthControls";
+import { useAuth, buildAuthHeaders } from "./components/useAuth";
 import { SessionSidebar } from "./components/SessionSidebar";
 import { SetupPanel } from "./components/SetupPanel";
 import { ChatHeader } from "./components/ChatHeader";
@@ -53,6 +55,7 @@ const ACTIVE_SESSION_STORAGE_KEY = "allpath-active-session";
 const SHARE_LINKS_STORAGE_KEY = "allpath-share-links";
 
 export default function HomePage() {
+  const auth = useAuth();
   const [isSessionSidebarOpen, setIsSessionSidebarOpen] = useState(false);
   const [isSetupPanelOpen, setIsSetupPanelOpen] = useState(true);
   const [isMobileView, setIsMobileView] = useState(false);
@@ -1138,6 +1141,7 @@ export default function HomePage() {
           <Link className="transition hover:text-primary" href="/contact">
             Contact
           </Link>
+          <AuthControls auth={auth} />
         </div>
       </div>
       <div className="mb-2 hidden items-center gap-2 lg:flex">
