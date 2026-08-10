@@ -8,6 +8,12 @@ substitutions:
   _OPENROUTER_API_KEY_SECRET: OPENROUTER_API_KEY
   _TRIAL_COOKIE_SECRET_NAME: TRIAL_COOKIE_SECRET
   _TRIAL_ENCRYPTION_SECRET_NAME: TRIAL_ENCRYPTION_SECRET
+  # Firebase Auth web config (public identifiers, baked in at build time).
+  # Leave empty to build with auth disabled.
+  _NEXT_PUBLIC_FIREBASE_API_KEY: ""
+  _NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ""
+  _NEXT_PUBLIC_FIREBASE_PROJECT_ID: ""
+  _NEXT_PUBLIC_FIREBASE_APP_ID: ""
 
 steps:
   - id: build-image
@@ -16,6 +22,14 @@ steps:
       - build
       - -t
       - gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${_IMAGE_TAG}
+      - --build-arg
+      - NEXT_PUBLIC_FIREBASE_API_KEY=${_NEXT_PUBLIC_FIREBASE_API_KEY}
+      - --build-arg
+      - NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${_NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}
+      - --build-arg
+      - NEXT_PUBLIC_FIREBASE_PROJECT_ID=${_NEXT_PUBLIC_FIREBASE_PROJECT_ID}
+      - --build-arg
+      - NEXT_PUBLIC_FIREBASE_APP_ID=${_NEXT_PUBLIC_FIREBASE_APP_ID}
       - .
 
   - id: push-image
