@@ -28,6 +28,9 @@ export interface TrialGuestRecord {
   trialSpentUsd: number;
   trialStatus: TrialStatus;
   userProvidedOpenRouterKeyEncrypted?: string;
+  // Firebase Auth uid this guest record is linked to (set on redeem/status
+  // while signed in), so the trial budget follows the account across devices.
+  linkedUid?: string;
   createdAt: string;
   lastSeenAt: string;
 }
@@ -137,6 +140,24 @@ export async function getGuestById(guestId: string | undefined): Promise<TrialGu
     return null;
   }
   return snapshot.data() as TrialGuestRecord;
+}
+
+export async function linkGuestToUser(guestId: string, uid: string): Promise<void> {
+  await getGuestRef(guestId).set({ linkedUid: uid, lastSeenAt: nowIso() }, { merge: true });
+}
+
+export async function getGuestByLinkedUid(uid: string): Promise<TrialGuestRecord | null> {
+  const snapshot = await getFirestoreDb()
+    .collection(GUESTS_COLLECTION)
+    .where("linkedUid", "==", uid)
+    .limit(1)
+    .get();
+
+  return snapshot.empty ? null : (snapshot.docs[0].data() as TrialGuestRecord);
+}
+
+export function guestCookieValueFor(guestId: string): string {
+  return signGuestCookie(guestId);
 }
 
 export async function getTrialStatusForRequest(): Promise<TrialStatusPayload> {

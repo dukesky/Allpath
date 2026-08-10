@@ -57,6 +57,11 @@ export interface Message {
 
 export interface SessionConfig {
   sessionId: string;
+  // Set for sessions owned by a signed-in user; enables Firestore persistence.
+  // persistentId stays stable when a session is recreated from a stored transcript.
+  ownerUid?: string;
+  persistentId?: string;
+  title?: string;
   mode: Mode;
   agentInitialPrompt?: string;
   globalApiKey?: string;

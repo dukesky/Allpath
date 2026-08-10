@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { getAdapter } from "@/lib/providers";
+import { persistSessionState } from "@/lib/sessionPersistence";
 import { addMessage, emit, getSession, shiftQueue, updateMessage } from "@/lib/store";
 import { Message, MessageAttachment, ModelMessage, ParticipantConfig, ProviderConfig } from "@/lib/types";
 import { applyOwnerTrialUsage, resolveOpenRouterProviderForSession, TrialAccessError } from "@/lib/trial";
@@ -443,6 +444,10 @@ export async function processSessionQueue(sessionId: string): Promise<void> {
     payload: { roundId, userMessageId: nextQueueItem.messageId }
   });
 
+  void persistSessionState(state.config, { recentRoundsOnly: true }).catch((error) => {
+    console.error(`[allpath] persist_failed session=${sessionId}`, error);
+  });
+
   if (state.queue.length > 0) {
     await processSessionQueue(sessionId);
   }
@@ -457,6 +462,10 @@ export async function runManualSummarizer(sessionId: string): Promise<void> {
   const summarizer = state.config.summarizer;
   const roundId = state.config.roundNumber;
   const messageId = randomUUID();
+  const persist = () =>
+    void persistSessionState(state.config, { recentRoundsOnly: true }).catch((error) => {
+      console.error(`[allpath] persist_failed session=${sessionId}`, error);
+    });
 
   addMessage(sessionId, {
     messageId,
@@ -491,6 +500,7 @@ export async function runManualSummarizer(sessionId: string): Promise<void> {
       type: "server_error",
       payload: { message }
     });
+    persist();
     return;
   }
 
@@ -586,5 +596,7 @@ export async function runManualSummarizer(sessionId: string): Promise<void> {
       type: "server_error",
       payload: { message: `Summarizer failed: ${(error as Error).message}` }
     });
+  } finally {
+    persist();
   }
 }

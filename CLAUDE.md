@@ -17,9 +17,15 @@ Browser (SPA in app/chat/page.tsx)
   → POST /api/share                      — save snapshot to Firestore
   → GET  /share/[id]                     — view shared transcript
   → GET/POST /api/trial/*                — invite code + guest trial management
+  → GET  /api/sessions                   — list signed-in user's saved sessions
+  → GET/DELETE /api/sessions/[pid]       — fetch/delete one saved session
 ```
 
-**In-memory store** (`lib/store.ts`): Sessions live in `globalThis.__allpathSessions` (a `Map<sessionId, InternalSessionState>`). Each session holds config, messages, SSE subscribers, and a message queue. State is **ephemeral** — lost on server restart.
+**In-memory store** (`lib/store.ts`): Sessions live in `globalThis.__allpathSessions` (a `Map<sessionId, InternalSessionState>`). Each session holds config, messages, SSE subscribers, and a message queue. In-memory state is ephemeral — but sessions owned by a signed-in user are persisted to Firestore after every round and can be rebuilt after a restart.
+
+**Auth (optional)**: Firebase Auth (Google + email/password). Client init in `lib/firebaseClient.ts` (only active when `NEXT_PUBLIC_FIREBASE_*` env vars are set; otherwise no sign-in UI and everything is guest-only). API routes resolve the user via `lib/serverAuth.ts::getAuthUser()` (firebase-admin `verifyIdToken`, ADC credentials, `Authorization: Bearer <idToken>`). Setup guide: `docs/firebase_auth_setup.md`.
+
+**Session persistence** (`lib/sessionPersistence.ts`): For sessions with `ownerUid` + `persistentId`, `persistSessionState()` writes `users/{uid}/sessions/{persistentId}` (sanitized doc) + `messages` subcollection (one doc per message) — after each round (orchestrator hook), after manual summarizer, and at creation. **Secrets are never persisted** (provider apiKeys, globalApiKey stripped; attachment payloads dropped). Resume flow: client hits a dead SSE stream → fetches `/api/sessions/[pid]` → recreates the session via `POST /api/session` with `initialMessages` + same `persistentId` (client re-attaches keys). `persistentId` is the stable identity across recreations; `sessionId` changes each time.
 
 **Orchestrator** (`lib/orchestrator.ts`): `processSessionQueue()` runs one round at a time. Each participant gets their own LLM call via `runParticipantTurn()`. Output is sanitized by `sanitizeAgentOutput()` to strip model self-labeling artifacts.
 
@@ -50,7 +56,12 @@ Browser (SPA in app/chat/page.tsx)
 | `lib/modelCatalog.ts` | Featured/more model lists, price tiers, generated OpenRouter catalog |
 | `lib/trial.ts` | Guest trial system: invite codes, budget tracking, provider resolution |
 | `lib/trialCrypto.ts` | Cookie signing (HMAC) + secret encryption (AES-GCM) for trial |
-| `lib/firestore.ts` | Firestore singleton (used for share records + trial data only) |
+| `lib/firestore.ts` | Firestore singleton (share records, trial data, persisted sessions) |
+| `lib/firebaseClient.ts` | Client-side Firebase Auth init (null when env vars unset) |
+| `lib/serverAuth.ts` | firebase-admin ID-token verification for API routes |
+| `lib/sessionPersistence.ts` | Sanitize + persist/load/delete sessions in Firestore (vitest-covered) |
+| `app/chat/components/useAuth.ts` | React auth-state hook + `buildAuthHeaders()` |
+| `app/chat/components/AuthControls.tsx` | Sign-in button, modal (Google + email), account menu |
 | `lib/share.ts` | Share record creation/retrieval |
 | `lib/userPreferences.ts` | localStorage prefs: globalApiKey, prompt presets |
 
@@ -72,6 +83,10 @@ TRIAL_ENCRYPTION_SECRET=      # AES-GCM for stored API keys
 FIRESTORE_DATABASE_ID=        # Firestore DB (empty = default)
 OPENROUTER_SITE_URL=https://all-path.com
 OPENROUTER_APP_NAME=AllPath MVP
+NEXT_PUBLIC_FIREBASE_API_KEY=      # Firebase Auth web config (all 4 optional —
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=  # sign-in UI + session persistence activate
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=   # only when set; see docs/firebase_auth_setup.md)
+NEXT_PUBLIC_FIREBASE_APP_ID=
 ```
 
 ## Dev Commands
@@ -80,6 +95,7 @@ OPENROUTER_APP_NAME=AllPath MVP
 npm run dev            # Local dev server (port 3000)
 npm run build          # Production build
 npm run lint           # ESLint
+npm test               # vitest (lib/**/*.test.ts)
 npm run models:update  # Refresh lib/generated/openrouterModels.json from OpenRouter API
 ```
 

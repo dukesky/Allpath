@@ -273,8 +273,10 @@ export function readFileAsDataUrl(file: File): Promise<string> {
   });
 }
 
-export async function fetchTrialStatus(): Promise<TrialStatusResponse | null> {
-  const response = await fetch("/api/trial/status");
+export async function fetchTrialStatus(
+  headers: Record<string, string> = {}
+): Promise<TrialStatusResponse | null> {
+  const response = await fetch("/api/trial/status", { headers });
   if (!response.ok) {
     return null;
   }

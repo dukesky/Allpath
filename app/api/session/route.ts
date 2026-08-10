@@ -1,9 +1,13 @@
 import { randomUUID } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
+import { getAuthUser } from "@/lib/serverAuth";
+import { persistSessionState } from "@/lib/sessionPersistence";
 import { createSession } from "@/lib/store";
 import { Message, Mode, ParticipantConfig, SessionConfig } from "@/lib/types";
 import { getGuestFromCookie } from "@/lib/trial";
 import { DEFAULT_SESSION_RULES } from "@/lib/userPreferences";
+
+const PERSISTENT_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const DEFAULT_AGENT_INITIAL_PROMPT = DEFAULT_SESSION_RULES;
 
@@ -49,6 +53,8 @@ export async function POST(request: NextRequest) {
     globalApiKey?: unknown;
     mode?: unknown;
     initialMessages?: unknown[];
+    persistentId?: unknown;
+    title?: unknown;
   };
 
   const participants = (body.participants ?? []).filter(validateParticipant);
@@ -58,7 +64,7 @@ export async function POST(request: NextRequest) {
   }
 
   const summarizer = validateParticipant(body.summarizer) ? body.summarizer : undefined;
-  const guest = await getGuestFromCookie();
+  const [guest, user] = await Promise.all([getGuestFromCookie(), getAuthUser(request)]);
 
   const requiresServerOpenRouterAccess = [...participants, ...(summarizer ? [summarizer] : [])].some(
     (item) =>
@@ -82,6 +88,13 @@ export async function POST(request: NextRequest) {
 
   const session: SessionConfig = {
     sessionId: randomUUID(),
+    ownerUid: user?.uid,
+    persistentId: user
+      ? typeof body.persistentId === "string" && PERSISTENT_ID_PATTERN.test(body.persistentId)
+        ? body.persistentId
+        : randomUUID()
+      : undefined,
+    title: typeof body.title === "string" && body.title.trim() ? body.title.trim().slice(0, 120) : undefined,
     mode,
     agentInitialPrompt:
       typeof body.agentInitialPrompt === "string" && body.agentInitialPrompt.trim().length > 0
@@ -101,10 +114,19 @@ export async function POST(request: NextRequest) {
 
   createSession(session);
 
+  if (session.ownerUid && session.persistentId) {
+    // Initial persist covers the full transcript (matters when a session is
+    // recreated from a stored transcript or a share import).
+    void persistSessionState(session).catch((error) => {
+      console.error(`[allpath] persist_failed session=${session.sessionId}`, error);
+    });
+  }
+
   return NextResponse.json({
     sessionId: session.sessionId,
     mode: session.mode,
     status: session.status,
-    roundNumber: session.roundNumber
+    roundNumber: session.roundNumber,
+    persistentId: session.persistentId
   });
 }
