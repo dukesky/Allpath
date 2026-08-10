@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "models:update": "node scripts/update-openrouter-models.mjs",
-    "trial:invite:init": "node scripts/init-trial-invite-code.mjs"
+    "trial:invite:init": "node scripts/init-trial-invite-code.mjs",
+    "test": "vitest run"
   },
   "dependencies": {
     "@google-cloud/firestore": "^8.3.0",
