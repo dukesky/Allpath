@@ -110,6 +110,7 @@ export default function HomePage() {
   const [isSharing, setIsSharing] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
+  const hasPendingActiveSessionRestoreRef = useRef(false);
   const effectiveGlobalApiKey =
     apiKeyMode === "default_profile"
       ? defaultProfileApiKey
@@ -176,6 +177,9 @@ export default function HomePage() {
           title: typeof session.title === "string" ? session.title : "Saved session",
           createdAt:
             typeof session.createdAt === "string" ? session.createdAt : new Date().toISOString(),
+          persistentId: typeof session.persistentId === "string" ? session.persistentId : undefined,
+          updatedAt: typeof session.updatedAt === "string" ? session.updatedAt : undefined,
+          source: session.source === "cloud" ? ("cloud" as const) : ("local" as const),
           members: Array.isArray(session.members)
             ? session.members.map((member, index) => ({
                 id:
@@ -240,13 +244,7 @@ export default function HomePage() {
       return;
     }
 
-    const activeSession = localStorage.getItem(ACTIVE_SESSION_STORAGE_KEY);
-    if (activeSession) {
-      setSessionId(activeSession);
-      setMessages([]);
-      setMobileActivePanel("chat");
-      connectStream(activeSession);
-    }
+    hasPendingActiveSessionRestoreRef.current = true;
 
     void fetchTrialStatus().then((value) => {
       if (value) {
@@ -254,6 +252,106 @@ export default function HomePage() {
       }
     });
   }, []);
+
+  // Restore the last active session once auth state has settled, so a
+  // signed-in user can fall back to a cloud resume when the in-memory
+  // session no longer exists (e.g. after a server restart).
+  useEffect(() => {
+    if (auth.isLoading || !hasPendingActiveSessionRestoreRef.current) {
+      return;
+    }
+    hasPendingActiveSessionRestoreRef.current = false;
+
+    const activeSession = localStorage.getItem(ACTIVE_SESSION_STORAGE_KEY);
+    if (!activeSession) {
+      return;
+    }
+
+    const meta = sessionList.find((item) => item.id === activeSession);
+    setSessionId(activeSession);
+    setMessages([]);
+    setMobileActivePanel("chat");
+    connectStream(activeSession, meta?.persistentId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.isLoading, sessionList]);
+
+  // Load the signed-in user's persisted sessions and merge them into the
+  // sidebar list; drop cloud entries again after sign-out.
+  useEffect(() => {
+    if (!auth.user) {
+      if (!auth.isLoading) {
+        setSessionList((current) => current.filter((item) => item.source !== "cloud"));
+      }
+      return;
+    }
+
+    let active = true;
+    void (async () => {
+      const headers = await buildAuthHeaders(auth.getIdToken);
+      if (!headers.Authorization) {
+        return;
+      }
+      try {
+        const response = await fetch("/api/sessions", { headers });
+        if (!response.ok || !active) {
+          return;
+        }
+        const json = (await response.json()) as {
+          sessions?: Array<{
+            persistentId: string;
+            liveSessionId: string;
+            title: string;
+            updatedAt: string;
+            participants?: Array<{
+              id: string;
+              label: string;
+              avatarUrl?: string;
+              model?: string;
+              muted?: boolean;
+              roleTitle?: string;
+              character?: string;
+            }>;
+          }>;
+        };
+        const cloudMetas: SessionMeta[] = (json.sessions ?? []).map((session) => ({
+          id: session.liveSessionId,
+          title: session.title || "Saved session",
+          createdAt: session.updatedAt,
+          updatedAt: session.updatedAt,
+          persistentId: session.persistentId,
+          source: "cloud" as const,
+          members: (session.participants ?? []).map((participant) => ({
+            id: participant.id,
+            label: participant.label,
+            avatarUrl: participant.avatarUrl ?? "",
+            model: participant.model ?? "",
+            muted: participant.muted === true,
+            roleTitle: participant.roleTitle,
+            character: participant.character
+          }))
+        }));
+        if (!active) {
+          return;
+        }
+        setSessionList((current) => {
+          const cloudPids = new Set(cloudMetas.map((item) => item.persistentId));
+          const cloudLiveIds = new Set(cloudMetas.map((item) => item.id));
+          const rest = current.filter(
+            (item) =>
+              !(item.persistentId && cloudPids.has(item.persistentId)) && !cloudLiveIds.has(item.id)
+          );
+          return [...cloudMetas, ...rest];
+        });
+      } catch {
+        // Cloud session list is best-effort; local list still works.
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.user, auth.isLoading]);
 
   useEffect(() => {
     let active = true;
@@ -488,6 +586,7 @@ export default function HomePage() {
       | undefined;
     sessionTitle: string;
     initialMessages?: Message[];
+    resumePersistentId?: string;
   }) {
     const payload = {
       mode: input.sessionModeOverride ?? sessionMode,
@@ -513,12 +612,15 @@ export default function HomePage() {
         }
       })),
       summarizer: input.summarizerOverride,
-      initialMessages: input.initialMessages
+      initialMessages: input.initialMessages,
+      persistentId: input.resumePersistentId,
+      title: input.sessionTitle
     };
 
+    const authHeaders = await buildAuthHeaders(auth.getIdToken);
     const response = await fetch("/api/session", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...authHeaders },
       body: JSON.stringify(payload)
     });
 
@@ -536,6 +638,7 @@ export default function HomePage() {
       status: string;
       roundNumber: number;
       mode?: Mode;
+      persistentId?: string;
     };
     const members = input.sessionParticipants.map((participant, index) =>
       participantToSessionMember({
@@ -563,16 +666,23 @@ export default function HomePage() {
         id: json.sessionId,
         title: input.sessionTitle,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        persistentId: json.persistentId,
+        source: json.persistentId ? ("cloud" as const) : ("local" as const),
         members
       },
-      ...current.filter((item) => item.id !== json.sessionId)
+      ...current.filter(
+        (item) =>
+          item.id !== json.sessionId &&
+          !(json.persistentId && item.persistentId === json.persistentId)
+      )
     ]);
     if (isMobileView) {
       setMobileActivePanel("chat");
     } else {
       setIsSetupPanelOpen(false);
     }
-    connectStream(json.sessionId);
+    connectStream(json.sessionId, json.persistentId);
     return true;
   }
 
@@ -644,7 +754,139 @@ export default function HomePage() {
     }));
   }
 
-  function connectStream(newSessionId: string) {
+  function resetDeadSession() {
+    eventSourceRef.current?.close();
+    eventSourceRef.current = null;
+    localStorage.removeItem(ACTIVE_SESSION_STORAGE_KEY);
+    setSessionId(null);
+    setMessages([]);
+    setActiveSessionMembers([]);
+    setStatus("idle");
+    setRoundNumber(0);
+    setError("Session expired or not found. Please create a new session.");
+  }
+
+  // Rebuilds a dead in-memory session from its Firestore record: fetches the
+  // stored transcript, recreates the live session under the same persistentId
+  // and reconnects. Falls back to a read-only restore when the session can't
+  // go live (e.g. no trial budget / API key).
+  async function resumeCloudSession(persistentId: string): Promise<boolean> {
+    try {
+      const headers = await buildAuthHeaders(auth.getIdToken);
+      if (!headers.Authorization) {
+        return false;
+      }
+
+      const response = await fetch(`/api/sessions/${persistentId}`, { headers });
+      if (!response.ok) {
+        return false;
+      }
+
+      const json = (await response.json()) as {
+        session: {
+          title?: string;
+          mode?: Mode;
+          agentInitialPrompt?: string;
+          roundNumber?: number;
+          participants?: Array<{
+            id: string;
+            label: string;
+            avatarUrl?: string;
+            model: string;
+            muted?: boolean;
+            roleTitle?: string;
+            character?: string;
+            provider?: { type?: ProviderType; baseUrl?: string };
+          }>;
+          summarizer?: {
+            id: string;
+            label: string;
+            avatarUrl?: string;
+            model: string;
+            roleTitle?: string;
+            character?: string;
+            provider?: { type?: ProviderType; baseUrl?: string };
+          };
+        };
+        messages: Message[];
+      };
+
+      const toParticipantPayload = (participant: NonNullable<typeof json.session.participants>[number]) => ({
+        id: participant.id,
+        label: participant.label,
+        avatarUrl: participant.avatarUrl,
+        model: participant.model,
+        muted: participant.muted === true,
+        roleTitle: participant.roleTitle,
+        character: participant.character,
+        provider: {
+          type: participant.provider?.type ?? "openrouter",
+          apiKey: "",
+          baseUrl: participant.provider?.baseUrl
+        }
+      });
+
+      const participantsPayload = (json.session.participants ?? []).map(toParticipantPayload);
+      const members = participantsPayload.map(participantToSessionMember);
+
+      const createResponse = await fetch("/api/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...headers },
+        body: JSON.stringify({
+          mode: json.session.mode,
+          agentInitialPrompt: json.session.agentInitialPrompt,
+          globalApiKey: effectiveGlobalApiKey.trim() || undefined,
+          participants: participantsPayload,
+          summarizer: json.session.summarizer
+            ? toParticipantPayload(json.session.summarizer)
+            : undefined,
+          initialMessages: json.messages,
+          persistentId,
+          title: json.session.title
+        })
+      });
+
+      if (!createResponse.ok) {
+        const errorJson = (await createResponse.json().catch(() => ({}))) as { error?: string };
+        eventSourceRef.current?.close();
+        eventSourceRef.current = null;
+        setSessionId(null);
+        setMessages(json.messages);
+        setActiveSessionMembers(members);
+        setStatus("idle");
+        setRoundNumber(json.session.roundNumber ?? 0);
+        setError(
+          errorJson.error
+            ? `Session restored read-only. To continue chatting: ${errorJson.error}`
+            : "Session restored read-only."
+        );
+        return true;
+      }
+
+      const created = (await createResponse.json()) as {
+        sessionId: string;
+        status: string;
+        roundNumber: number;
+      };
+      setSessionList((current) =>
+        current.map((item) =>
+          item.persistentId === persistentId ? { ...item, id: created.sessionId } : item
+        )
+      );
+      setSessionId(created.sessionId);
+      setStatus(created.status);
+      setRoundNumber(created.roundNumber);
+      setMessages([]);
+      setActiveSessionMembers(members);
+      setError("");
+      connectStream(created.sessionId, persistentId);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function connectStream(newSessionId: string, resumePersistentId?: string) {
     eventSourceRef.current?.close();
     const source = new EventSource(`/api/session/${newSessionId}/stream`);
     let openedOnce = false;
@@ -718,13 +960,15 @@ export default function HomePage() {
       if (!openedOnce) {
         eventSourceRef.current?.close();
         eventSourceRef.current = null;
-        localStorage.removeItem(ACTIVE_SESSION_STORAGE_KEY);
-        setSessionId(null);
-        setMessages([]);
-        setActiveSessionMembers([]);
-        setStatus("idle");
-        setRoundNumber(0);
-        setError("Session expired or not found. Please create a new session.");
+        if (resumePersistentId) {
+          void resumeCloudSession(resumePersistentId).then((resumed) => {
+            if (!resumed) {
+              resetDeadSession();
+            }
+          });
+          return;
+        }
+        resetDeadSession();
         return;
       }
 
@@ -861,21 +1105,32 @@ export default function HomePage() {
       return;
     }
 
+    const meta = sessionList.find((item) => item.id === targetSessionId);
     setError("");
     setSessionId(targetSessionId);
     setMessages([]);
-    setActiveSessionMembers(
-      sessionList.find((item) => item.id === targetSessionId)?.members ?? []
-    );
+    setActiveSessionMembers(meta?.members ?? []);
     if (isMobileView) {
       setMobileActivePanel("chat");
     } else {
       setIsSetupPanelOpen(false);
     }
-    connectStream(targetSessionId);
+    connectStream(targetSessionId, meta?.persistentId);
   }
 
   function deleteSavedSession(targetSessionId: string) {
+    const meta = sessionList.find((item) => item.id === targetSessionId);
+    if (meta?.persistentId && auth.user) {
+      void (async () => {
+        const headers = await buildAuthHeaders(auth.getIdToken);
+        if (!headers.Authorization) {
+          return;
+        }
+        await fetch(`/api/sessions/${meta.persistentId}`, { method: "DELETE", headers }).catch(
+          () => undefined
+        );
+      })();
+    }
     setSessionList((current) => current.filter((item) => item.id !== targetSessionId));
     if (targetSessionId !== sessionId) {
       return;

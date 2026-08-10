@@ -15,6 +15,10 @@ export interface SessionMeta {
   title: string;
   createdAt: string;
   members: SessionMemberMeta[];
+  // Set when the session is persisted to the signed-in user's account.
+  persistentId?: string;
+  updatedAt?: string;
+  source?: "local" | "cloud";
 }
 
 export interface StoryExperience {

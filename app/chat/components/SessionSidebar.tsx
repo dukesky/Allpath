@@ -68,7 +68,14 @@ export function SessionSidebar({
                   <p className="text-[10px] text-slate-500">{item.members.length} members</p>
                 </div>
                 <p className="font-medium">{item.title}</p>
-                <p className="mt-1 font-mono text-[10px]">{item.id}</p>
+                <div className="mt-1 flex items-center gap-1.5">
+                  {item.source === "cloud" && (
+                    <span className="rounded bg-indigo-50 px-1 py-0.5 text-[9px] font-medium text-indigo-600">
+                      Saved
+                    </span>
+                  )}
+                  <p className="truncate font-mono text-[10px]">{item.id}</p>
+                </div>
               </button>
               <div className="flex flex-col gap-1">
                 <button
