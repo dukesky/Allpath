@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-10T13:01:49.687Z",
+  "generatedAt": "2026-08-10T21:09:57.595Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -370,7 +370,7 @@
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
-      "price": "$$",
+      "price": "$",
       "created": 1781631930,
       "variantCount": 2
     },
@@ -1016,13 +1016,6 @@
       "label": "Inception: Mercury 2",
       "price": "$",
       "created": 1772636275,
-      "variantCount": 1
-    },
-    {
-      "id": "openai/gpt-5.3-chat",
-      "label": "OpenAI: GPT-5.3 Chat",
-      "price": "$$",
-      "created": 1772564061,
       "variantCount": 1
     },
     {
