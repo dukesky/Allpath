@@ -5,6 +5,8 @@ import type { AuthState } from "./useAuth";
 
 function describeAuthError(error: unknown): string {
   const code = (error as { code?: string })?.code ?? "";
+  // Keep the raw error visible for debugging intermittent sign-in issues.
+  console.error("[allpath] auth_error", code, error);
   switch (code) {
     case "auth/invalid-credential":
     case "auth/wrong-password":
@@ -17,9 +19,14 @@ function describeAuthError(error: unknown): string {
     case "auth/invalid-email":
       return "Please enter a valid email address.";
     case "auth/popup-closed-by-user":
+    case "auth/cancelled-popup-request":
       return "";
+    case "auth/popup-blocked":
+      return "Your browser blocked the sign-in popup. Allow popups for this site and retry.";
+    case "auth/network-request-failed":
+      return "Network error during sign-in. Check your connection and retry.";
     default:
-      return "Sign-in failed. Please try again.";
+      return `Sign-in failed${code ? ` (${code})` : ""}. Please try again.`;
   }
 }
 
