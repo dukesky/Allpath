@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-11T01:27:04.310Z",
+  "generatedAt": "2026-08-11T12:58:06.969Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "sakana/sakana-namazu",
+      "label": "Sakana: Sakana Namazu",
+      "price": "$$",
+      "created": 1786410129,
+      "variantCount": 1
+    },
     {
       "id": "upstage/solar-pro4",
       "label": "Upstage: Solar Pro 4",
