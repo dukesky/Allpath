@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getSession, subscribe } from "@/lib/store";
+import { getSession, subscribe, toClientParticipant } from "@/lib/store";
 import { StreamEvent } from "@/lib/types";
 
 const encoder = new TextEncoder();
@@ -34,7 +34,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
             status: session.config.status,
             roundNumber: session.config.roundNumber,
             mode: session.config.mode,
-            participants: session.config.participants,
+            participants: session.config.participants.map(toClientParticipant),
             existingMessages: session.config.messages
           }
         })

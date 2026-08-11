@@ -1,4 +1,26 @@
-import { Message, Mode, SessionConfig, StreamEvent } from "@/lib/types";
+import { Message, Mode, ParticipantConfig, SessionConfig, StreamEvent } from "@/lib/types";
+
+// Shape of a participant as exposed to the browser (SSE events + API
+// responses). Provider config (apiKey, baseUrl) must never leave the server.
+export interface ClientParticipant {
+  id: string;
+  label: string;
+  avatarUrl?: string;
+  model: string;
+  muted?: boolean;
+}
+
+export function toClientParticipant(participant: ParticipantConfig): ClientParticipant {
+  return Object.fromEntries(
+    Object.entries({
+      id: participant.id,
+      label: participant.label,
+      avatarUrl: participant.avatarUrl,
+      model: participant.model,
+      muted: participant.muted
+    }).filter(([, value]) => value !== undefined)
+  ) as unknown as ClientParticipant;
+}
 
 type Subscriber = (event: StreamEvent) => void;
 
@@ -153,7 +175,7 @@ export function setParticipantMuted(
   sessionId: string,
   participantId: string,
   muted: boolean
-): SessionConfig["participants"] | null {
+): ClientParticipant[] | null {
   const session = sessions.get(sessionId);
   if (!session) {
     return null;
@@ -165,15 +187,16 @@ export function setParticipantMuted(
   }
 
   participant.muted = muted;
+  const clientParticipants = session.config.participants.map(toClientParticipant);
   emit(sessionId, {
     type: "session_state",
     payload: {
       status: session.config.status,
       roundNumber: session.config.roundNumber,
       mode: session.config.mode,
-      participants: session.config.participants
+      participants: clientParticipants
     }
   });
 
-  return session.config.participants;
+  return clientParticipants;
 }
