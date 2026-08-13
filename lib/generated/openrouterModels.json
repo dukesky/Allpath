@@ -1,8 +1,43 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-12T13:03:16.447Z",
+  "generatedAt": "2026-08-13T01:46:57.173Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "bytedance-seed/seed-2-1-turbo",
+      "label": "ByteDance Seed: Seed 2.1 Turbo",
+      "price": "$",
+      "created": 1786552176,
+      "variantCount": 1
+    },
+    {
+      "id": "qwen/qwen3.8-2.4t-a95b",
+      "label": "Qwen: Qwen3.8 2.4T A95B",
+      "price": "$$",
+      "created": 1786551702,
+      "variantCount": 1
+    },
+    {
+      "id": "bytedance-seed/seed-2.0-code",
+      "label": "ByteDance Seed: Seed-2.0-Code",
+      "price": "$$",
+      "created": 1786550701,
+      "variantCount": 1
+    },
+    {
+      "id": "deepseek/deepseek-v4-pro-0813",
+      "label": "DeepSeek: DeepSeek V4 Pro 0813",
+      "price": "$",
+      "created": 1786549364,
+      "variantCount": 1
+    },
+    {
+      "id": "x-ai/grok-4.6",
+      "label": "SpaceXAI: Grok 4.6",
+      "price": "$$",
+      "created": 1786548957,
+      "variantCount": 1
+    },
     {
       "id": "liquid/lfm-2.5-2.6b:free",
       "label": "LiquidAI: LFM2.5-2.6B (free)",
@@ -78,13 +113,6 @@
       "label": "DeepSeek: DeepSeek V4 Flash 0731",
       "price": "$",
       "created": 1785478908,
-      "variantCount": 1
-    },
-    {
-      "id": "bytedance-seed/seed-2.0-code",
-      "label": "ByteDance Seed: Seed-2.0-Code",
-      "price": "$$",
-      "created": 1785451719,
       "variantCount": 1
     },
     {
