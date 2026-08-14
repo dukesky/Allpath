@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-14T01:44:51.108Z",
+  "generatedAt": "2026-08-14T20:02:48.000Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -454,7 +454,7 @@
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
-      "price": "$",
+      "price": "$$",
       "created": 1781631930,
       "variantCount": 2
     },
@@ -874,7 +874,7 @@
     {
       "id": "moonshotai/kimi-k2.6",
       "label": "MoonshotAI: Kimi K2.6",
-      "price": "$$",
+      "price": "$",
       "created": 1776699402,
       "variantCount": 1
     },
@@ -1210,7 +1210,7 @@
     {
       "id": "qwen/qwen3.5-397b-a17b",
       "label": "Qwen: Qwen3.5 397B A17B",
-      "price": "$$",
+      "price": "$",
       "created": 1771223018,
       "variantCount": 1
     },
