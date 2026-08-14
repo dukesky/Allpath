@@ -14,6 +14,7 @@ Browser (SPA in app/chat/page.tsx)
   → POST /api/session/[id]/summarize     — triggers manual summarizer
   → POST /api/session/[id]/mode          — switch roundtable/one_to_one
   → POST /api/session/[id]/participant   — mute/unmute participants
+  → POST /api/session/[id]/claim         — attach a guest session to the signed-in user
   → POST /api/share                      — save snapshot to Firestore
   → GET  /share/[id]                     — view shared transcript
   → GET/POST /api/trial/*                — invite code + guest trial management
@@ -25,7 +26,7 @@ Browser (SPA in app/chat/page.tsx)
 
 **Auth (optional)**: Firebase Auth (Google + email/password). Client init in `lib/firebaseClient.ts` (only active when `NEXT_PUBLIC_FIREBASE_*` env vars are set; otherwise no sign-in UI and everything is guest-only). API routes resolve the user via `lib/serverAuth.ts::getAuthUser()` (firebase-admin `verifyIdToken`, ADC credentials, `Authorization: Bearer <idToken>`). Setup guide: `docs/firebase_auth_setup.md`.
 
-**Session persistence** (`lib/sessionPersistence.ts`): For sessions with `ownerUid` + `persistentId`, `persistSessionState()` writes `users/{uid}/sessions/{persistentId}` (sanitized doc) + `messages` subcollection (one doc per message) — after each round (orchestrator hook), after manual summarizer, and at creation. **Secrets are never persisted** (provider apiKeys, globalApiKey stripped; attachment payloads dropped). Resume flow: client hits a dead SSE stream → fetches `/api/sessions/[pid]` → recreates the session via `POST /api/session` with `initialMessages` + same `persistentId` (client re-attaches keys). `persistentId` is the stable identity across recreations; `sessionId` changes each time.
+**Session persistence** (`lib/sessionPersistence.ts`): For sessions with `ownerUid` + `persistentId`, `persistSessionState()` writes `users/{uid}/sessions/{persistentId}` (sanitized doc) + `messages` subcollection (one doc per message) — after each round (orchestrator hook), after manual summarizer, and at creation. **Secrets are never persisted** (provider apiKeys, globalApiKey stripped; attachment payloads dropped). Resume flow: client hits a dead SSE stream → fetches `/api/sessions/[pid]` → recreates the session via `POST /api/session` with `initialMessages` + same `persistentId` (client re-attaches keys). `persistentId` is the stable identity across recreations; `sessionId` changes each time. **Claiming**: sessions started as a guest have no `ownerUid`, so they never persist; on sign-in the client calls `POST /api/session/[id]/claim` for each local session, which attaches `ownerUid` + `persistentId` and persists the full transcript (only works while the session is still in memory).
 
 **Orchestrator** (`lib/orchestrator.ts`): `processSessionQueue()` runs one round at a time. Each participant gets their own LLM call via `runParticipantTurn()`. Output is sanitized by `sanitizeAgentOutput()` to strip model self-labeling artifacts.
 

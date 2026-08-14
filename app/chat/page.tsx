@@ -111,6 +111,7 @@ export default function HomePage() {
   const eventSourceRef = useRef<EventSource | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
   const hasPendingActiveSessionRestoreRef = useRef(false);
+  const sessionListRef = useRef<SessionMeta[]>([]);
   const effectiveGlobalApiKey =
     apiKeyMode === "default_profile"
       ? defaultProfileApiKey
@@ -294,6 +295,48 @@ export default function HomePage() {
       if (!headers.Authorization) {
         return;
       }
+
+      // Claim sessions started before signing in, so they are saved to the
+      // account instead of being lost. Only sessions still live on the server
+      // can be claimed; failures are silent and leave the entry local.
+      const claimable = sessionListRef.current.filter(
+        (item) => !item.persistentId && item.source !== "cloud"
+      );
+      if (claimable.length > 0) {
+        const claimed = (
+          await Promise.all(
+            claimable.map(async (item) => {
+              try {
+                const claimResponse = await fetch(`/api/session/${item.id}/claim`, {
+                  method: "POST",
+                  headers
+                });
+                if (!claimResponse.ok) {
+                  return null;
+                }
+                const claimJson = (await claimResponse.json()) as { persistentId?: string };
+                return claimJson.persistentId
+                  ? { id: item.id, persistentId: claimJson.persistentId }
+                  : null;
+              } catch {
+                return null;
+              }
+            })
+          )
+        ).filter((item): item is { id: string; persistentId: string } => item !== null);
+
+        if (claimed.length > 0 && active) {
+          const claimedById = new Map(claimed.map((item) => [item.id, item.persistentId]));
+          setSessionList((current) =>
+            current.map((item) =>
+              claimedById.has(item.id)
+                ? { ...item, persistentId: claimedById.get(item.id), source: "cloud" as const }
+                : item
+            )
+          );
+        }
+      }
+
       try {
         const response = await fetch("/api/sessions", { headers });
         if (!response.ok || !active) {
@@ -390,6 +433,7 @@ export default function HomePage() {
   }, [effectiveGlobalApiKey]);
 
   useEffect(() => {
+    sessionListRef.current = sessionList;
     localStorage.setItem(SESSION_LIST_STORAGE_KEY, JSON.stringify(sessionList));
   }, [sessionList]);
 
