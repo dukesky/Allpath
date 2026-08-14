@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-13T13:03:57.946Z",
+  "generatedAt": "2026-08-14T01:44:51.108Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "google/gemini-3.7-flash",
+      "label": "Google: Gemini 3.7 Flash",
+      "price": "$",
+      "created": 1786640581,
+      "variantCount": 2
+    },
+    {
+      "id": "google/gemini-3.7-flash:batch",
+      "label": "Google: Gemini 3.7 Flash (batch)",
+      "price": "$",
+      "created": 1786640581,
+      "variantCount": 2
+    },
     {
       "id": "bytedance-seed/seed-2-1-turbo",
       "label": "ByteDance Seed: Seed 2.1 Turbo",
@@ -174,7 +188,7 @@
     {
       "id": "google/gemini-3.6-flash:batch",
       "label": "Google: Gemini 3.6 Flash (batch)",
-      "price": "$$",
+      "price": "$",
       "created": 1784646733,
       "variantCount": 2
     },
@@ -706,7 +720,7 @@
     {
       "id": "~google/gemini-flash-latest",
       "label": "Google Gemini Flash Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1777318398,
       "variantCount": 1
     },
