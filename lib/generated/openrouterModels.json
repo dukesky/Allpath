@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-15T01:05:30.539Z",
+  "generatedAt": "2026-08-15T12:32:16.836Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "qwen/qwen3.8-27b",
+      "label": "Qwen: Qwen3.8 27B",
+      "price": "$$",
+      "created": 1786722910,
+      "variantCount": 1
+    },
+    {
+      "id": "dots-studio/dots-3-note-preview:free",
+      "label": "Dots Studio: Dots3-Note Preview (free)",
+      "price": "$",
+      "created": 1786680361,
+      "variantCount": 1
+    },
     {
       "id": "google/gemini-3.7-flash",
       "label": "Google: Gemini 3.7 Flash",
@@ -454,7 +468,7 @@
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
-      "price": "$$",
+      "price": "$",
       "created": 1781631930,
       "variantCount": 2
     },
@@ -874,7 +888,7 @@
     {
       "id": "moonshotai/kimi-k2.6",
       "label": "MoonshotAI: Kimi K2.6",
-      "price": "$$",
+      "price": "$",
       "created": 1776699402,
       "variantCount": 1
     },
@@ -1926,7 +1940,14 @@
       "label": "OpenAI: gpt-oss-20b",
       "price": "$",
       "created": 1754414229,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-oss-20b:free",
+      "label": "OpenAI: gpt-oss-20b (free)",
+      "price": "$",
+      "created": 1754414229,
+      "variantCount": 2
     },
     {
       "id": "anthropic/claude-opus-4.1",
