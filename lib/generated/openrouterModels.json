@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-14T20:02:48.000Z",
+  "generatedAt": "2026-08-15T01:05:30.539Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -874,7 +874,7 @@
     {
       "id": "moonshotai/kimi-k2.6",
       "label": "MoonshotAI: Kimi K2.6",
-      "price": "$",
+      "price": "$$",
       "created": 1776699402,
       "variantCount": 1
     },
@@ -1224,7 +1224,7 @@
     {
       "id": "z-ai/glm-5",
       "label": "Z.ai: GLM 5",
-      "price": "$$",
+      "price": "$",
       "created": 1770829182,
       "variantCount": 1
     },
@@ -1926,14 +1926,7 @@
       "label": "OpenAI: gpt-oss-20b",
       "price": "$",
       "created": 1754414229,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-oss-20b:free",
-      "label": "OpenAI: gpt-oss-20b (free)",
-      "price": "$",
-      "created": 1754414229,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "anthropic/claude-opus-4.1",
