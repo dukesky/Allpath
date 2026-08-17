@@ -92,6 +92,9 @@ export default function HomePage() {
             <Link className="transition hover:text-primary" href="/contact">
               Contact
             </Link>
+            <Link className="transition hover:text-primary" href="/trading">
+              Trading Agent
+            </Link>
             <Link className="rounded-full bg-slate-950 px-5 py-2.5 text-white transition hover:bg-primary" href="/chat">
               Start Your Conversation
             </Link>
@@ -250,6 +253,29 @@ export default function HomePage() {
               <p className="mt-4 text-sm leading-8 text-slate-700">{panel.body}</p>
             </article>
           ))}
+        </section>
+
+        <section className="pb-4">
+          <Link
+            className="group flex flex-col gap-6 rounded-[2rem] border border-slate-200 bg-[#101727] p-6 text-slate-100 shadow-sm transition hover:border-primary sm:flex-row sm:items-center sm:justify-between lg:p-8"
+            href="/trading"
+          >
+            <div className="max-w-2xl">
+              <p className="font-mono text-xs font-medium uppercase tracking-[0.24em] text-slate-400">
+                Related project · open source
+              </p>
+              <h4 className="mt-3 text-2xl font-semibold tracking-tight">
+                AllPath Trading Agent — a self-hosted trading agent that proposes. You approve.
+              </h4>
+              <p className="mt-3 text-sm leading-7 text-slate-300">
+                YAML strategies watched hourly, a chat agent with memory (web and Telegram), a nightly
+                reflection loop, and a human approval gate in front of every order. Paper trading by default.
+              </p>
+            </div>
+            <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-slate-950 transition group-hover:bg-primary group-hover:text-white">
+              trading.all-path.com ↗
+            </span>
+          </Link>
         </section>
       </div>
     </main>
