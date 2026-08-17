@@ -3,19 +3,34 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
+  getRedirectResult,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
   signOut,
   User
 } from "firebase/auth";
 import { createGoogleProvider, getFirebaseAuth, isFirebaseAuthConfigured } from "@/lib/firebaseClient";
+
+// Popup sign-in fails in browsers that restrict third-party storage: the
+// account is created on the auth server but the client never receives the
+// credential. These codes mean "the popup channel broke", not "the user
+// changed their mind", so we retry automatically via full-page redirect.
+const POPUP_CHANNEL_FAILURE_CODES = new Set([
+  "auth/popup-blocked",
+  "auth/internal-error",
+  "auth/timeout",
+  "auth/web-storage-unsupported",
+  "auth/operation-not-supported-in-this-environment"
+]);
 
 export interface AuthState {
   isConfigured: boolean;
   isLoading: boolean;
   user: User | null;
   signInWithGoogle: () => Promise<void>;
+  signInWithGoogleRedirect: () => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signUpWithEmail: (email: string, password: string) => Promise<void>;
   signOutUser: () => Promise<void>;
@@ -32,10 +47,23 @@ export function useAuth(): AuthState {
       return;
     }
 
+    // Completes a redirect-based sign-in after the browser navigates back.
+    void getRedirectResult(auth).catch((error) => {
+      console.error("[allpath] auth_redirect_error", (error as { code?: string })?.code, error);
+    });
+
     return onAuthStateChanged(auth, (nextUser) => {
       setUser(nextUser);
       setIsLoading(false);
     });
+  }, []);
+
+  const signInWithGoogleRedirect = useCallback(async () => {
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      return;
+    }
+    await signInWithRedirect(auth, createGoogleProvider());
   }, []);
 
   const signInWithGoogle = useCallback(async () => {
@@ -43,7 +71,17 @@ export function useAuth(): AuthState {
     if (!auth) {
       return;
     }
-    await signInWithPopup(auth, createGoogleProvider());
+
+    try {
+      await signInWithPopup(auth, createGoogleProvider());
+    } catch (error) {
+      const code = (error as { code?: string })?.code ?? "";
+      if (POPUP_CHANNEL_FAILURE_CODES.has(code)) {
+        await signInWithRedirect(auth, createGoogleProvider());
+        return;
+      }
+      throw error;
+    }
   }, []);
 
   const signInWithEmail = useCallback(async (email: string, password: string) => {
@@ -87,6 +125,7 @@ export function useAuth(): AuthState {
     isLoading,
     user,
     signInWithGoogle,
+    signInWithGoogleRedirect,
     signInWithEmail,
     signUpWithEmail,
     signOutUser,

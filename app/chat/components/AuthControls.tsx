@@ -11,9 +11,12 @@ function describeAuthError(error: unknown): string {
     case "auth/invalid-credential":
     case "auth/wrong-password":
     case "auth/user-not-found":
-      return "Incorrect email or password.";
+      // Email enumeration protection makes these indistinguishable, and an
+      // account created via Google has no password at all — so point at the
+      // Google button instead of insisting the password is wrong.
+      return "Incorrect email or password. If you signed up with Google, use “Continue with Google” above.";
     case "auth/email-already-in-use":
-      return "This email is already registered. Try signing in instead.";
+      return "This email is already registered — if you signed up with Google, use “Continue with Google” above.";
     case "auth/weak-password":
       return "Password must be at least 6 characters.";
     case "auth/invalid-email":
@@ -38,6 +41,7 @@ export function AuthControls({ auth }: { auth: AuthState }) {
   const [password, setPassword] = useState("");
   const [formError, setFormError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showRedirectFallback, setShowRedirectFallback] = useState(false);
 
   if (!auth.isConfigured) {
     return null;
@@ -137,11 +141,18 @@ export function AuthControls({ auth }: { auth: AuthState }) {
               className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
               onClick={async () => {
                 setFormError("");
+                setShowRedirectFallback(false);
                 try {
                   await auth.signInWithGoogle();
                   setIsModalOpen(false);
                 } catch (error) {
-                  setFormError(describeAuthError(error));
+                  // The popup channel can break even when the account is
+                  // created server-side; offer the redirect route as a way out.
+                  setFormError(
+                    describeAuthError(error) ||
+                      "The Google sign-in window closed before finishing."
+                  );
+                  setShowRedirectFallback(true);
                 }
               }}
             >
@@ -165,6 +176,22 @@ export function AuthControls({ auth }: { auth: AuthState }) {
               </svg>
               Continue with Google
             </button>
+            {showRedirectFallback && (
+              <button
+                type="button"
+                className="mt-2 w-full rounded-lg border border-indigo-300 bg-indigo-50 px-3 py-2 text-xs font-medium text-indigo-700 hover:bg-indigo-100"
+                onClick={async () => {
+                  setFormError("");
+                  try {
+                    await auth.signInWithGoogleRedirect();
+                  } catch (error) {
+                    setFormError(describeAuthError(error));
+                  }
+                }}
+              >
+                Retry without a popup (redirects this page)
+              </button>
+            )}
             <div className="my-4 flex items-center gap-3 text-[11px] uppercase tracking-wide text-slate-400">
               <span className="h-px flex-1 bg-slate-200" />
               or
