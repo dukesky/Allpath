@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-18T01:52:58.314Z",
+  "generatedAt": "2026-08-18T02:57:23.139Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -64,13 +64,6 @@
       "label": "SpaceXAI: Grok 4.6",
       "price": "$$",
       "created": 1786548957,
-      "variantCount": 1
-    },
-    {
-      "id": "liquid/lfm-2.5-2.6b:free",
-      "label": "LiquidAI: LFM2.5-2.6B (free)",
-      "price": "$",
-      "created": 1786470519,
       "variantCount": 1
     },
     {
