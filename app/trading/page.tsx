@@ -36,7 +36,7 @@ const PILLARS = [
     eyebrow: "An agent that remembers",
     title: "Talk to it in the browser or in Telegram — same agent, same memory.",
     body:
-      "Ask what a position looks like against its plan, tighten a stop, draft a new strategy. It keeps four layers of memory (your profile, strategies, per-stock notes, lessons) and consolidates them nightly, so it gets less generic the longer you use it.",
+      "Ask what a position looks like against its plan, tighten a stop, draft a new strategy. It keeps four layers of memory (your profile, strategies, per-stock notes, lessons) and consolidates them nightly, so it gets less generic the longer you use it. Bring your own model: OpenRouter (any model, one key), OpenAI, or Anthropic — pick a different tier for chat, hourly review, and memory.",
     shot: "chat",
     alt: "Chat page: the agent answers a question about NVDA with a small table, then queues a stop-loss change for approval."
   },
@@ -62,23 +62,49 @@ const GUARANTEES = [
 const STEPS = [
   {
     title: "Clone and install",
-    code: "git clone https://github.com/dukesky/allpath-trading-agent\ncd allpath-trading-agent\nuv sync"
+    zh: "克隆仓库并安装依赖（需要 Python 3.11+ 和 uv）",
+    code: "git clone https://github.com/dukesky/allpath-trading-agent\ncd allpath-trading-agent\nuv sync",
+    links: [{ label: "Install uv", href: "https://docs.astral.sh/uv/getting-started/installation/" }]
   },
   {
-    title: "Add two keys",
-    code: "cp .env.example .env\n# ALPACA_API_KEY / ALPACA_SECRET_KEY  (paper account, free)\n# OPENROUTER_API_KEY  (or OpenAI / Anthropic)"
+    title: "Get a broker key (free paper account)",
+    zh: "去 Alpaca 开一个免费的模拟盘账户，生成 API key（Paper Trading 页面右侧）",
+    code: "# .env\nALPACA_API_KEY=your_paper_key\nALPACA_SECRET_KEY=your_paper_secret\nALPACA_PAPER=true",
+    links: [
+      { label: "Create Alpaca account", href: "https://app.alpaca.markets/signup" },
+      { label: "Paper trading & API keys", href: "https://app.alpaca.markets/paper/dashboard/overview" }
+    ]
+  },
+  {
+    title: "Pick an LLM provider",
+    zh: "三选一：OpenRouter（一把 key 用任意模型，推荐）、OpenAI 直连、Anthropic 直连",
+    code: "# .env — choose ONE\nLLM_PROVIDER=openrouter\nOPENROUTER_API_KEY=sk-or-...\n\n# or: LLM_PROVIDER=openai     + OPENAI_API_KEY=...\n# or: LLM_PROVIDER=anthropic  + ANTHROPIC_API_KEY=...",
+    links: [
+      { label: "OpenRouter keys", href: "https://openrouter.ai/settings/keys" },
+      { label: "OpenAI keys", href: "https://platform.openai.com/api-keys" },
+      { label: "Anthropic keys", href: "https://console.anthropic.com/settings/keys" }
+    ]
   },
   {
     title: "Start the web UI",
-    code: "uv run allpath-trade serve\n# → http://127.0.0.1:8791  (token printed on first run)"
+    zh: "启动本地服务；首次运行会在终端打印登录 token，浏览器打开 127.0.0.1:8791",
+    code: "cp .env.example .env   # then fill in the keys above\nuv run allpath-trade serve\n# → http://127.0.0.1:8791",
+    links: []
   },
   {
-    title: "Draft a strategy in chat",
-    code: "“Buy NVDA on pullbacks under 170, up to 20% of the account,\n hard stop at 140.”\n# → queued on Pending as a diff → Approve → activate on the Strategies page"
+    title: "Draft a strategy in chat, then approve it",
+    zh: "在聊天里用自然语言让 agent 起草策略；它进入 Pending 队列，你看完 diff 点批准，再到 Strategies 页激活",
+    code: "You: \"Buy NVDA on pullbacks under 170, up to 20% of the account, hard stop at 140.\"\nAgent: Draft queued for your approval as #1 — open Pending.\n# Approve on Pending → Activate on the Strategies page → the sentinel starts watching",
+    links: []
   },
   {
-    title: "Take it with you",
-    code: "Settings → Push (ntfy) or Telegram\n# triggers, fills, reports and approve links on your phone"
+    title: "Take it with you (optional)",
+    zh: "Settings 里配置 ntfy 手机推送或 Telegram，触发/成交/复盘报告和一键审批链接直达手机",
+    code: "Settings → Push notifications (ntfy)  or  Settings → Telegram\n# triggers, fills, nightly reports and approve links on your phone",
+    links: [
+      { label: "ntfy app", href: "https://ntfy.sh/" },
+      { label: "Telegram BotFather", href: "https://t.me/BotFather" }
+    ]
   }
 ] as const;
 
@@ -128,7 +154,7 @@ export default function TradingPage() {
               </div>
               <div>
                 <dt>Models</dt>
-                <dd className="mt-1 text-sm normal-case tracking-normal text-slate-900">Any via OpenRouter</dd>
+                <dd className="mt-1 text-sm normal-case tracking-normal text-slate-900">OpenRouter · OpenAI · Anthropic</dd>
               </div>
               <div>
                 <dt>Stack</dt>
@@ -251,16 +277,37 @@ export default function TradingPage() {
         >
           <p className="font-mono text-xs uppercase tracking-[0.24em] text-slate-500">Quick start</p>
           <h3 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
-            Five minutes to a running agent. Paper account, no card.
+            Six steps to a running agent. Paper account, no card.
           </h3>
-          <ol className="mt-8 grid gap-4 lg:grid-cols-5">
+          <ol className="mt-8 space-y-4">
             {STEPS.map((s, i) => (
-              <li key={s.title} className="flex flex-col rounded-2xl border border-slate-200 bg-white/85 p-4">
-                <div className="flex items-baseline gap-2">
-                  <span className="font-mono text-xs text-primary">{String(i + 1).padStart(2, "0")}</span>
-                  <p className="text-sm font-semibold text-slate-900">{s.title}</p>
+              <li
+                key={s.title}
+                className="grid gap-4 rounded-2xl border border-slate-200 bg-white/85 p-5 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-8 lg:p-6"
+              >
+                <div>
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-mono text-sm text-primary">{String(i + 1).padStart(2, "0")}</span>
+                    <p className="text-base font-semibold text-slate-900">{s.title}</p>
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">{s.zh}</p>
+                  {s.links.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {s.links.map((l) => (
+                        <a
+                          key={l.href}
+                          className="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-3 py-1 text-xs font-medium text-slate-700 transition hover:border-primary hover:text-primary"
+                          href={l.href}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          {l.label} ↗
+                        </a>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <pre className="mt-3 flex-1 overflow-x-auto whitespace-pre-wrap rounded-xl bg-[#14151a] p-3 font-mono text-[11px] leading-5 text-slate-200">
+                <pre className="min-w-0 overflow-x-auto whitespace-pre-wrap break-words rounded-xl bg-[#14151a] p-4 font-mono text-[12.5px] leading-6 text-slate-200">
                   {s.code}
                 </pre>
               </li>
@@ -271,11 +318,8 @@ export default function TradingPage() {
             <a className="font-medium text-primary underline-offset-2 hover:underline" href={`${GITHUB}#readme`}>
               README
             </a>{" "}
-            (English and 中文). Requires Python 3.11+ and{" "}
-            <a className="font-medium text-primary underline-offset-2 hover:underline" href="https://docs.astral.sh/uv/">
-              uv
-            </a>
-            .
+            (English and 中文). Live trading is a deliberate <code className="font-mono text-xs">.env</code> change,
+            never the default.
           </p>
         </section>
 
