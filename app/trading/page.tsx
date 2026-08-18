@@ -62,13 +62,13 @@ const GUARANTEES = [
 const STEPS = [
   {
     title: "Clone and install",
-    zh: "克隆仓库并安装依赖（需要 Python 3.11+ 和 uv）",
+    hint: "Needs Python 3.11+ and uv. Nothing else to install — the broker and data clients ship with the package.",
     code: "git clone https://github.com/dukesky/allpath-trading-agent\ncd allpath-trading-agent\nuv sync",
     links: [{ label: "Install uv", href: "https://docs.astral.sh/uv/getting-started/installation/" }]
   },
   {
     title: "Get a broker key (free paper account)",
-    zh: "去 Alpaca 开一个免费的模拟盘账户，生成 API key（Paper Trading 页面右侧）",
+    hint: "Alpaca paper accounts are free and need no funding. Generate the key pair from the Paper Trading dashboard (right-hand panel).",
     code: "# .env\nALPACA_API_KEY=your_paper_key\nALPACA_SECRET_KEY=your_paper_secret\nALPACA_PAPER=true",
     links: [
       { label: "Create Alpaca account", href: "https://app.alpaca.markets/signup" },
@@ -77,7 +77,7 @@ const STEPS = [
   },
   {
     title: "Pick an LLM provider",
-    zh: "三选一：OpenRouter（一把 key 用任意模型，推荐）、OpenAI 直连、Anthropic 直连",
+    hint: "One key is enough. OpenRouter is recommended (any model behind one key); OpenAI and Anthropic connect directly. You can pick different models per tier later in Settings.",
     code: "# .env — choose ONE\nLLM_PROVIDER=openrouter\nOPENROUTER_API_KEY=sk-or-...\n\n# or: LLM_PROVIDER=openai     + OPENAI_API_KEY=...\n# or: LLM_PROVIDER=anthropic  + ANTHROPIC_API_KEY=...",
     links: [
       { label: "OpenRouter keys", href: "https://openrouter.ai/settings/keys" },
@@ -87,19 +87,19 @@ const STEPS = [
   },
   {
     title: "Start the web UI",
-    zh: "启动本地服务；首次运行会在终端打印登录 token，浏览器打开 127.0.0.1:8791",
+    hint: "The first run prints a login token in the terminal. Open the URL, paste the token, and you are on the dashboard.",
     code: "cp .env.example .env   # then fill in the keys above\nuv run allpath-trade serve\n# → http://127.0.0.1:8791",
     links: []
   },
   {
     title: "Draft a strategy in chat, then approve it",
-    zh: "在聊天里用自然语言让 agent 起草策略；它进入 Pending 队列，你看完 diff 点批准，再到 Strategies 页激活",
+    hint: "Describe the plan in plain English. The draft lands on Pending as a diff; approve it, then activate it on the Strategies page so the sentinel starts watching.",
     code: "You: \"Buy NVDA on pullbacks under 170, up to 20% of the account, hard stop at 140.\"\nAgent: Draft queued for your approval as #1 — open Pending.\n# Approve on Pending → Activate on the Strategies page → the sentinel starts watching",
     links: []
   },
   {
     title: "Take it with you (optional)",
-    zh: "Settings 里配置 ntfy 手机推送或 Telegram，触发/成交/复盘报告和一键审批链接直达手机",
+    hint: "Push via ntfy or pair a Telegram bot in Settings. Triggers, fills, nightly reports, and one-tap approve links reach your phone.",
     code: "Settings → Push notifications (ntfy)  or  Settings → Telegram\n# triggers, fills, nightly reports and approve links on your phone",
     links: [
       { label: "ntfy app", href: "https://ntfy.sh/" },
@@ -290,7 +290,7 @@ export default function TradingPage() {
                     <span className="font-mono text-sm text-primary">{String(i + 1).padStart(2, "0")}</span>
                     <p className="text-base font-semibold text-slate-900">{s.title}</p>
                   </div>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{s.zh}</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">{s.hint}</p>
                   {s.links.length > 0 && (
                     <div className="mt-3 flex flex-wrap gap-2">
                       {s.links.map((l) => (
@@ -318,7 +318,7 @@ export default function TradingPage() {
             <a className="font-medium text-primary underline-offset-2 hover:underline" href={`${GITHUB}#readme`}>
               README
             </a>{" "}
-            (English and 中文). Live trading is a deliberate <code className="font-mono text-xs">.env</code> change,
+            (English and Chinese). Live trading is a deliberate <code className="font-mono text-xs">.env</code> change,
             never the default.
           </p>
         </section>
