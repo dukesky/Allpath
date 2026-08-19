@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-18T12:39:52.729Z",
+  "generatedAt": "2026-08-19T01:05:34.015Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "z-ai/glm-5.3",
+      "label": "Z.ai: GLM 5.3",
+      "price": "$$",
+      "created": 1787086655,
+      "variantCount": 1
+    },
     {
       "id": "qwen/qwen3.8-27b",
       "label": "Qwen: Qwen3.8 27B",
@@ -55,7 +62,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$",
+      "price": "$$",
       "created": 1786549364,
       "variantCount": 1
     },
@@ -64,6 +71,13 @@
       "label": "SpaceXAI: Grok 4.6",
       "price": "$$",
       "created": 1786548957,
+      "variantCount": 1
+    },
+    {
+      "id": "liquid/lfm-2.5-2.6b:free",
+      "label": "LiquidAI: LFM2.5-2.6B (free)",
+      "price": "$",
+      "created": 1786470519,
       "variantCount": 1
     },
     {
@@ -230,7 +244,7 @@
     {
       "id": "thinkingmachines/inkling:batch",
       "label": "Thinking Machines: Inkling (batch)",
-      "price": "$",
+      "price": "$$",
       "created": 1784325956,
       "variantCount": 2
     },
@@ -463,14 +477,21 @@
       "label": "Z.ai: GLM 5.2",
       "price": "$$",
       "created": 1781631930,
-      "variantCount": 2
+      "variantCount": 3
     },
     {
       "id": "z-ai/glm-5.2:batch",
       "label": "Z.ai: GLM 5.2 (batch)",
+      "price": "$$",
+      "created": 1781631930,
+      "variantCount": 3
+    },
+    {
+      "id": "z-ai/glm-5.2:free",
+      "label": "Z.ai: GLM 5.2 (free)",
       "price": "$",
       "created": 1781631930,
-      "variantCount": 2
+      "variantCount": 3
     },
     {
       "id": "openrouter/fusion",
@@ -489,7 +510,7 @@
     {
       "id": "moonshotai/kimi-k2.7-code:batch",
       "label": "MoonshotAI: Kimi K2.7 Code (batch)",
-      "price": "$",
+      "price": "$$",
       "created": 1781266361,
       "variantCount": 2
     },
@@ -538,7 +559,7 @@
     {
       "id": "nvidia/nemotron-3-ultra-550b-a55b:batch",
       "label": "NVIDIA: Nemotron 3 Ultra (batch)",
-      "price": "$",
+      "price": "$$",
       "created": 1780551208,
       "variantCount": 3
     },
@@ -811,7 +832,7 @@
     {
       "id": "deepseek/deepseek-v4-pro",
       "label": "DeepSeek: DeepSeek V4 Pro 0423",
-      "price": "$",
+      "price": "$$",
       "created": 1777000679,
       "variantCount": 1
     },
@@ -1280,7 +1301,7 @@
     {
       "id": "moonshotai/kimi-k2.5",
       "label": "MoonshotAI: Kimi K2.5",
-      "price": "$$",
+      "price": "$",
       "created": 1769487076,
       "variantCount": 1
     },
