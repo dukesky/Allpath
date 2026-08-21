@@ -95,6 +95,9 @@ export default function HomePage() {
             <Link className="transition hover:text-primary" href="/trading">
               Trading Agent
             </Link>
+            <Link className="transition hover:text-primary" href="/agent">
+              Personal Agent
+            </Link>
             <Link className="rounded-full bg-slate-950 px-5 py-2.5 text-white transition hover:bg-primary" href="/chat">
               Start Your Conversation
             </Link>
@@ -274,6 +277,30 @@ export default function HomePage() {
             </div>
             <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-slate-950 transition group-hover:bg-primary group-hover:text-white">
               trading.all-path.com ↗
+            </span>
+          </Link>
+        </section>
+
+        <section className="pb-4">
+          <Link
+            className="group flex flex-col gap-6 rounded-[2rem] border border-slate-200 bg-[#101727] p-6 text-slate-100 shadow-sm transition hover:border-primary sm:flex-row sm:items-center sm:justify-between lg:p-8"
+            href="/agent"
+          >
+            <div className="max-w-2xl">
+              <p className="font-mono text-xs font-medium uppercase tracking-[0.24em] text-slate-400">
+                Related project · open source
+              </p>
+              <h4 className="mt-3 text-2xl font-semibold tracking-tight">
+                AllPath Personal Agent — a local agent that teaches itself to you.
+              </h4>
+              <p className="mt-3 text-sm leading-7 text-slate-300">
+                Starts as a plain chat and introduces one capability at a time: connect a model in
+                conversation, link Telegram, schedule a morning briefing. Every side effect behind
+                your approval, everything on your own machine.
+              </p>
+            </div>
+            <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-slate-950 transition group-hover:bg-primary group-hover:text-white">
+              agent.all-path.com ↗
             </span>
           </Link>
         </section>
