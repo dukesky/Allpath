@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-21T01:08:35.996Z",
+  "generatedAt": "2026-08-21T12:40:59.710Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "deepseek/deepseek-v4-flash-vision-exp",
+      "label": "DeepSeek: DeepSeek V4 Flash Vision Exp",
+      "price": "$",
+      "created": 1787311563,
+      "variantCount": 1
+    },
     {
       "id": "stealth/ox-alpha",
       "label": "Ox Alpha",
