@@ -1,8 +1,29 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-20T12:42:24.976Z",
+  "generatedAt": "2026-08-21T01:08:35.996Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "stealth/ox-alpha",
+      "label": "Ox Alpha",
+      "price": "$",
+      "created": 1787256295,
+      "variantCount": 1
+    },
+    {
+      "id": "tencent/hy-mt2-1.8b",
+      "label": "Tencent: Hy-MT2-1.8B",
+      "price": "$",
+      "created": 1787231581,
+      "variantCount": 1
+    },
+    {
+      "id": "tencent/hy-mt2-30b-a3b",
+      "label": "Tencent: Hy-MT2-30B-A3B",
+      "price": "$",
+      "created": 1787231561,
+      "variantCount": 1
+    },
     {
       "id": "~z-ai/glm-latest",
       "label": "Z.ai: GLM Latest",
