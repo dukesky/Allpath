@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-22T01:04:52.321Z",
+  "generatedAt": "2026-08-23T01:10:10.020Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -43,6 +43,13 @@
       "label": "Z.ai: GLM Latest",
       "price": "$$",
       "created": 1787151053,
+      "variantCount": 1
+    },
+    {
+      "id": "tencent/hy-mt2-7b",
+      "label": "Tencent: Hy-MT2-7B",
+      "price": "$",
+      "created": 1787148797,
       "variantCount": 1
     },
     {
@@ -958,7 +965,7 @@
     {
       "id": "moonshotai/kimi-k2.6",
       "label": "MoonshotAI: Kimi K2.6",
-      "price": "$",
+      "price": "$$",
       "created": 1776699402,
       "variantCount": 1
     },
