@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-25T12:41:53.024Z",
+  "generatedAt": "2026-08-26T01:09:07.751Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1870,14 +1870,7 @@
       "label": "Qwen: Qwen Plus 0728",
       "price": "$",
       "created": 1757347599,
-      "variantCount": 2
-    },
-    {
-      "id": "qwen/qwen-plus-2025-07-28:thinking",
-      "label": "Qwen: Qwen Plus 0728 (thinking)",
-      "price": "$",
-      "created": 1757347599,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "moonshotai/kimi-k2-0905",
@@ -2199,13 +2192,6 @@
       "label": "Anthropic: Claude Sonnet 4",
       "price": "$$",
       "created": 1747930371,
-      "variantCount": 1
-    },
-    {
-      "id": "google/gemma-3n-e4b-it",
-      "label": "Google: Gemma 3n 4B",
-      "price": "$",
-      "created": 1747776824,
       "variantCount": 1
     },
     {
