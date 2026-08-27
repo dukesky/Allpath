@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-27T07:17:35.726Z",
+  "generatedAt": "2026-08-27T21:45:21.419Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "inclusionai/ling-3.0-flash-fin:free",
+      "label": "Ling 3.0 Flash Fin (free)",
+      "price": "$",
+      "created": 1787846290,
+      "variantCount": 1
+    },
     {
       "id": "qwen/qwen3.8-flash",
       "label": "Qwen: Qwen3.8 Flash",
@@ -1357,7 +1364,7 @@
     {
       "id": "moonshotai/kimi-k2.5",
       "label": "MoonshotAI: Kimi K2.5",
-      "price": "$",
+      "price": "$$",
       "created": 1769487076,
       "variantCount": 1
     },
