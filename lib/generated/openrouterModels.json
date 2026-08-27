@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-26T12:46:05.301Z",
+  "generatedAt": "2026-08-27T07:17:35.726Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "qwen/qwen3.8-flash",
+      "label": "Qwen: Qwen3.8 Flash",
+      "price": "$",
+      "created": 1787773060,
+      "variantCount": 1
+    },
+    {
+      "id": "z-ai/glm-5.3-flash",
+      "label": "Z.ai: GLM 5.3 Flash",
+      "price": "$",
+      "created": 1787752741,
+      "variantCount": 1
+    },
     {
       "id": "meta/muse-spark-1.2-contributor",
       "label": "Meta: Muse Spark 1.2 Contributor",
@@ -15,13 +29,6 @@
       "label": "DeepSeek: DeepSeek V4 Flash Vision Exp",
       "price": "$",
       "created": 1787311563,
-      "variantCount": 1
-    },
-    {
-      "id": "stealth/ox-alpha",
-      "label": "Ox Alpha",
-      "price": "$",
-      "created": 1787256295,
       "variantCount": 1
     },
     {
@@ -540,21 +547,14 @@
       "label": "Z.ai: GLM 5.2",
       "price": "$$",
       "created": 1781631930,
-      "variantCount": 3
-    },
-    {
-      "id": "z-ai/glm-5.2:batch",
-      "label": "Z.ai: GLM 5.2 (batch)",
-      "price": "$$",
-      "created": 1781631930,
-      "variantCount": 3
+      "variantCount": 2
     },
     {
       "id": "z-ai/glm-5.2:free",
       "label": "Z.ai: GLM 5.2 (free)",
       "price": "$",
       "created": 1781631930,
-      "variantCount": 3
+      "variantCount": 2
     },
     {
       "id": "openrouter/fusion",
@@ -1357,7 +1357,7 @@
     {
       "id": "moonshotai/kimi-k2.5",
       "label": "MoonshotAI: Kimi K2.5",
-      "price": "$$",
+      "price": "$",
       "created": 1769487076,
       "variantCount": 1
     },
