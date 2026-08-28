@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-27T21:45:21.419Z",
+  "generatedAt": "2026-08-28T09:31:29.031Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "tencent/hy4-preview",
+      "label": "Tencent: Hy4 preview",
+      "price": "$$",
+      "created": 1787897375,
+      "variantCount": 1
+    },
     {
       "id": "inclusionai/ling-3.0-flash-fin:free",
       "label": "Ling 3.0 Flash Fin (free)",
@@ -365,84 +372,42 @@
       "label": "OpenAI: GPT-5.6 Luna Pro",
       "price": "$",
       "created": 1783590867,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.6-luna-pro:batch",
-      "label": "OpenAI: GPT-5.6 Luna Pro (batch)",
-      "price": "$",
-      "created": 1783590867,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-5.6-luna",
       "label": "OpenAI: GPT-5.6 Luna",
       "price": "$",
       "created": 1783590864,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.6-luna:batch",
-      "label": "OpenAI: GPT-5.6 Luna (batch)",
-      "price": "$",
-      "created": 1783590864,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-5.6-terra-pro",
       "label": "OpenAI: GPT-5.6 Terra Pro",
       "price": "$$",
       "created": 1783590861,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.6-terra-pro:batch",
-      "label": "OpenAI: GPT-5.6 Terra Pro (batch)",
-      "price": "$$",
-      "created": 1783590861,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-5.6-terra",
       "label": "OpenAI: GPT-5.6 Terra",
       "price": "$$",
       "created": 1783590857,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.6-terra:batch",
-      "label": "OpenAI: GPT-5.6 Terra (batch)",
-      "price": "$$",
-      "created": 1783590857,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-5.6-sol-pro",
       "label": "OpenAI: GPT-5.6 Sol Pro",
       "price": "$$",
       "created": 1783590854,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.6-sol-pro:batch",
-      "label": "OpenAI: GPT-5.6 Sol Pro (batch)",
-      "price": "$$",
-      "created": 1783590854,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-5.6-sol",
       "label": "OpenAI: GPT-5.6 Sol",
       "price": "$$",
       "created": 1783590850,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.6-sol:batch",
-      "label": "OpenAI: GPT-5.6 Sol (batch)",
-      "price": "$$",
-      "created": 1783590850,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "x-ai/grok-4.5",
@@ -575,14 +540,7 @@
       "label": "MoonshotAI: Kimi K2.7 Code",
       "price": "$$",
       "created": 1781266361,
-      "variantCount": 2
-    },
-    {
-      "id": "moonshotai/kimi-k2.7-code:batch",
-      "label": "MoonshotAI: Kimi K2.7 Code (batch)",
-      "price": "$$",
-      "created": 1781266361,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "~anthropic/claude-fable-latest",
@@ -622,7 +580,7 @@
     {
       "id": "nvidia/nemotron-3-ultra-550b-a55b",
       "label": "NVIDIA: Nemotron 3 Ultra",
-      "price": "$$",
+      "price": "$",
       "created": 1780551208,
       "variantCount": 3
     },
@@ -778,7 +736,14 @@
       "label": "Mistral: Mistral Medium 3.5",
       "price": "$$",
       "created": 1777570439,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/mistral-medium-3-5:batch",
+      "label": "Mistral: Mistral Medium 3.5 (batch)",
+      "price": "$$",
+      "created": 1777570439,
+      "variantCount": 2
     },
     {
       "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
@@ -876,28 +841,14 @@
       "label": "OpenAI: GPT-5.5 Pro",
       "price": "$$$",
       "created": 1777051896,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.5-pro:batch",
-      "label": "OpenAI: GPT-5.5 Pro (batch)",
-      "price": "$$$",
-      "created": 1777051896,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-5.5",
       "label": "OpenAI: GPT-5.5",
       "price": "$$$",
       "created": 1777051893,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.5:batch",
-      "label": "OpenAI: GPT-5.5 (batch)",
-      "price": "$$",
-      "created": 1777051893,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "deepseek/deepseek-v4-pro",
@@ -1093,35 +1044,28 @@
       "label": "OpenAI: GPT-5.4 Nano",
       "price": "$",
       "created": 1773748187,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.4-nano:batch",
-      "label": "OpenAI: GPT-5.4 Nano (batch)",
-      "price": "$",
-      "created": 1773748187,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-5.4-mini",
       "label": "OpenAI: GPT-5.4 Mini",
       "price": "$$",
       "created": 1773748178,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.4-mini:batch",
-      "label": "OpenAI: GPT-5.4 Mini (batch)",
-      "price": "$",
-      "created": 1773748178,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "mistralai/mistral-small-2603",
       "label": "Mistral: Mistral Small 4",
       "price": "$",
       "created": 1773695685,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/mistral-small-2603:batch",
+      "label": "Mistral: Mistral Small 4 (batch)",
+      "price": "$",
+      "created": 1773695685,
+      "variantCount": 2
     },
     {
       "id": "z-ai/glm-5-turbo",
@@ -1163,28 +1107,14 @@
       "label": "OpenAI: GPT-5.4 Pro",
       "price": "$$$",
       "created": 1772734366,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.4-pro:batch",
-      "label": "OpenAI: GPT-5.4 Pro (batch)",
-      "price": "$$$",
-      "created": 1772734366,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-5.4",
       "label": "OpenAI: GPT-5.4",
       "price": "$$",
       "created": 1772734352,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.4:batch",
-      "label": "OpenAI: GPT-5.4 (batch)",
-      "price": "$$",
-      "created": 1772734352,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "inception/mercury-2",
@@ -1478,28 +1408,14 @@
       "label": "OpenAI: GPT-5.2 Pro",
       "price": "$$$",
       "created": 1765389780,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.2-pro:batch",
-      "label": "OpenAI: GPT-5.2 Pro (batch)",
-      "price": "$$$",
-      "created": 1765389780,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-5.2",
       "label": "OpenAI: GPT-5.2",
       "price": "$$",
       "created": 1765389775,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.2:batch",
-      "label": "OpenAI: GPT-5.2 (batch)",
-      "price": "$$",
-      "created": 1765389775,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "mistralai/devstral-2512",
@@ -1555,7 +1471,14 @@
       "label": "Mistral: Ministral 3 8B 2512",
       "price": "$",
       "created": 1764681654,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/ministral-8b-2512:batch",
+      "label": "Mistral: Ministral 3 8B 2512 (batch)",
+      "price": "$",
+      "created": 1764681654,
+      "variantCount": 2
     },
     {
       "id": "mistralai/ministral-3b-2512",
@@ -1569,7 +1492,14 @@
       "label": "Mistral: Mistral Large 3 2512",
       "price": "$",
       "created": 1764624472,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/mistral-large-2512:batch",
+      "label": "Mistral: Mistral Large 3 2512 (batch)",
+      "price": "$",
+      "created": 1764624472,
+      "variantCount": 2
     },
     {
       "id": "deepseek/deepseek-v3.2",
@@ -1611,14 +1541,7 @@
       "label": "OpenAI: GPT-5.1",
       "price": "$$",
       "created": 1763060305,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5.1:batch",
-      "label": "OpenAI: GPT-5.1 (batch)",
-      "price": "$$",
-      "created": 1763060305,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-5.1-codex",
@@ -1758,14 +1681,7 @@
       "label": "OpenAI: GPT-5 Pro",
       "price": "$$$",
       "created": 1759776663,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5-pro:batch",
-      "label": "OpenAI: GPT-5 Pro (batch)",
-      "price": "$$$",
-      "created": 1759776663,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "z-ai/glm-4.6",
@@ -1835,13 +1751,6 @@
       "label": "Qwen: Qwen3 Coder Plus",
       "price": "$$",
       "created": 1758662707,
-      "variantCount": 1
-    },
-    {
-      "id": "openai/gpt-5-codex:batch",
-      "label": "OpenAI: GPT-5 Codex (batch)",
-      "price": "$$",
-      "created": 1758643403,
       "variantCount": 1
     },
     {
@@ -1919,7 +1828,14 @@
       "label": "Mistral: Mistral Medium 3.1",
       "price": "$",
       "created": 1755095639,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/mistral-medium-3.1:batch",
+      "label": "Mistral: Mistral Medium 3.1 (batch)",
+      "price": "$",
+      "created": 1755095639,
+      "variantCount": 2
     },
     {
       "id": "z-ai/glm-4.5v",
@@ -1933,42 +1849,21 @@
       "label": "OpenAI: GPT-5",
       "price": "$$",
       "created": 1754587413,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5:batch",
-      "label": "OpenAI: GPT-5 (batch)",
-      "price": "$$",
-      "created": 1754587413,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-5-mini",
       "label": "OpenAI: GPT-5 Mini",
       "price": "$",
       "created": 1754587407,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5-mini:batch",
-      "label": "OpenAI: GPT-5 Mini (batch)",
-      "price": "$",
-      "created": 1754587407,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-5-nano",
       "label": "OpenAI: GPT-5 Nano",
       "price": "$",
       "created": 1754587402,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-5-nano:batch",
-      "label": "OpenAI: GPT-5 Nano (batch)",
-      "price": "$",
-      "created": 1754587402,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-oss-120b",
@@ -2003,7 +1898,14 @@
       "label": "Mistral: Codestral 2508",
       "price": "$",
       "created": 1754079630,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/codestral-2508:batch",
+      "label": "Mistral: Codestral 2508 (batch)",
+      "price": "$",
+      "created": 1754079630,
+      "variantCount": 2
     },
     {
       "id": "qwen/qwen3-coder-30b-a3b-instruct",
@@ -2164,14 +2066,7 @@
       "label": "OpenAI: o3 Pro",
       "price": "$$$",
       "created": 1749598352,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/o3-pro:batch",
-      "label": "OpenAI: o3 Pro (batch)",
-      "price": "$$$",
-      "created": 1749598352,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "google/gemini-2.5-pro-preview",
@@ -2269,84 +2164,42 @@
       "label": "OpenAI: o4 Mini High",
       "price": "$$",
       "created": 1744824212,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/o4-mini-high:batch",
-      "label": "OpenAI: o4 Mini High (batch)",
-      "price": "$",
-      "created": 1744824212,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/o3",
       "label": "OpenAI: o3",
       "price": "$$",
       "created": 1744823457,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/o3:batch",
-      "label": "OpenAI: o3 (batch)",
-      "price": "$$",
-      "created": 1744823457,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/o4-mini",
       "label": "OpenAI: o4 Mini",
       "price": "$$",
       "created": 1744820942,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/o4-mini:batch",
-      "label": "OpenAI: o4 Mini (batch)",
-      "price": "$",
-      "created": 1744820942,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-4.1",
       "label": "OpenAI: GPT-4.1",
       "price": "$$",
       "created": 1744651385,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-4.1:batch",
-      "label": "OpenAI: GPT-4.1 (batch)",
-      "price": "$$",
-      "created": 1744651385,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-4.1-mini",
       "label": "OpenAI: GPT-4.1 Mini",
       "price": "$",
       "created": 1744651381,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-4.1-mini:batch",
-      "label": "OpenAI: GPT-4.1 Mini (batch)",
-      "price": "$",
-      "created": 1744651381,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-4.1-nano",
       "label": "OpenAI: GPT-4.1 Nano",
       "price": "$",
       "created": 1744651369,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-4.1-nano:batch",
-      "label": "OpenAI: GPT-4.1 Nano (batch)",
-      "price": "$",
-      "created": 1744651369,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "meta-llama/llama-4-maverick",
@@ -2374,14 +2227,7 @@
       "label": "OpenAI: o1-pro",
       "price": "$$$",
       "created": 1742423211,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/o1-pro:batch",
-      "label": "OpenAI: o1-pro (batch)",
-      "price": "$$$",
-      "created": 1742423211,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "mistralai/mistral-small-3.1-24b-instruct",
