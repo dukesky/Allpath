@@ -146,6 +146,13 @@ export default function TradingPage() {
               >
                 Run it in 5 minutes
               </a>
+              <Link
+                className="inline-flex items-center gap-1.5 rounded-full border border-emerald-600/40 bg-emerald-50 px-5 py-3 text-sm font-medium text-emerald-800 transition hover:border-emerald-600"
+                href="/trading/journal"
+              >
+                <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60"></span><span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-600"></span></span>
+                Live journal
+              </Link>
             </div>
             <dl className="mt-8 grid max-w-md grid-cols-3 gap-4 font-mono text-[11px] uppercase tracking-wider text-slate-500">
               <div>
@@ -392,6 +399,9 @@ function Header() {
         <a className="transition hover:text-primary" href="#quick-start">
           Quick start
         </a>
+        <Link className="transition hover:text-primary" href="/trading/journal">
+          Live journal
+        </Link>
         <Link className="transition hover:text-primary" href="/">
           AllPath
         </Link>
