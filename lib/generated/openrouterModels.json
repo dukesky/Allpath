@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-28T21:42:55.889Z",
+  "generatedAt": "2026-08-29T05:37:56.567Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1586,13 +1586,6 @@
       "variantCount": 2
     },
     {
-      "id": "allenai/olmo-3-32b-think",
-      "label": "AllenAI: Olmo 3 32B Think",
-      "price": "$",
-      "created": 1763758276,
-      "variantCount": 1
-    },
-    {
       "id": "google/gemini-3-pro-image-preview",
       "label": "Google: Nano Banana Pro (Gemini 3 Pro Image Preview)",
       "price": "$$",
@@ -2185,13 +2178,6 @@
       "label": "Google: Gemini 2.5 Pro Preview 05-06",
       "price": "$$",
       "created": 1746578513,
-      "variantCount": 1
-    },
-    {
-      "id": "arcee-ai/virtuoso-large",
-      "label": "Arcee AI: Virtuoso Large",
-      "price": "$",
-      "created": 1746478885,
       "variantCount": 1
     },
     {
