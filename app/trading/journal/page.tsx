@@ -10,8 +10,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://trading.all-path.com/journal" }
 };
 
-// Re-render at most hourly; the data only changes once per trading day.
-export const revalidate = 3600;
+// Rendered per-request (never at build time: the Docker build has no GCP
+// credentials, and the Firestore client's metadata probe hangs the static
+// export — this exact page failed two Cloud Builds that way). A module-level
+// cache below keeps Firestore reads to one per 5 minutes per instance.
+export const dynamic = "force-dynamic";
 
 type Trade = {
   ticker?: string;
@@ -36,16 +39,24 @@ type Entry = {
   pending_proposals?: number;
 };
 
+const CACHE_TTL_MS = 5 * 60 * 1000;
+let cache: { at: number; entries: Entry[] } | null = null;
+
 async function loadEntries(): Promise<Entry[]> {
+  if (cache && Date.now() - cache.at < CACHE_TTL_MS) return cache.entries;
   try {
     const snapshot = await getFirestoreDb()
       .collection("tradingJournal")
       .orderBy("date", "desc")
       .limit(30)
       .get();
-    return snapshot.docs.map((d) => d.data() as Entry);
+    const entries = snapshot.docs.map((d) => d.data() as Entry);
+    cache = { at: Date.now(), entries };
+    return entries;
   } catch {
-    return []; // Firestore hiccup → empty state, never a 500 on a public page.
+    // Firestore hiccup → serve the stale cache if we have one, else empty
+    // state. Never a 500 on a public page.
+    return cache?.entries ?? [];
   }
 }
 
