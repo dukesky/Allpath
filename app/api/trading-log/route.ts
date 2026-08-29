@@ -52,6 +52,22 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ ok: true, date });
 }
 
+/**
+ * DELETE — auth'd, removes one day's entry (`?date=YYYY-MM-DD`). Exists so a
+ * bad or test publish can be corrected without touching Firestore by hand.
+ */
+export async function DELETE(req: NextRequest) {
+  if (!authorized(req)) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  const date = req.nextUrl.searchParams.get("date") ?? "";
+  if (!DATE_RE.test(date)) {
+    return NextResponse.json({ error: "invalid or missing date" }, { status: 400 });
+  }
+  await getFirestoreDb().collection(COLLECTION).doc(date).delete();
+  return NextResponse.json({ ok: true, date });
+}
+
 export async function GET() {
   const snapshot = await getFirestoreDb()
     .collection(COLLECTION)
