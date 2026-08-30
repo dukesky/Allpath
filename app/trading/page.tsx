@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import CopyButton from "./CopyButton";
 
 export const metadata: Metadata = {
   title: "AllPath Trading Agent — a self-hosted trading agent that proposes, never acts alone",
@@ -58,6 +59,20 @@ const GUARANTEES = [
   ["Runs on your machine", "SQLite, local YAML, your own API keys. Nothing leaves your box but the calls you configured."],
   ["Honest state", "Draft strategies are labelled not monitored. Fills show submitted vs filled. A stale heartbeat shows as stale."]
 ] as const;
+
+/* Handed verbatim to the user's coding agent (Claude Code, Codex, Cursor…).
+   Deliberately keeps every secret OUT of the agent's hands: the app's own
+   first-run wizard and Settings page collect the keys afterwards. */
+const AGENT_PROMPT = `Set up the AllPath Trading Agent (https://github.com/dukesky/allpath-trading-agent) on this machine and hand me a running dashboard:
+
+1. Check Python 3.11+ is available and that uv is installed (install uv if missing: https://docs.astral.sh/uv/getting-started/installation/).
+2. git clone https://github.com/dukesky/allpath-trading-agent, cd into it, run: uv sync
+3. cp .env.example .env — leave every key EMPTY. Do not ask me for API keys or secrets in this chat, and never commit .env.
+4. Start the server as a background process: uv run allpath-trade serve
+5. First run prints a one-time login token in the server output — find it and show it to me.
+6. Open http://127.0.0.1:8791 in my browser. I'll sign in with the token; the built-in setup wizard then collects my Alpaca paper keys (free account, no funding needed) and the Settings page takes one LLM key (OpenRouter, OpenAI, or Anthropic).
+
+Everything runs locally on 127.0.0.1 and it is paper trading by default — do not change that. You are done when the dashboard loads and you've shown me the login token.`;
 
 const STEPS = [
   {
@@ -286,6 +301,30 @@ export default function TradingPage() {
           <h3 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
             Six steps to a running agent. Paper account, no card.
           </h3>
+
+          {/* One-prompt setup: paste into a coding agent, get a dashboard. */}
+          <div className="mt-8 overflow-hidden rounded-2xl border border-slate-800 bg-[#14151a]">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 px-5 py-4">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-emerald-400">
+                  Or: one prompt, zero steps
+                </p>
+                <p className="mt-1 text-sm text-slate-400">
+                  Using Claude Code, Codex, Cursor — any coding agent? Paste this and it does the
+                  setup for you.
+                </p>
+              </div>
+              <CopyButton text={AGENT_PROMPT} />
+            </div>
+            <pre className="max-h-72 min-w-0 overflow-y-auto whitespace-pre-wrap break-words px-5 py-4 font-mono text-[12px] leading-6 text-slate-300">
+              {AGENT_PROMPT}
+            </pre>
+            <p className="border-t border-slate-800 px-5 py-3 text-xs leading-5 text-slate-500">
+              Your API keys never touch the agent chat — the app&apos;s own setup wizard collects
+              them locally afterwards. Prefer doing it by hand? The same six steps are below.
+            </p>
+          </div>
+
           <ol className="mt-8 space-y-4">
             {STEPS.map((s, i) => (
               <li
