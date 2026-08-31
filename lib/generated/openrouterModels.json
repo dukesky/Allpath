@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-29T05:37:56.567Z",
+  "generatedAt": "2026-08-31T03:37:27.607Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -146,7 +146,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$",
+      "price": "$$",
       "created": 1786549364,
       "variantCount": 2
     },
@@ -902,7 +902,7 @@
     {
       "id": "deepseek/deepseek-v4-pro",
       "label": "DeepSeek: DeepSeek V4 Pro 0423",
-      "price": "$",
+      "price": "$$",
       "created": 1777000679,
       "variantCount": 1
     },
@@ -1357,7 +1357,7 @@
     {
       "id": "moonshotai/kimi-k2.5",
       "label": "MoonshotAI: Kimi K2.5",
-      "price": "$$",
+      "price": "$",
       "created": 1769487076,
       "variantCount": 1
     },
