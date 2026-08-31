@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-08-31T03:37:27.607Z",
+  "generatedAt": "2026-08-31T18:45:20.907Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -146,7 +146,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 2
     },
@@ -400,13 +400,6 @@
       "label": "Meta: Muse Spark 1.1",
       "price": "$$",
       "created": 1784215741,
-      "variantCount": 1
-    },
-    {
-      "id": "kwaipilot/kat-coder-air-v2.5",
-      "label": "Kwaipilot: KAT-Coder-Air V2.5",
-      "price": "$",
-      "created": 1783714590,
       "variantCount": 1
     },
     {
