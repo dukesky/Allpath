@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-01T03:33:44.417Z",
+  "generatedAt": "2026-09-01T16:03:14.768Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "inception/mercury-2.5-preview",
+      "label": "Inception: Mercury 2.5 Preview",
+      "price": "$",
+      "created": 1788209864,
+      "variantCount": 1
+    },
     {
       "id": "ibm-granite/granite-4.2-8b",
       "label": "IBM: Granite 4.2 8B",
@@ -153,7 +160,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 2
     },
@@ -281,13 +288,6 @@
       "label": "Qwen: Qwen3.7 Flash",
       "price": "$",
       "created": 1785190561,
-      "variantCount": 1
-    },
-    {
-      "id": "anthropic/claude-opus-5-fast",
-      "label": "Claude Opus 5 (Fast)",
-      "price": "$$$",
-      "created": 1784912546,
       "variantCount": 1
     },
     {
@@ -725,13 +725,6 @@
       "variantCount": 1
     },
     {
-      "id": "anthropic/claude-opus-4.8-fast",
-      "label": "Anthropic: Claude Opus 4.8 (Fast)",
-      "price": "$$$",
-      "created": 1779913703,
-      "variantCount": 1
-    },
-    {
       "id": "anthropic/claude-opus-4.8",
       "label": "Anthropic: Claude Opus 4.8",
       "price": "$$$",
@@ -772,13 +765,6 @@
       "price": "$$",
       "created": 1779193800,
       "variantCount": 2
-    },
-    {
-      "id": "anthropic/claude-opus-4.7-fast",
-      "label": "Anthropic: Claude Opus 4.7 (Fast)",
-      "price": "$$$",
-      "created": 1778613011,
-      "variantCount": 1
     },
     {
       "id": "perceptron/perceptron-mk1",
@@ -1184,14 +1170,7 @@
       "label": "Mistral: Mistral Small 4",
       "price": "$",
       "created": 1773695685,
-      "variantCount": 2
-    },
-    {
-      "id": "mistralai/mistral-small-2603:batch",
-      "label": "Mistral: Mistral Small 4 (batch)",
-      "price": "$",
-      "created": 1773695685,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "z-ai/glm-5-turbo",
@@ -1632,14 +1611,7 @@
       "label": "Mistral: Ministral 3 8B 2512",
       "price": "$",
       "created": 1764681654,
-      "variantCount": 2
-    },
-    {
-      "id": "mistralai/ministral-8b-2512:batch",
-      "label": "Mistral: Ministral 3 8B 2512 (batch)",
-      "price": "$",
-      "created": 1764681654,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "mistralai/ministral-3b-2512",
@@ -1653,14 +1625,7 @@
       "label": "Mistral: Mistral Large 3 2512",
       "price": "$",
       "created": 1764624472,
-      "variantCount": 2
-    },
-    {
-      "id": "mistralai/mistral-large-2512:batch",
-      "label": "Mistral: Mistral Large 3 2512 (batch)",
-      "price": "$",
-      "created": 1764624472,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "deepseek/deepseek-v3.2",
@@ -1996,14 +1961,7 @@
       "label": "Mistral: Mistral Medium 3.1",
       "price": "$",
       "created": 1755095639,
-      "variantCount": 2
-    },
-    {
-      "id": "mistralai/mistral-medium-3.1:batch",
-      "label": "Mistral: Mistral Medium 3.1 (batch)",
-      "price": "$",
-      "created": 1755095639,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "z-ai/glm-4.5v",
@@ -2101,14 +2059,7 @@
       "label": "Mistral: Codestral 2508",
       "price": "$",
       "created": 1754079630,
-      "variantCount": 2
-    },
-    {
-      "id": "mistralai/codestral-2508:batch",
-      "label": "Mistral: Codestral 2508 (batch)",
-      "price": "$",
-      "created": 1754079630,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "qwen/qwen3-coder-30b-a3b-instruct",
