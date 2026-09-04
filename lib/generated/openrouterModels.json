@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-03T15:46:25.140Z",
+  "generatedAt": "2026-09-04T03:00:54.762Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -67,11 +67,18 @@
       "variantCount": 1
     },
     {
+      "id": "inclusionai/ling-3.0-flash-fin",
+      "label": "Ling 3.0 Flash Fin",
+      "price": "$",
+      "created": 1787846290,
+      "variantCount": 2
+    },
+    {
       "id": "inclusionai/ling-3.0-flash-fin:free",
       "label": "Ling 3.0 Flash Fin (free)",
       "price": "$",
       "created": 1787846290,
-      "variantCount": 1
+      "variantCount": 2
     },
     {
       "id": "~z-ai/glm-flash-latest",
@@ -153,7 +160,7 @@
     {
       "id": "qwen/qwen3.8-27b",
       "label": "Qwen: Qwen3.8 27B",
-      "price": "$",
+      "price": "$$",
       "created": 1786722910,
       "variantCount": 1
     },
@@ -209,7 +216,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$",
+      "price": "$$",
       "created": 1786549364,
       "variantCount": 2
     },
@@ -711,16 +718,23 @@
       "variantCount": 1
     },
     {
+      "id": "nvidia/nemotron-3.5-content-safety",
+      "label": "NVIDIA: Nemotron 3.5 Content Safety",
+      "price": "$",
+      "created": 1780581864,
+      "variantCount": 2
+    },
+    {
       "id": "nvidia/nemotron-3.5-content-safety:free",
       "label": "NVIDIA: Nemotron 3.5 Content Safety (free)",
       "price": "$",
       "created": 1780581864,
-      "variantCount": 1
+      "variantCount": 2
     },
     {
       "id": "nvidia/nemotron-3-ultra-550b-a55b",
       "label": "NVIDIA: Nemotron 3 Ultra",
-      "price": "$",
+      "price": "$$",
       "created": 1780551208,
       "variantCount": 2
     },
@@ -841,7 +855,14 @@
       "label": "SpaceXAI: Grok 4.3",
       "price": "$$",
       "created": 1777591821,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "x-ai/grok-4.3:batch",
+      "label": "SpaceXAI: Grok 4.3 (batch)",
+      "price": "$",
+      "created": 1777591821,
+      "variantCount": 2
     },
     {
       "id": "ibm-granite/granite-4.1-8b",
