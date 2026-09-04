@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-04T03:00:54.762Z",
+  "generatedAt": "2026-09-04T15:45:12.961Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -216,7 +216,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 2
     },
