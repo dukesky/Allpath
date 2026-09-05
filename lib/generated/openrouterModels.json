@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-05T02:56:49.774Z",
+  "generatedAt": "2026-09-05T14:35:06.143Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -36,6 +36,13 @@
       "label": "inclusionAI: Ling 3.0 Flash Sante (free)",
       "price": "$",
       "created": 1788545946,
+      "variantCount": 1
+    },
+    {
+      "id": "qwen/qwen3.8-max-0902",
+      "label": "Qwen: Qwen3.8 Max (0902)",
+      "price": "$$",
+      "created": 1788469704,
       "variantCount": 1
     },
     {
@@ -323,13 +330,6 @@
       "label": "Meta: Muse Spark 1.2",
       "price": "$$",
       "created": 1785959287,
-      "variantCount": 1
-    },
-    {
-      "id": "qwen/qwen3.8-max",
-      "label": "Qwen: Qwen3.8 Max",
-      "price": "$$",
-      "created": 1785731612,
       "variantCount": 1
     },
     {
