@@ -1,8 +1,29 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-08T15:58:45.052Z",
+  "generatedAt": "2026-09-09T03:04:33.492Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "inception/mercury-2.5",
+      "label": "Inception: Mercury 2.5",
+      "price": "$",
+      "created": 1788892137,
+      "variantCount": 1
+    },
+    {
+      "id": "nex-agi/nex-n2.5-mini:free",
+      "label": "Nex AGI: Nex-N2.5-Mini (free)",
+      "price": "$",
+      "created": 1788890061,
+      "variantCount": 1
+    },
+    {
+      "id": "nex-agi/nex-n2.5-pro:free",
+      "label": "Nex AGI: Nex-N2.5-Pro (free)",
+      "price": "$",
+      "created": 1788890050,
+      "variantCount": 1
+    },
     {
       "id": "openai/gpt-6-astra",
       "label": "OpenAI: GPT-6 Astra",
@@ -86,13 +107,6 @@
       "price": "$$$",
       "created": 1788285838,
       "variantCount": 2
-    },
-    {
-      "id": "inception/mercury-2.5-preview",
-      "label": "Inception: Mercury 2.5 Preview",
-      "price": "$",
-      "created": 1788209864,
-      "variantCount": 1
     },
     {
       "id": "ibm-granite/granite-4.2-8b",
