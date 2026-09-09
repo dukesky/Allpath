@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-09T03:04:33.492Z",
+  "generatedAt": "2026-09-09T15:55:07.238Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -720,7 +720,7 @@
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
-      "price": "$$",
+      "price": "$",
       "created": 1781631930,
       "variantCount": 2
     },
@@ -2024,13 +2024,6 @@
       "label": "Qwen: Qwen3 30B A3B Thinking 2507",
       "price": "$",
       "created": 1756399192,
-      "variantCount": 1
-    },
-    {
-      "id": "nousresearch/hermes-4-70b",
-      "label": "Nous: Hermes 4 70B",
-      "price": "$",
-      "created": 1756236182,
       "variantCount": 1
     },
     {
