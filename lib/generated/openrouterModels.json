@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-09T15:55:07.238Z",
+  "generatedAt": "2026-09-10T03:04:46.083Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -286,7 +286,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$",
+      "price": "$$",
       "created": 1786549364,
       "variantCount": 2
     },
@@ -720,7 +720,7 @@
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
-      "price": "$",
+      "price": "$$",
       "created": 1781631930,
       "variantCount": 2
     },
@@ -1261,7 +1261,14 @@
       "label": "Mistral: Mistral Small 4",
       "price": "$",
       "created": 1773695685,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/mistral-small-2603:batch",
+      "label": "Mistral: Mistral Small 4 (batch)",
+      "price": "$",
+      "created": 1773695685,
+      "variantCount": 2
     },
     {
       "id": "z-ai/glm-5-turbo",
@@ -1702,7 +1709,14 @@
       "label": "Mistral: Ministral 3 8B 2512",
       "price": "$",
       "created": 1764681654,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/ministral-8b-2512:batch",
+      "label": "Mistral: Ministral 3 8B 2512 (batch)",
+      "price": "$",
+      "created": 1764681654,
+      "variantCount": 2
     },
     {
       "id": "mistralai/ministral-3b-2512",
@@ -1716,7 +1730,14 @@
       "label": "Mistral: Mistral Large 3 2512",
       "price": "$",
       "created": 1764624472,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/mistral-large-2512:batch",
+      "label": "Mistral: Mistral Large 3 2512 (batch)",
+      "price": "$",
+      "created": 1764624472,
+      "variantCount": 2
     },
     {
       "id": "deepseek/deepseek-v3.2",
@@ -2045,7 +2066,14 @@
       "label": "Mistral: Mistral Medium 3.1",
       "price": "$",
       "created": 1755095639,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/mistral-medium-3.1:batch",
+      "label": "Mistral: Mistral Medium 3.1 (batch)",
+      "price": "$",
+      "created": 1755095639,
+      "variantCount": 2
     },
     {
       "id": "z-ai/glm-4.5v",
@@ -2143,7 +2171,14 @@
       "label": "Mistral: Codestral 2508",
       "price": "$",
       "created": 1754079630,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/codestral-2508:batch",
+      "label": "Mistral: Codestral 2508 (batch)",
+      "price": "$",
+      "created": 1754079630,
+      "variantCount": 2
     },
     {
       "id": "qwen/qwen3-coder-30b-a3b-instruct",
