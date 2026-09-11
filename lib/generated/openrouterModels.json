@@ -1,14 +1,63 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-11T03:00:01.176Z",
+  "generatedAt": "2026-09-11T15:51:27.281Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "~openai/gpt-astra-latest",
+      "label": "OpenAI GPT Astra Latest",
+      "price": "$$$",
+      "created": 1789130932,
+      "variantCount": 1
+    },
+    {
+      "id": "~openai/gpt-sol-latest",
+      "label": "OpenAI GPT Sol Latest",
+      "price": "$$",
+      "created": 1789130928,
+      "variantCount": 1
+    },
+    {
+      "id": "~openai/gpt-terra-latest",
+      "label": "OpenAI GPT Terra Latest",
+      "price": "$$",
+      "created": 1789130925,
+      "variantCount": 1
+    },
+    {
+      "id": "~openai/gpt-luna-latest",
+      "label": "OpenAI GPT Luna Latest",
+      "price": "$",
+      "created": 1789130922,
+      "variantCount": 1
+    },
+    {
+      "id": "sakana/fugu-ultra-v2",
+      "label": "Sakana: Fugu Ultra v2",
+      "price": "$$$",
+      "created": 1789105383,
+      "variantCount": 1
+    },
+    {
+      "id": "sakana/fugu-max",
+      "label": "Sakana: Fugu Max",
+      "price": "$$",
+      "created": 1789104771,
+      "variantCount": 1
+    },
+    {
+      "id": "inclusionai/ling-3.0-flash-vl",
+      "label": "inclusionAI: Ling 3.0 Flash VL",
+      "price": "$",
+      "created": 1789056114,
+      "variantCount": 2
+    },
     {
       "id": "inclusionai/ling-3.0-flash-vl:free",
       "label": "inclusionAI: Ling 3.0 Flash VL (free)",
       "price": "$",
       "created": 1789056114,
-      "variantCount": 1
+      "variantCount": 2
     },
     {
       "id": "deepseek/deepseek-v4.1-flash",
@@ -216,7 +265,7 @@
     {
       "id": "~z-ai/glm-latest",
       "label": "Z.ai: GLM Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1787151053,
       "variantCount": 1
     },
@@ -300,7 +349,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 2
     },
@@ -981,13 +1030,6 @@
       "label": "Anthropic Claude Sonnet Latest",
       "price": "$$",
       "created": 1777318368,
-      "variantCount": 1
-    },
-    {
-      "id": "~openai/gpt-latest",
-      "label": "OpenAI GPT Latest",
-      "price": "$$",
-      "created": 1777318334,
       "variantCount": 1
     },
     {
