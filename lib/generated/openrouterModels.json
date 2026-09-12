@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-12T03:07:02.136Z",
+  "generatedAt": "2026-09-12T14:58:59.570Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -19,28 +19,28 @@
     },
     {
       "id": "~openai/gpt-astra-latest",
-      "label": "OpenAI GPT Astra Latest",
+      "label": "OpenAI: GPT Astra Latest",
       "price": "$$$",
       "created": 1789130932,
       "variantCount": 1
     },
     {
       "id": "~openai/gpt-sol-latest",
-      "label": "OpenAI GPT Sol Latest",
+      "label": "OpenAI: GPT Sol Latest",
       "price": "$$",
       "created": 1789130928,
       "variantCount": 1
     },
     {
       "id": "~openai/gpt-terra-latest",
-      "label": "OpenAI GPT Terra Latest",
+      "label": "OpenAI: GPT Terra Latest",
       "price": "$$",
       "created": 1789130925,
       "variantCount": 1
     },
     {
       "id": "~openai/gpt-luna-latest",
-      "label": "OpenAI GPT Luna Latest",
+      "label": "OpenAI: GPT Luna Latest",
       "price": "$",
       "created": 1789130922,
       "variantCount": 1
@@ -439,7 +439,7 @@
     },
     {
       "id": "~deepseek/deepseek-v4-flash-latest",
-      "label": "DeepSeek V4 Flash Latest",
+      "label": "DeepSeek: DeepSeek V4 Flash Latest",
       "price": "$",
       "created": 1785606009,
       "variantCount": 1
@@ -1006,42 +1006,42 @@
     },
     {
       "id": "~anthropic/claude-haiku-latest",
-      "label": "Anthropic Claude Haiku Latest",
+      "label": "Anthropic: Claude Haiku Latest",
       "price": "$$",
       "created": 1777318492,
       "variantCount": 1
     },
     {
       "id": "~openai/gpt-mini-latest",
-      "label": "OpenAI GPT Mini Latest",
+      "label": "OpenAI: GPT Mini Latest",
       "price": "$$",
       "created": 1777318471,
       "variantCount": 1
     },
     {
       "id": "~google/gemini-pro-latest",
-      "label": "Google Gemini Pro Latest",
+      "label": "Google: Gemini Pro Latest",
       "price": "$$",
       "created": 1777318451,
       "variantCount": 1
     },
     {
       "id": "~moonshotai/kimi-latest",
-      "label": "MoonshotAI Kimi Latest",
+      "label": "MoonshotAI: Kimi Latest",
       "price": "$$",
       "created": 1777318428,
       "variantCount": 1
     },
     {
       "id": "~google/gemini-flash-latest",
-      "label": "Google Gemini Flash Latest",
+      "label": "Google: Gemini Flash Latest",
       "price": "$$",
       "created": 1777318398,
       "variantCount": 1
     },
     {
       "id": "~anthropic/claude-sonnet-latest",
-      "label": "Anthropic Claude Sonnet Latest",
+      "label": "Anthropic: Claude Sonnet Latest",
       "price": "$$",
       "created": 1777318368,
       "variantCount": 1
