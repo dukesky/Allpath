@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-11T15:51:27.281Z",
+  "generatedAt": "2026-09-12T03:07:02.136Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "inference-net/schematron-v2-turbo",
+      "label": "Inference.net: Schematron V2 Turbo",
+      "price": "$",
+      "created": 1789176949,
+      "variantCount": 1
+    },
+    {
+      "id": "inference-net/schematron-v2-small",
+      "label": "Inference.net: Schematron V2 Small",
+      "price": "$",
+      "created": 1789176933,
+      "variantCount": 1
+    },
     {
       "id": "~openai/gpt-astra-latest",
       "label": "OpenAI GPT Astra Latest",
@@ -265,7 +279,7 @@
     {
       "id": "~z-ai/glm-latest",
       "label": "Z.ai: GLM Latest",
-      "price": "$",
+      "price": "$$",
       "created": 1787151053,
       "variantCount": 1
     },
@@ -293,7 +307,7 @@
     {
       "id": "qwen/qwen3.8-27b",
       "label": "Qwen: Qwen3.8 27B",
-      "price": "$$",
+      "price": "$",
       "created": 1786722910,
       "variantCount": 1
     },
@@ -783,7 +797,7 @@
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
-      "price": "$$",
+      "price": "$",
       "created": 1781631930,
       "variantCount": 2
     },
