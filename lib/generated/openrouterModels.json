@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-14T03:22:06.610Z",
+  "generatedAt": "2026-09-14T17:41:19.154Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "~deepseek/deepseek-pro-latest",
+      "label": "DeepSeek: DeepSeek Pro Latest",
+      "price": "$",
+      "created": 1789399174,
+      "variantCount": 1
+    },
+    {
+      "id": "~deepseek/deepseek-flash-latest",
+      "label": "DeepSeek: DeepSeek Flash Latest",
+      "price": "$",
+      "created": 1789399150,
+      "variantCount": 1
+    },
     {
       "id": "inference-net/schematron-v2-turbo",
       "label": "Inference.net: Schematron V2 Turbo",
@@ -363,7 +377,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 2
     },
