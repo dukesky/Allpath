@@ -1,12 +1,12 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-15T03:23:58.709Z",
+  "generatedAt": "2026-09-15T16:14:44.691Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1789399174,
       "variantCount": 1
     },
@@ -377,7 +377,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 2
     },
@@ -813,14 +813,21 @@
       "label": "Z.ai: GLM 5.2",
       "price": "$$",
       "created": 1781631930,
-      "variantCount": 2
+      "variantCount": 3
     },
     {
       "id": "z-ai/glm-5.2:batch",
       "label": "Z.ai: GLM 5.2 (batch)",
       "price": "$",
       "created": 1781631930,
-      "variantCount": 2
+      "variantCount": 3
+    },
+    {
+      "id": "z-ai/glm-5.2:free",
+      "label": "Z.ai: GLM 5.2 (free)",
+      "price": "$",
+      "created": 1781631930,
+      "variantCount": 3
     },
     {
       "id": "openrouter/fusion",
