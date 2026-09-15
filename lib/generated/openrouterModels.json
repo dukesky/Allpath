@@ -1,12 +1,12 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-14T17:41:19.154Z",
+  "generatedAt": "2026-09-15T03:23:58.709Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$",
+      "price": "$$",
       "created": 1789399174,
       "variantCount": 1
     },
@@ -377,7 +377,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$",
+      "price": "$$",
       "created": 1786549364,
       "variantCount": 2
     },
@@ -811,7 +811,7 @@
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
-      "price": "$",
+      "price": "$$",
       "created": 1781631930,
       "variantCount": 2
     },
@@ -2458,13 +2458,6 @@
       "label": "Mistral: Mistral Medium 3",
       "price": "$",
       "created": 1746627341,
-      "variantCount": 1
-    },
-    {
-      "id": "google/gemini-2.5-pro-preview-05-06",
-      "label": "Google: Gemini 2.5 Pro Preview 05-06",
-      "price": "$$",
-      "created": 1746578513,
       "variantCount": 1
     },
     {
