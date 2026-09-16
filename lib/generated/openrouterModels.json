@@ -1,12 +1,12 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-15T16:14:44.691Z",
+  "generatedAt": "2026-09-16T03:20:16.540Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$",
+      "price": "$$",
       "created": 1789399174,
       "variantCount": 1
     },
@@ -377,7 +377,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$",
+      "price": "$$",
       "created": 1786549364,
       "variantCount": 2
     },
@@ -477,21 +477,14 @@
       "label": "Thinking Machines: Inkling Small",
       "price": "$",
       "created": 1785443117,
-      "variantCount": 3
-    },
-    {
-      "id": "thinkingmachines/inkling-small:batch",
-      "label": "Thinking Machines: Inkling Small (batch)",
-      "price": "$",
-      "created": 1785443117,
-      "variantCount": 3
+      "variantCount": 2
     },
     {
       "id": "thinkingmachines/inkling-small:free",
       "label": "Thinking Machines: Inkling Small (free)",
       "price": "$",
       "created": 1785443117,
-      "variantCount": 3
+      "variantCount": 2
     },
     {
       "id": "qwen/qwen3.7-flash",
@@ -502,14 +495,14 @@
     },
     {
       "id": "anthropic/claude-opus-5",
-      "label": "Claude Opus 5",
+      "label": "Anthropic: Claude Opus 5",
       "price": "$$$",
       "created": 1784912544,
       "variantCount": 2
     },
     {
       "id": "anthropic/claude-opus-5:batch",
-      "label": "Claude Opus 5 (batch)",
+      "label": "Anthropic: Claude Opus 5 (batch)",
       "price": "$$",
       "created": 1784912544,
       "variantCount": 2
@@ -881,7 +874,7 @@
     {
       "id": "nvidia/nemotron-3-ultra-550b-a55b",
       "label": "NVIDIA: Nemotron 3 Ultra",
-      "price": "$",
+      "price": "$$",
       "created": 1780551208,
       "variantCount": 2
     },
@@ -1233,21 +1226,14 @@
       "label": "Google: Gemma 4 31B",
       "price": "$",
       "created": 1775148486,
-      "variantCount": 3
-    },
-    {
-      "id": "google/gemma-4-31b-it:batch",
-      "label": "Google: Gemma 4 31B (batch)",
-      "price": "$",
-      "created": 1775148486,
-      "variantCount": 3
+      "variantCount": 2
     },
     {
       "id": "google/gemma-4-31b-it:free",
       "label": "Google: Gemma 4 31B (free)",
       "price": "$",
       "created": 1775148486,
-      "variantCount": 3
+      "variantCount": 2
     },
     {
       "id": "qwen/qwen3.6-plus",
@@ -2234,14 +2220,7 @@
       "label": "OpenAI: gpt-oss-20b",
       "price": "$",
       "created": 1754414229,
-      "variantCount": 2
-    },
-    {
-      "id": "openai/gpt-oss-20b:batch",
-      "label": "OpenAI: gpt-oss-20b (batch)",
-      "price": "$",
-      "created": 1754414229,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "anthropic/claude-opus-4.1",
