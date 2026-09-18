@@ -16,6 +16,7 @@ interface ChatHeaderProps {
   onToggleChatMembers: () => void;
   onToggleMute: (sessionId: string, participantId: string, muted: boolean) => void;
   onShare: () => void;
+  onExport: () => void;
   onDismissShare: () => void;
   onCopyShare: () => void;
 }
@@ -32,6 +33,7 @@ export function ChatHeader({
   onToggleChatMembers,
   onToggleMute,
   onShare,
+  onExport,
   onDismissShare,
   onCopyShare,
 }: ChatHeaderProps) {
@@ -115,7 +117,15 @@ export function ChatHeader({
           )}
         </div>
         {sessionId && groupedMessages.some((m) => m.sourceRole !== "user" && m.status === "completed") && (
-          <div className="relative self-start lg:self-auto">
+          <div className="relative flex items-center gap-2 self-start lg:self-auto">
+            <button
+              type="button"
+              onClick={onExport}
+              title="Download this conversation as a Markdown file"
+              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm hover:bg-slate-50"
+            >
+              Export
+            </button>
             <button
               type="button"
               onClick={onShare}

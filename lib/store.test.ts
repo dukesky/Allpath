@@ -39,7 +39,8 @@ describe("toClientParticipant", () => {
       label: "Agent p1",
       avatarUrl: "/avatars/cat.png",
       model: "openai/gpt-5-mini",
-      muted: true
+      muted: true,
+      roleTitle: "Analyst"
     });
     expect(JSON.stringify(result)).not.toContain("sk-secret");
   });

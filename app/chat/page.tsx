@@ -25,6 +25,7 @@ import {
   readShareForkRequest,
   shareAgentsToParticipantFields
 } from "@/lib/shareFork";
+import { buildSessionExport } from "@/lib/exportMarkdown";
 
 import {
   ApiKeyMode,
@@ -38,6 +39,7 @@ import {
 import {
   buildParticipantFromProfile,
   defaultParticipant,
+  downloadTextFile,
   fetchTrialStatus,
   GENERIC_STARTER_PROMPTS,
   isTextLikeFile,
@@ -1399,6 +1401,18 @@ export default function HomePage() {
     setShareForkNotice(null);
   }
 
+  function handleExport() {
+    if (!sessionId) return;
+    const { filename, markdown } = buildSessionExport({
+      sessionTitle: sessionList.find((item) => item.id === sessionId)?.title,
+      mode: sessionMode,
+      exportedAt: new Date(),
+      members: activeSessionMembers,
+      messages
+    });
+    downloadTextFile(filename, markdown, "text/markdown;charset=utf-8");
+  }
+
   async function handleShare() {
     if (!sessionId || isSharing) return;
     setIsSharing(true);
@@ -1662,6 +1676,7 @@ export default function HomePage() {
           onToggleChatMembers={() => setIsChatMembersOpen((value) => !value)}
           onToggleMute={toggleParticipantMute}
           onShare={() => void handleShare()}
+          onExport={handleExport}
           onDismissShare={() => setShareUrl(null)}
           onCopyShare={() => void navigator.clipboard.writeText(shareUrl ?? "")}
         />

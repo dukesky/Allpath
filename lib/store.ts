@@ -8,6 +8,7 @@ export interface ClientParticipant {
   avatarUrl?: string;
   model: string;
   muted?: boolean;
+  roleTitle?: string;
 }
 
 export function toClientParticipant(participant: ParticipantConfig): ClientParticipant {
@@ -17,7 +18,8 @@ export function toClientParticipant(participant: ParticipantConfig): ClientParti
       label: participant.label,
       avatarUrl: participant.avatarUrl,
       model: participant.model,
-      muted: participant.muted
+      muted: participant.muted,
+      roleTitle: participant.roleTitle
     }).filter(([, value]) => value !== undefined)
   ) as unknown as ClientParticipant;
 }

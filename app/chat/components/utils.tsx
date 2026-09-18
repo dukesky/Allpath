@@ -273,6 +273,20 @@ export function readFileAsDataUrl(file: File): Promise<string> {
   });
 }
 
+// Saves text as a file entirely client-side (Blob + object URL), no server round-trip.
+export function downloadTextFile(filename: string, content: string, mimeType: string): void {
+  const url = URL.createObjectURL(new Blob([content], { type: mimeType }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.style.display = "none";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  // Revoke after the click has been handled (Safari needs the URL alive briefly).
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 export async function fetchTrialStatus(
   headers: Record<string, string> = {}
 ): Promise<TrialStatusResponse | null> {

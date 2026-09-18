@@ -107,6 +107,13 @@ using `@google-cloud/firestore`, which picks up ADC credentials; `GOOGLE_CLOUD_P
 - **B4** Title: the current session's sidebar title, else the first user message (truncated),
   else `AllPath session`.
 - **B5** No server round-trip; no API keys in output.
+- **B6** *(added by planner after round 1)* The export ends with a `---` rule followed by
+  exactly `_Exported from [AllPath](https://all-path.com) — where many minds find one path._`,
+  appearing once, as the last line. There must be a blank line before `---` so it is not read
+  as a setext heading underline.
+- *Accepted scope change:* `lib/store.ts` `toClientParticipant` now includes `roleTitle` in
+  client-facing participant payloads (needed so exported participant lines show roles). It
+  must still never include `provider`/`apiKey`.
 
 ---
 
