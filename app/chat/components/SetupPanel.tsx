@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, ReactNode, useState } from "react";
 import Link from "next/link";
 import { CatalogModel, isNew, isPopular } from "@/lib/modelCatalog";
 import { ModelPicker } from "@/app/chat/ModelPicker";
@@ -25,6 +25,8 @@ import {
 const CUSTOMIZED_STORY = "__customized__";
 
 interface SetupPanelProps {
+  // Share → chat fork banner/notice, rendered above the trial block
+  shareForkBanner?: ReactNode;
   // Trial
   trialStatus: TrialStatusResponse | null;
   inviteCode: string;
@@ -131,6 +133,8 @@ export function SetupPanel(props: SetupPanelProps) {
           User Profile
         </Link>
       </div>
+
+      {props.shareForkBanner && <div className="mt-4">{props.shareForkBanner}</div>}
 
       {/* Trial 状态块 */}
       <div className="mt-4 space-y-3">

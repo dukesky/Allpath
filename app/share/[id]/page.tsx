@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getShareRecord } from "@/lib/share";
 import { Message, ShareableParticipant } from "@/lib/types";
-import { StartFromHereButton } from "./StartFromHereButton";
+import { StartFromHereButtons } from "./StartFromHereButton";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -145,9 +145,10 @@ export default async function SharePage({ params }: Props) {
           </div>
 
           <div className="mt-5">
-            <StartFromHereButton shareId={record.shareId} />
+            <StartFromHereButtons shareId={record.shareId} />
             <p className="mt-2 text-xs text-slate-400">
-              Opens a new conversation with this team, starting from this point in the discussion.
+              Start a new conversation with this team — ask your own question, or pick up where this
+              discussion left off.
             </p>
           </div>
         </div>
@@ -181,13 +182,11 @@ export default async function SharePage({ params }: Props) {
 
         {/* Bottom CTA */}
         <div className="mt-10 rounded-2xl border border-indigo-100 bg-indigo-50 p-6 text-center">
-          <p className="text-sm font-semibold text-slate-800">Want to continue this conversation?</p>
+          <p className="text-sm font-semibold text-slate-800">Want to talk to this team?</p>
           <p className="mt-1 text-sm text-slate-500">
-            Start your own session with the same team, picking up where this left off.
+            Ask the same agents your own question, or continue this conversation where it left off.
           </p>
-          <div className="mt-4 flex justify-center">
-            <StartFromHereButton shareId={record.shareId} />
-          </div>
+          <StartFromHereButtons shareId={record.shareId} className="mt-4 sm:justify-center" />
         </div>
       </main>
     </div>

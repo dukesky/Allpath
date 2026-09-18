@@ -19,9 +19,16 @@ import {
   normalizeUserPreferences
 } from "@/lib/userPreferences";
 import { getDefaultAvatarUrl } from "@/lib/avatar";
+import {
+  ShareForkRequest,
+  clearShareForkRequest,
+  readShareForkRequest,
+  shareAgentsToParticipantFields
+} from "@/lib/shareFork";
 
 import {
   ApiKeyMode,
+  BlockedShareFork,
   ParticipantForm,
   PendingAttachment,
   SessionMemberMeta,
@@ -47,6 +54,7 @@ import { ChatHeader } from "./components/ChatHeader";
 import { MessageFeed } from "./components/MessageFeed";
 import { ChatInput } from "./components/ChatInput";
 import { MobileNav } from "./components/MobileNav";
+import { ShareForkNotice, SharedTeamBanner } from "./components/SharedTeamBanner";
 
 const PROFILE_STORAGE_KEY = "allpath-agent-profiles";
 const STORY_STORAGE_KEY = "allpath-agent-stories";
@@ -108,9 +116,17 @@ export default function HomePage() {
   const [error, setError] = useState("");
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [isSharing, setIsSharing] = useState(false);
+  // Share → chat fork: the request read from sessionStorage (started once auth
+  // settles), the fetched share when a fork is blocked, and a notice for
+  // shares that can't be loaded.
+  const [shareForkRequest, setShareForkRequest] = useState<ShareForkRequest | null>(null);
+  const [blockedShareFork, setBlockedShareFork] = useState<BlockedShareFork | null>(null);
+  const [shareForkNotice, setShareForkNotice] = useState<string | null>(null);
+  const [isStartingShareFork, setIsStartingShareFork] = useState(false);
+  const shareForkInFlightRef = useRef(false);
   const eventSourceRef = useRef<EventSource | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
-  const hasPendingActiveSessionRestoreRef = useRef(false);
+  const pendingActiveSessionIdRef = useRef<string | null>(null);
   const sessionListRef = useRef<SessionMeta[]>([]);
   const effectiveGlobalApiKey =
     apiKeyMode === "default_profile"
@@ -200,52 +216,19 @@ export default function HomePage() {
       );
     }
 
-    const fromShareId = sessionStorage.getItem("allpath-from-share-id");
-    if (fromShareId) {
-      sessionStorage.removeItem("allpath-from-share-id");
-      void (async () => {
-        try {
-          const res = await fetch(`/api/share/${fromShareId}`);
-          if (!res.ok) return;
-          const record = (await res.json()) as {
-            mode: string;
-            agentConfig: Array<{
-              id: string;
-              label: string;
-              avatarUrl?: string;
-              model: string;
-              roleTitle?: string;
-              character?: string;
-            }>;
-            transcript: Message[];
-          };
-          const preloadedParticipants: ParticipantForm[] = record.agentConfig.map(
-            (agent, index) => ({
-              ...defaultParticipant(`share-${agent.id}-${index}`, agent.label),
-              avatarUrl: agent.avatarUrl ?? "",
-              roleTitle: agent.roleTitle ?? "",
-              character: agent.character ?? "",
-              model: quickStartModel || "openai/gpt-5-mini"
-            })
-          );
-          setParticipants(preloadedParticipants);
-          await createSessionFromParticipants({
-            sessionParticipants: preloadedParticipants,
-            sessionModeOverride: record.mode === "one_to_one" ? "one_to_one" : "roundtable",
-            agentInitialPromptOverride: DEFAULT_SESSION_RULES,
-            globalApiKeyOverride: quickStartApiKey || undefined,
-            summarizerOverride: undefined,
-            sessionTitle: `Continued · ${new Date().toLocaleString()}`,
-            initialMessages: record.transcript
-          });
-        } catch {
-          // Failed to restore from share — continue normally
-        }
-      })();
-      return;
+    // Arriving from a share page: the fork request stays in sessionStorage
+    // until it succeeds or is dismissed, and replaces the active-session
+    // restore for this load.
+    const pendingShareFork = readShareForkRequest(sessionStorage);
+    if (pendingShareFork) {
+      setShareForkRequest(pendingShareFork);
+    } else {
+      // Capture the id now: the [sessionId] effect clears the key on first
+      // commit, before auth settles and the restore effect below runs. Keep an
+      // id already captured (Strict Mode re-runs this effect after the clear).
+      pendingActiveSessionIdRef.current =
+        localStorage.getItem(ACTIVE_SESSION_STORAGE_KEY) ?? pendingActiveSessionIdRef.current;
     }
-
-    hasPendingActiveSessionRestoreRef.current = true;
 
     void fetchTrialStatus().then((value) => {
       if (value) {
@@ -258,15 +241,11 @@ export default function HomePage() {
   // signed-in user can fall back to a cloud resume when the in-memory
   // session no longer exists (e.g. after a server restart).
   useEffect(() => {
-    if (auth.isLoading || !hasPendingActiveSessionRestoreRef.current) {
+    if (auth.isLoading || !pendingActiveSessionIdRef.current) {
       return;
     }
-    hasPendingActiveSessionRestoreRef.current = false;
-
-    const activeSession = localStorage.getItem(ACTIVE_SESSION_STORAGE_KEY);
-    if (!activeSession) {
-      return;
-    }
+    const activeSession = pendingActiveSessionIdRef.current;
+    pendingActiveSessionIdRef.current = null;
 
     const meta = sessionList.find((item) => item.id === activeSession);
     setSessionId(activeSession);
@@ -275,6 +254,17 @@ export default function HomePage() {
     connectStream(activeSession, meta?.persistentId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.isLoading, sessionList]);
+
+  // Start a pending share fork once auth has settled, so a signed-in user's
+  // fork is created (and persisted) under their account.
+  useEffect(() => {
+    if (auth.isLoading || !shareForkRequest) {
+      return;
+    }
+    setShareForkRequest(null);
+    void startShareFork(shareForkRequest);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.isLoading, shareForkRequest]);
 
   // Load the signed-in user's persisted sessions and merge them into the
   // sidebar list; drop cloud entries again after sign-out.
@@ -634,7 +624,7 @@ export default function HomePage() {
     sessionTitle: string;
     initialMessages?: Message[];
     resumePersistentId?: string;
-  }) {
+  }): Promise<{ ok: true } | { ok: false; code?: string; error: string }> {
     const payload = {
       mode: input.sessionModeOverride ?? sessionMode,
       globalApiKey: input.globalApiKeyOverride ?? (effectiveGlobalApiKey.trim() || undefined),
@@ -673,11 +663,12 @@ export default function HomePage() {
 
     if (!response.ok) {
       const json = (await response.json().catch(() => ({}))) as { error?: string; code?: string };
-      setError(json.error ?? "Failed to create session.");
+      const message = json.error ?? "Failed to create session.";
+      setError(message);
       if (json.code?.startsWith("trial_")) {
         await refreshTrialStatus();
       }
-      return false;
+      return { ok: false, code: json.code, error: message };
     }
 
     const json = (await response.json()) as {
@@ -730,7 +721,7 @@ export default function HomePage() {
       setIsSetupPanelOpen(false);
     }
     connectStream(json.sessionId, json.persistentId);
-    return true;
+    return { ok: true };
   }
 
   function filterProfilesByStory(storyFilter: string): AgentProfile[] {
@@ -1057,6 +1048,10 @@ export default function HomePage() {
 
       setTrialStatus(json as TrialStatusResponse);
       setInviteCode("");
+      // Access unlocked: retry a share fork that was waiting on it.
+      if (blockedShareFork) {
+        void startShareFork(blockedShareFork.request, blockedShareFork.record);
+      }
     } finally {
       setIsRedeemingInvite(false);
     }
@@ -1304,6 +1299,106 @@ export default function HomePage() {
     });
   }
 
+  // Forks a shared conversation into a new live session: the same team, each
+  // agent on its own model, plus the transcript for "continue". If the fork
+  // can't start, the team is preloaded into setup and SharedTeamBanner offers
+  // a retry; the sessionStorage request is kept until success or dismissal.
+  async function startShareFork(
+    request: ShareForkRequest,
+    knownRecord?: BlockedShareFork["record"]
+  ) {
+    if (shareForkInFlightRef.current) {
+      return;
+    }
+    shareForkInFlightRef.current = true;
+    setIsStartingShareFork(true);
+    setShareForkNotice(null);
+
+    let record = knownRecord;
+    try {
+      if (!record) {
+        const response = await fetch(`/api/share/${encodeURIComponent(request.shareId)}`);
+        if (response.status === 404) {
+          clearShareForkRequest(sessionStorage);
+          setBlockedShareFork(null);
+          setShareForkNotice("This shared conversation has expired or no longer exists.");
+          return;
+        }
+        if (!response.ok) {
+          setShareForkNotice("Couldn't load the shared conversation. Reload the page to try again.");
+          return;
+        }
+        record = (await response.json()) as BlockedShareFork["record"];
+      }
+
+      const sessionParticipants: ParticipantForm[] = shareAgentsToParticipantFields(
+        record.agentConfig,
+        quickStartModel || "openai/gpt-5-mini"
+      ).map((fields) => ({ ...defaultParticipant(fields.id, fields.label), ...fields }));
+      const forkMode: Mode = record.mode === "one_to_one" ? "one_to_one" : "roundtable";
+
+      // Preload the team so it stays visible (and editable) in setup even if
+      // the fork is blocked.
+      setParticipants(sessionParticipants);
+      setSessionMode(forkMode);
+
+      const result = await createSessionFromParticipants({
+        sessionParticipants,
+        sessionModeOverride: forkMode,
+        agentInitialPromptOverride: DEFAULT_SESSION_RULES,
+        globalApiKeyOverride: quickStartApiKey || undefined,
+        summarizerOverride: undefined,
+        sessionTitle:
+          request.intent === "continue"
+            ? `Continued · ${new Date().toLocaleString()}`
+            : `Shared team · ${new Date().toLocaleString()} · ${sessionParticipants
+                .map((participant) => participant.label)
+                .join(", ")}`,
+        initialMessages: request.intent === "continue" ? record.transcript : undefined
+      });
+
+      if (result.ok) {
+        clearShareForkRequest(sessionStorage);
+        setBlockedShareFork(null);
+        return;
+      }
+
+      // The banner explains what to do next, so it replaces the error line.
+      const isAccessError = result.code?.startsWith("trial_") === true;
+      setError("");
+      setBlockedShareFork({
+        request,
+        record,
+        reason: isAccessError ? "access" : "error",
+        errorMessage: isAccessError ? undefined : result.error
+      });
+      if (isMobileView) {
+        setMobileActivePanel("setup");
+      }
+    } catch {
+      if (record) {
+        setBlockedShareFork({
+          request,
+          record,
+          reason: "error",
+          errorMessage: "Network error. Check your connection and retry."
+        });
+      } else {
+        setShareForkNotice("Couldn't load the shared conversation. Reload the page to try again.");
+      }
+    } finally {
+      shareForkInFlightRef.current = false;
+      setIsStartingShareFork(false);
+    }
+  }
+
+  function dismissShareFork() {
+    clearShareForkRequest(sessionStorage);
+    setShareForkRequest(null);
+    setBlockedShareFork(null);
+    setShareForkNotice(null);
+  }
+
   async function handleShare() {
     if (!sessionId || isSharing) return;
     setIsSharing(true);
@@ -1490,6 +1585,20 @@ export default function HomePage() {
         className={`${(!isMobileView && isSetupPanelOpen) || (isMobileView && mobileActivePanel === "setup") ? "block" : "hidden"} h-full min-h-0`}
       >
         <SetupPanel
+          shareForkBanner={
+            blockedShareFork ? (
+              <SharedTeamBanner
+                fork={blockedShareFork}
+                showInviteHint={trialStatus?.available === true && trialStatus.requiresInviteCode}
+                showSignInHint={auth.isConfigured && !auth.user}
+                isStarting={isStartingShareFork}
+                onStart={() => void startShareFork(blockedShareFork.request, blockedShareFork.record)}
+                onDismiss={dismissShareFork}
+              />
+            ) : shareForkNotice ? (
+              <ShareForkNotice message={shareForkNotice} onDismiss={dismissShareFork} />
+            ) : null
+          }
           trialStatus={trialStatus}
           inviteCode={inviteCode}
           isRedeemingInvite={isRedeemingInvite}

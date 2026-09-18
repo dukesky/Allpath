@@ -1,4 +1,5 @@
-import { MessageAttachment, ProviderType } from "@/lib/types";
+import { MessageAttachment, ProviderType, ShareRecord } from "@/lib/types";
+import { ShareForkRequest } from "@/lib/shareFork";
 
 export interface SessionMemberMeta {
   id: string;
@@ -54,3 +55,12 @@ export type ParticipantForm = {
   character: string;
   profileId: string;
 };
+
+// A share → chat fork that could not start: "access" when the visitor has no
+// invite/key yet (POST /api/session code trial_*), "error" otherwise.
+export interface BlockedShareFork {
+  request: ShareForkRequest;
+  record: Pick<ShareRecord, "title" | "mode" | "agentConfig" | "transcript">;
+  reason: "access" | "error";
+  errorMessage?: string;
+}
