@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-18T03:11:22.281Z",
+  "generatedAt": "2026-09-18T11:40:32.885Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -13,7 +13,7 @@
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1789399174,
       "variantCount": 1
     },
@@ -391,7 +391,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 2
     },
@@ -825,7 +825,7 @@
     {
       "id": "z-ai/glm-5.2",
       "label": "Z.ai: GLM 5.2",
-      "price": "$$",
+      "price": "$",
       "created": 1781631930,
       "variantCount": 3
     },
@@ -1824,18 +1824,11 @@
       "variantCount": 1
     },
     {
-      "id": "mistralai/mistral-large-2512",
-      "label": "Mistral: Mistral Large 3 2512",
-      "price": "$",
-      "created": 1764624472,
-      "variantCount": 2
-    },
-    {
       "id": "mistralai/mistral-large-2512:batch",
       "label": "Mistral: Mistral Large 3 2512 (batch)",
       "price": "$",
       "created": 1764624472,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "deepseek/deepseek-v3.2",
