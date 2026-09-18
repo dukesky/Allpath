@@ -122,4 +122,24 @@ export interface ShareRecord {
   title: string;
   transcript: Message[];
   agentConfig: ShareableParticipant[];
+  // Set by `npm run share:feature`. Featured shares appear on the landing page
+  // and never expire (getShareRecord ignores expiresAt for them).
+  featured?: boolean;
+  featuredAt?: string;
+}
+
+export interface FeaturedShareAgent {
+  label: string;
+  avatarUrl?: string;
+  roleTitle?: string;
+}
+
+// Landing-page card data for a featured share — never the full transcript.
+export interface FeaturedShareSummary {
+  shareId: string;
+  title: string;
+  mode: Mode;
+  messageCount: number;
+  agents: FeaturedShareAgent[];
+  excerpt: string;
 }

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { FeaturedConversations } from "./FeaturedConversations";
 
 const CONTACT_EMAIL = "0tianzhang0@gmail.com";
 
@@ -160,6 +161,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        <FeaturedConversations />
 
         <section className="grid gap-6 pb-8 lg:grid-cols-[1.6fr_0.9fr]">
           <article className="rounded-[2rem] border border-slate-200 bg-white/92 p-8 shadow-sm">

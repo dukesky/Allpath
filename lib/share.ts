@@ -1,6 +1,18 @@
 import { randomUUID } from "crypto";
+import {
+  FEATURED_DEFAULT_LIMIT,
+  FEATURED_QUERY_LIMIT,
+  isShareExpired,
+  selectFeaturedShareSummaries
+} from "@/lib/featuredShares";
 import { getFirestoreDb } from "@/lib/firestore";
-import { Message, Mode, ShareableParticipant, ShareRecord } from "@/lib/types";
+import {
+  FeaturedShareSummary,
+  Message,
+  Mode,
+  ShareableParticipant,
+  ShareRecord
+} from "@/lib/types";
 
 const SHARES_COLLECTION = "shared_sessions";
 const SHARE_TTL_DAYS = 30;
@@ -55,10 +67,28 @@ export async function getShareRecord(shareId: string): Promise<ShareRecord | nul
 
   const data = doc.data() as ShareRecord;
 
-  // Treat expired shares as missing
-  if (data.expiresAt && new Date(data.expiresAt) < new Date()) {
+  // Treat expired shares as missing (featured shares never expire)
+  if (isShareExpired(data)) {
     return null;
   }
 
   return data;
+}
+
+// Featured shares for the landing page, newest featuredAt first. Single-field
+// equality query (no composite index) with a hard cap; sorting happens in memory.
+export async function getFeaturedShares(
+  limit: number = FEATURED_DEFAULT_LIMIT
+): Promise<FeaturedShareSummary[]> {
+  const db = getFirestoreDb();
+  const snapshot = await db
+    .collection(SHARES_COLLECTION)
+    .where("featured", "==", true)
+    .limit(FEATURED_QUERY_LIMIT)
+    .get();
+
+  const records = snapshot.docs.map(
+    (doc) => ({ ...(doc.data() as ShareRecord), shareId: doc.id }) as ShareRecord
+  );
+  return selectFeaturedShareSummaries(records, limit);
 }

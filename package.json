@@ -9,6 +9,7 @@
     "lint": "next lint",
     "models:update": "node scripts/update-openrouter-models.mjs",
     "trial:invite:init": "node scripts/init-trial-invite-code.mjs",
+    "share:feature": "node scripts/feature-share.mjs",
     "test": "vitest run"
   },
   "dependencies": {

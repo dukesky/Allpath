@@ -16,6 +16,7 @@ Browser (SPA in app/chat/page.tsx)
   → POST /api/session/[id]/participant   — mute/unmute participants
   → POST /api/session/[id]/claim         — attach a guest session to the signed-in user
   → POST /api/share                      — save snapshot to Firestore
+  → GET  /api/share/featured             — featured share summaries for the landing page
   → GET  /share/[id]                     — view shared transcript
   → GET/POST /api/trial/*                — invite code + guest trial management
   → GET  /api/sessions                   — list signed-in user's saved sessions
@@ -63,7 +64,9 @@ Browser (SPA in app/chat/page.tsx)
 | `lib/sessionPersistence.ts` | Sanitize + persist/load/delete sessions in Firestore (vitest-covered) |
 | `app/chat/components/useAuth.ts` | React auth-state hook + `buildAuthHeaders()` |
 | `app/chat/components/AuthControls.tsx` | Sign-in button, modal (Google + email), account menu |
-| `lib/share.ts` | Share record creation/retrieval |
+| `lib/share.ts` | Share record creation/retrieval, `getFeaturedShares()` |
+| `lib/featuredShares.ts` | Pure featured-share logic: summaries, excerpt, sort, expiry, TTL cache (vitest-covered) |
+| `app/FeaturedConversations.tsx` | Client component: landing-page featured conversations section |
 | `lib/userPreferences.ts` | localStorage prefs: globalApiKey, prompt presets |
 
 ## Trial System
@@ -74,6 +77,27 @@ Three funding paths resolved in `trial.ts::resolveOpenRouterProviderForSession()
 3. **owner_trial** — guest has active trial budget; server's `OPENROUTER_API_KEY` is used; cost tracked per-call via Firestore transaction
 
 Budget default: **$2 USD** per guest. Collections: `trial_guests`, `trial_invite_codes`.
+
+## Featured Conversations
+
+Share docs in `shared_sessions` can carry `featured: true` + `featuredAt` (ISO). They are set by hand with
+`SHARE_ID=<id> npm run share:feature` (`scripts/feature-share.mjs`; `UNFEATURE=true` removes both fields; fails if
+the doc doesn't exist). The script reads `GOOGLE_CLOUD_PROJECT` / `FIRESTORE_DATABASE_ID` from the shell, not
+`.env.local` — set them as there (prod database id is `default`). Featured shares never expire (`getShareRecord`
+ignores `expiresAt` for them).
+
+- `lib/share.ts::getFeaturedShares(limit = 3)` — `where("featured", "==", true).limit(20)` (no composite index),
+  sorted by `featuredAt` desc in memory, mapped to `FeaturedShareSummary` (`shareId, title, mode, messageCount,
+  agents[{label, avatarUrl?, roleTitle?}], excerpt`) — never the transcript, model, or character.
+- `GET /api/share/featured` → `{ shares }`, `force-dynamic` (never prerendered — the build has no GCP creds),
+  `Cache-Control: public, s-maxage=300, stale-while-revalidate=600`. Summaries are memoised per instance for
+  5 minutes; a failed fetch is logged, retried after 30s (last good list served meanwhile) and returns
+  `200 { shares: [] }` with `no-store` if nothing is cached.
+- `app/FeaturedConversations.tsx` fetches it after mount (`cache: "no-cache"`, so browsers don't apply the SWR
+  directive meant for shared caches) and renders up to 3 cards linking to `/share/{id}` right
+  after the hero on `/`; renders nothing when the list is empty or the fetch fails. `/` must stay static (`○`).
+- Featuring/unfeaturing can take up to 5 minutes to show (per-instance cache). In `next dev` the memo also resets
+  whenever a route compiles; restart the dev server to force a refresh.
 
 ## Env Vars (`.env.local`)
 
@@ -98,6 +122,8 @@ npm run build          # Production build
 npm run lint           # ESLint
 npm test               # vitest (lib/**/*.test.ts)
 npm run models:update  # Refresh lib/generated/openrouterModels.json from OpenRouter API
+SHARE_ID=<id> npm run share:feature                # Feature a share on the landing page
+SHARE_ID=<id> UNFEATURE=true npm run share:feature # Remove it again
 ```
 
 ## Prompt System

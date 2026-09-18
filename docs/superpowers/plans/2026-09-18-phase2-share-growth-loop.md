@@ -136,3 +136,9 @@ using `@google-cloud/firestore`, which picks up ADC credentials; `GOOGLE_CLOUD_P
   `UNFEATURE=true` removes both fields. Fails clearly if the doc does not exist. Follows the
   pattern of `scripts/init-trial-invite-code.mjs`.
 - **C5** `CLAUDE.md` documents the featured flag, API route and script.
+- **C6** *(added by planner)* The landing page is the highest-traffic page and share docs
+  hold full transcripts (potentially hundreds of KB each), so `/api/share/featured` must not
+  hit Firestore on every request: keep the computed summaries in a module-level in-memory
+  cache with a 5-minute TTL (per server instance; a failed fetch must not be cached as an
+  empty success for the full TTL). The route declares `export const dynamic = "force-dynamic"`
+  so the build never tries to prerender it (build container has no GCP credentials).
