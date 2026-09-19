@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-19T03:07:49.370Z",
+  "generatedAt": "2026-09-19T15:21:44.800Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -8,6 +8,13 @@
       "label": "PrismML: Ternary Bonsai 2 27B",
       "price": "$",
       "created": 1789754046,
+      "variantCount": 1
+    },
+    {
+      "id": "z-ai/glm-5.3-flashx",
+      "label": "Z.ai: GLM 5.3 FlashX",
+      "price": "$",
+      "created": 1789744020,
       "variantCount": 1
     },
     {
