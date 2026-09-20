@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getFirestoreDb } from "@/lib/firestore";
+import EquityChart from "./EquityChart";
 
 export const metadata: Metadata = {
   title: "Live journal — AllPath Trading Agent",
@@ -40,6 +41,11 @@ type Entry = {
 };
 
 const CACHE_TTL_MS = 5 * 60 * 1000;
+// The equity chart wants the whole run, while the day-by-day cards below
+// stay capped (they carry the full reflection text). One Firestore read
+// feeds both: fetch the history, render the most recent `DAY_CARDS` of it.
+const HISTORY_LIMIT = 400;
+const DAY_CARDS = 30;
 let cache: { at: number; entries: Entry[] } | null = null;
 
 async function loadEntries(): Promise<Entry[]> {
@@ -48,7 +54,7 @@ async function loadEntries(): Promise<Entry[]> {
     const snapshot = await getFirestoreDb()
       .collection("tradingJournal")
       .orderBy("date", "desc")
-      .limit(30)
+      .limit(HISTORY_LIMIT)
       .get();
     const entries = snapshot.docs.map((d) => d.data() as Entry);
     cache = { at: Date.now(), entries };
@@ -129,6 +135,12 @@ export default async function JournalPage() {
           </p>
         </section>
 
+        {entries.length > 1 && (
+          <section className="mt-6 rounded-[2rem] border border-[#eadfcf] bg-white/70 px-6 py-8 backdrop-blur lg:px-10">
+            <EquityChart entries={entries} />
+          </section>
+        )}
+
         {entries.length === 0 && (
           <section className="mt-6 rounded-[2rem] border border-[#eadfcf] bg-white/70 px-6 py-10 text-center backdrop-blur">
             <p className="text-slate-600">
@@ -138,7 +150,7 @@ export default async function JournalPage() {
         )}
 
         <section className="mt-6 space-y-6">
-          {entries.map((e) => (
+          {entries.slice(0, DAY_CARDS).map((e) => (
             <article key={e.date} className="rounded-[2rem] border border-[#eadfcf] bg-white/70 p-6 backdrop-blur lg:p-8">
               <div className="flex flex-wrap items-baseline justify-between gap-3">
                 <h3 className="font-mono text-lg font-semibold tracking-tight">{e.date}</h3>
