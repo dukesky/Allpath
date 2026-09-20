@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-19T15:21:44.800Z",
+  "generatedAt": "2026-09-20T03:24:17.999Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -342,7 +342,7 @@
     {
       "id": "qwen/qwen3.8-27b",
       "label": "Qwen: Qwen3.8 27B",
-      "price": "$",
+      "price": "$$",
       "created": 1786722910,
       "variantCount": 2
     },
