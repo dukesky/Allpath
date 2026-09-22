@@ -1,8 +1,29 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-21T17:52:00.302Z",
+  "generatedAt": "2026-09-22T03:18:35.131Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "xiaomi/mimo-v2.6-pro-ultraspeed",
+      "label": "Xiaomi: MiMo-V2.6-Pro-UltraSpeed",
+      "price": "$$",
+      "created": 1790021267,
+      "variantCount": 1
+    },
+    {
+      "id": "xiaomi/mimo-v2.6-flash",
+      "label": "Xiaomi: MiMo-V2.6-Flash",
+      "price": "$",
+      "created": 1790021264,
+      "variantCount": 1
+    },
+    {
+      "id": "xiaomi/mimo-v2.6-pro",
+      "label": "Xiaomi: MiMo-V2.6-Pro",
+      "price": "$",
+      "created": 1790021259,
+      "variantCount": 1
+    },
     {
       "id": "x-ai/grok-4.7",
       "label": "SpaceXAI: Grok 4.7",
@@ -405,7 +426,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$",
+      "price": "$$",
       "created": 1786549364,
       "variantCount": 2
     },
