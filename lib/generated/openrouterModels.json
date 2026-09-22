@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-22T03:18:35.131Z",
+  "generatedAt": "2026-09-22T16:16:23.657Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -141,7 +141,14 @@
       "label": "DeepSeek: DeepSeek V4.1 Flash",
       "price": "$",
       "created": 1789021285,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "deepseek/deepseek-v4.1-flash:batch",
+      "label": "DeepSeek: DeepSeek V4.1 Flash (batch)",
+      "price": "$",
+      "created": 1789021285,
+      "variantCount": 2
     },
     {
       "id": "inception/mercury-2.5",
@@ -151,18 +158,32 @@
       "variantCount": 1
     },
     {
+      "id": "nex-agi/nex-n2.5-mini",
+      "label": "Nex AGI: Nex-N2.5-Mini",
+      "price": "$",
+      "created": 1788890061,
+      "variantCount": 2
+    },
+    {
       "id": "nex-agi/nex-n2.5-mini:free",
       "label": "Nex AGI: Nex-N2.5-Mini (free)",
       "price": "$",
       "created": 1788890061,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "nex-agi/nex-n2.5-pro",
+      "label": "Nex AGI: Nex-N2.5-Pro",
+      "price": "$",
+      "created": 1788890050,
+      "variantCount": 2
     },
     {
       "id": "nex-agi/nex-n2.5-pro:free",
       "label": "Nex AGI: Nex-N2.5-Pro (free)",
       "price": "$",
       "created": 1788890050,
-      "variantCount": 1
+      "variantCount": 2
     },
     {
       "id": "openai/gpt-6-astra",
@@ -316,14 +337,7 @@
       "label": "DeepSeek: DeepSeek V4 Flash Vision Exp",
       "price": "$",
       "created": 1787311563,
-      "variantCount": 2
-    },
-    {
-      "id": "deepseek/deepseek-v4-flash-vision-exp:batch",
-      "label": "DeepSeek: DeepSeek V4 Flash Vision Exp (batch)",
-      "price": "$",
-      "created": 1787311563,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "tencent/hy-mt2-1.8b",
@@ -342,7 +356,7 @@
     {
       "id": "~z-ai/glm-latest",
       "label": "Z.ai: GLM Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1787151053,
       "variantCount": 1
     },
@@ -356,14 +370,14 @@
     {
       "id": "z-ai/glm-5.3",
       "label": "Z.ai: GLM 5.3",
-      "price": "$$",
+      "price": "$",
       "created": 1787086655,
       "variantCount": 2
     },
     {
       "id": "z-ai/glm-5.3:batch",
       "label": "Z.ai: GLM 5.3 (batch)",
-      "price": "$",
+      "price": "$$",
       "created": 1787086655,
       "variantCount": 2
     },
@@ -426,16 +440,9 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
-      "created": 1786549364,
-      "variantCount": 2
-    },
-    {
-      "id": "deepseek/deepseek-v4-pro-0813:batch",
-      "label": "DeepSeek: DeepSeek V4 Pro 0813 (batch)",
       "price": "$",
       "created": 1786549364,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "x-ai/grok-4.6",
@@ -484,14 +491,7 @@
       "label": "Meta: Muse Glimmer 30B",
       "price": "$",
       "created": 1786302394,
-      "variantCount": 2
-    },
-    {
-      "id": "meta/muse-glimmer-30b:batch",
-      "label": "Meta: Muse Glimmer 30B (batch)",
-      "price": "$",
-      "created": 1786302394,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "meta/muse-spark-1.2",
@@ -512,14 +512,7 @@
       "label": "DeepSeek: DeepSeek V4 Flash 0731",
       "price": "$",
       "created": 1785478908,
-      "variantCount": 2
-    },
-    {
-      "id": "deepseek/deepseek-v4-flash-0731:batch",
-      "label": "DeepSeek: DeepSeek V4 Flash 0731 (batch)",
-      "price": "$",
-      "created": 1785478908,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "thinkingmachines/inkling-small",
@@ -638,7 +631,14 @@
       "label": "MoonshotAI: Kimi K3",
       "price": "$$",
       "created": 1784215858,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "moonshotai/kimi-k3:batch",
+      "label": "MoonshotAI: Kimi K3 (batch)",
+      "price": "$$",
+      "created": 1784215858,
+      "variantCount": 2
     },
     {
       "id": "meta/muse-spark-1.1",
@@ -841,21 +841,14 @@
       "label": "Z.ai: GLM 5.2",
       "price": "$",
       "created": 1781631930,
-      "variantCount": 3
-    },
-    {
-      "id": "z-ai/glm-5.2:batch",
-      "label": "Z.ai: GLM 5.2 (batch)",
-      "price": "$",
-      "created": 1781631930,
-      "variantCount": 3
+      "variantCount": 2
     },
     {
       "id": "z-ai/glm-5.2:free",
       "label": "Z.ai: GLM 5.2 (free)",
       "price": "$",
       "created": 1781631930,
-      "variantCount": 3
+      "variantCount": 2
     },
     {
       "id": "openrouter/fusion",
@@ -1119,7 +1112,7 @@
     {
       "id": "qwen/qwen3.6-27b",
       "label": "Qwen: Qwen3.6 27B",
-      "price": "$",
+      "price": "$$",
       "created": 1777255064,
       "variantCount": 1
     },
@@ -1310,13 +1303,6 @@
       "label": "Google: Lyria 3 Clip Preview",
       "price": "$",
       "created": 1774907255,
-      "variantCount": 1
-    },
-    {
-      "id": "kwaipilot/kat-coder-pro-v2",
-      "label": "Kwaipilot: KAT-Coder-Pro V2",
-      "price": "$",
-      "created": 1774649310,
       "variantCount": 1
     },
     {
@@ -2227,7 +2213,14 @@
       "label": "OpenAI: gpt-oss-20b",
       "price": "$",
       "created": 1754414229,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-oss-20b:batch",
+      "label": "OpenAI: gpt-oss-20b (batch)",
+      "price": "$",
+      "created": 1754414229,
+      "variantCount": 2
     },
     {
       "id": "anthropic/claude-opus-4.1",
