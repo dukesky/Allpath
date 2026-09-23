@@ -1,8 +1,85 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-22T16:16:23.657Z",
+  "generatedAt": "2026-09-23T03:19:20.829Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "cohere/command-a-plus",
+      "label": "Cohere: Command A+",
+      "price": "$",
+      "created": 1790102896,
+      "variantCount": 1
+    },
+    {
+      "id": "openai/gpt-6-luna-pro",
+      "label": "OpenAI: GPT-6 Luna Pro",
+      "price": "$",
+      "created": 1790100791,
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6-luna-pro:batch",
+      "label": "OpenAI: GPT-6 Luna Pro (batch)",
+      "price": "$",
+      "created": 1790100791,
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6-luna",
+      "label": "OpenAI: GPT-6 Luna",
+      "price": "$",
+      "created": 1790100786,
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6-luna:batch",
+      "label": "OpenAI: GPT-6 Luna (batch)",
+      "price": "$",
+      "created": 1790100786,
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6-sol-pro",
+      "label": "OpenAI: GPT-6 Sol Pro",
+      "price": "$$",
+      "created": 1790100781,
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6-sol-pro:batch",
+      "label": "OpenAI: GPT-6 Sol Pro (batch)",
+      "price": "$$",
+      "created": 1790100781,
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6-sol",
+      "label": "OpenAI: GPT-6 Sol",
+      "price": "$$",
+      "created": 1790100775,
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6-sol:batch",
+      "label": "OpenAI: GPT-6 Sol (batch)",
+      "price": "$$",
+      "created": 1790100775,
+      "variantCount": 2
+    },
+    {
+      "id": "anthropic/claude-opus-5.5",
+      "label": "Anthropic: Claude Opus 5.5",
+      "price": "$$$",
+      "created": 1790094732,
+      "variantCount": 2
+    },
+    {
+      "id": "anthropic/claude-opus-5.5:batch",
+      "label": "Anthropic: Claude Opus 5.5 (batch)",
+      "price": "$$",
+      "created": 1790094732,
+      "variantCount": 2
+    },
     {
       "id": "xiaomi/mimo-v2.6-pro-ultraspeed",
       "label": "Xiaomi: MiMo-V2.6-Pro-UltraSpeed",
@@ -32,6 +109,13 @@
       "variantCount": 1
     },
     {
+      "id": "qwen/qwen3.8-omni-flash",
+      "label": "Qwen: Qwen3.8 Omni Flash",
+      "price": "$",
+      "created": 1789959954,
+      "variantCount": 1
+    },
+    {
       "id": "prism-ml/ternary-bonsai-2-27b",
       "label": "PrismML: Ternary Bonsai 2 27B",
       "price": "$",
@@ -55,7 +139,7 @@
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$",
+      "price": "$$",
       "created": 1789399174,
       "variantCount": 1
     },
@@ -356,7 +440,7 @@
     {
       "id": "~z-ai/glm-latest",
       "label": "Z.ai: GLM Latest",
-      "price": "$",
+      "price": "$$",
       "created": 1787151053,
       "variantCount": 1
     },
@@ -370,7 +454,7 @@
     {
       "id": "z-ai/glm-5.3",
       "label": "Z.ai: GLM 5.3",
-      "price": "$",
+      "price": "$$",
       "created": 1787086655,
       "variantCount": 2
     },
@@ -440,7 +524,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$",
+      "price": "$$",
       "created": 1786549364,
       "variantCount": 1
     },
