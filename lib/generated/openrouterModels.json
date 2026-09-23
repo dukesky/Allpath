@@ -1,8 +1,29 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-23T03:19:20.829Z",
+  "generatedAt": "2026-09-23T16:06:06.186Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "aion-labs/aion-3.5-mini",
+      "label": "AionLabs: Aion 3.5 Mini",
+      "price": "$",
+      "created": 1790170962,
+      "variantCount": 1
+    },
+    {
+      "id": "aion-labs/aion-3.5",
+      "label": "AionLabs: Aion 3.5",
+      "price": "$$",
+      "created": 1790170961,
+      "variantCount": 1
+    },
+    {
+      "id": "upstage/solar-mini4",
+      "label": "Upstage: Solar Mini 4",
+      "price": "$",
+      "created": 1790160358,
+      "variantCount": 1
+    },
     {
       "id": "cohere/command-a-plus",
       "label": "Cohere: Command A+",
@@ -139,7 +160,7 @@
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1789399174,
       "variantCount": 1
     },
@@ -440,7 +461,7 @@
     {
       "id": "~z-ai/glm-latest",
       "label": "Z.ai: GLM Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1787151053,
       "variantCount": 1
     },
@@ -461,7 +482,7 @@
     {
       "id": "z-ai/glm-5.3:batch",
       "label": "Z.ai: GLM 5.3 (batch)",
-      "price": "$$",
+      "price": "$",
       "created": 1787086655,
       "variantCount": 2
     },
@@ -524,7 +545,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 1
     },
@@ -1822,13 +1843,6 @@
       "price": "$$",
       "created": 1765389775,
       "variantCount": 2
-    },
-    {
-      "id": "mistralai/devstral-2512",
-      "label": "Mistral: Devstral 2 2512",
-      "price": "$",
-      "created": 1765285419,
-      "variantCount": 1
     },
     {
       "id": "relace/relace-search",
