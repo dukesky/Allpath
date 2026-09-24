@@ -1,8 +1,29 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-23T16:06:06.186Z",
+  "generatedAt": "2026-09-24T03:08:47.287Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "z-ai/glm-5.3-prime",
+      "label": "Z.ai: GLM 5.3 Prime",
+      "price": "$$",
+      "created": 1790199651,
+      "variantCount": 1
+    },
+    {
+      "id": "qwen/qwen3.8-max-prime",
+      "label": "Qwen: Qwen3.8 Max Prime",
+      "price": "$$",
+      "created": 1790191228,
+      "variantCount": 1
+    },
+    {
+      "id": "stealth/space-bunny-alpha",
+      "label": "Space Bunny Alpha",
+      "price": "$",
+      "created": 1790174884,
+      "variantCount": 1
+    },
     {
       "id": "aion-labs/aion-3.5-mini",
       "label": "AionLabs: Aion 3.5 Mini",
@@ -160,7 +181,7 @@
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$",
+      "price": "$$",
       "created": 1789399174,
       "variantCount": 1
     },
@@ -232,14 +253,7 @@
       "label": "inclusionAI: Ling 3.0 Flash VL",
       "price": "$",
       "created": 1789056114,
-      "variantCount": 2
-    },
-    {
-      "id": "inclusionai/ling-3.0-flash-vl:free",
-      "label": "inclusionAI: Ling 3.0 Flash VL (free)",
-      "price": "$",
-      "created": 1789056114,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "deepseek/deepseek-v4.1-flash",
@@ -461,7 +475,7 @@
     {
       "id": "~z-ai/glm-latest",
       "label": "Z.ai: GLM Latest",
-      "price": "$",
+      "price": "$$",
       "created": 1787151053,
       "variantCount": 1
     },
@@ -2304,7 +2318,14 @@
       "label": "OpenAI: gpt-oss-120b",
       "price": "$",
       "created": 1754414231,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-oss-120b:batch",
+      "label": "OpenAI: gpt-oss-120b (batch)",
+      "price": "$",
+      "created": 1754414231,
+      "variantCount": 2
     },
     {
       "id": "openai/gpt-oss-20b",
