@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-25T03:25:50.976Z",
+  "generatedAt": "2026-09-25T16:31:51.787Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -281,20 +281,6 @@
       "label": "Inception: Mercury 2.5",
       "price": "$",
       "created": 1788892137,
-      "variantCount": 1
-    },
-    {
-      "id": "nex-agi/nex-n2.5-mini:free",
-      "label": "Nex AGI: Nex-N2.5-Mini (free)",
-      "price": "$",
-      "created": 1788890061,
-      "variantCount": 1
-    },
-    {
-      "id": "nex-agi/nex-n2.5-pro:free",
-      "label": "Nex AGI: Nex-N2.5-Pro (free)",
-      "price": "$",
-      "created": 1788890050,
       "variantCount": 1
     },
     {
