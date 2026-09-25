@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-24T16:29:43.653Z",
+  "generatedAt": "2026-09-25T03:25:50.976Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1852,6 +1852,13 @@
       "variantCount": 2
     },
     {
+      "id": "mistralai/devstral-2512",
+      "label": "Mistral: Devstral 2 2512",
+      "price": "$",
+      "created": 1765285419,
+      "variantCount": 1
+    },
+    {
       "id": "relace/relace-search",
       "label": "Relace: Relace Search",
       "price": "$$",
@@ -1915,11 +1922,18 @@
       "variantCount": 1
     },
     {
+      "id": "mistralai/mistral-large-2512",
+      "label": "Mistral: Mistral Large 3 2512",
+      "price": "$",
+      "created": 1764624472,
+      "variantCount": 2
+    },
+    {
       "id": "mistralai/mistral-large-2512:batch",
       "label": "Mistral: Mistral Large 3 2512 (batch)",
       "price": "$",
       "created": 1764624472,
-      "variantCount": 1
+      "variantCount": 2
     },
     {
       "id": "deepseek/deepseek-v3.2",
