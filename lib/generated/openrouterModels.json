@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-26T15:46:00.602Z",
+  "generatedAt": "2026-09-27T03:40:02.329Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -482,7 +482,7 @@
     {
       "id": "z-ai/glm-5.3",
       "label": "Z.ai: GLM 5.3",
-      "price": "$",
+      "price": "$$",
       "created": 1787086655,
       "variantCount": 2
     },
@@ -552,7 +552,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$",
+      "price": "$$",
       "created": 1786549364,
       "variantCount": 1
     },
