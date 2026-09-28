@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-28T03:38:37.355Z",
+  "generatedAt": "2026-09-28T19:14:12.775Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "anthropic/claude-sonnet-5.5",
+      "label": "Anthropic: Claude Sonnet 5.5",
+      "price": "$$",
+      "created": 1790618686,
+      "variantCount": 2
+    },
+    {
+      "id": "anthropic/claude-sonnet-5.5:batch",
+      "label": "Anthropic: Claude Sonnet 5.5 (batch)",
+      "price": "$$",
+      "created": 1790618686,
+      "variantCount": 2
+    },
     {
       "id": "typesafe/jev-router",
       "label": "TypeSafe: Jev Router",
@@ -202,7 +216,7 @@
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1789399174,
       "variantCount": 1
     },
@@ -295,6 +309,20 @@
       "label": "Inception: Mercury 2.5",
       "price": "$",
       "created": 1788892137,
+      "variantCount": 1
+    },
+    {
+      "id": "nex-agi/nex-n2.5-mini",
+      "label": "Nex AGI: Nex-N2.5-Mini",
+      "price": "$",
+      "created": 1788890061,
+      "variantCount": 1
+    },
+    {
+      "id": "nex-agi/nex-n2.5-pro",
+      "label": "Nex AGI: Nex-N2.5-Pro",
+      "price": "$",
+      "created": 1788890050,
       "variantCount": 1
     },
     {
@@ -400,14 +428,7 @@
       "label": "inclusionAI: Ling 3.0 Flash Fin",
       "price": "$",
       "created": 1787846290,
-      "variantCount": 2
-    },
-    {
-      "id": "inclusionai/ling-3.0-flash-fin:free",
-      "label": "inclusionAI: Ling 3.0 Flash Fin (free)",
-      "price": "$",
-      "created": 1787846290,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "~z-ai/glm-flash-latest",
@@ -468,7 +489,7 @@
     {
       "id": "~z-ai/glm-latest",
       "label": "Z.ai: GLM Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1787151053,
       "variantCount": 1
     },
@@ -825,7 +846,7 @@
     {
       "id": "openai/gpt-5.6-sol-pro",
       "label": "OpenAI: GPT-5.6 Sol Pro",
-      "price": "$$",
+      "price": "$$$",
       "created": 1783590854,
       "variantCount": 2
     },
