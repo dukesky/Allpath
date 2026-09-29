@@ -1,8 +1,36 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-29T04:13:46.407Z",
+  "generatedAt": "2026-09-29T17:37:42.562Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "openai/gpt-6.1-sol-pro",
+      "label": "OpenAI: GPT-6.1 Sol Pro",
+      "price": "$$",
+      "created": 1790702886,
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6.1-sol-pro:batch",
+      "label": "OpenAI: GPT-6.1 Sol Pro (batch)",
+      "price": "$$",
+      "created": 1790702886,
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6.1-sol",
+      "label": "OpenAI: GPT-6.1 Sol",
+      "price": "$$",
+      "created": 1790702882,
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6.1-sol:batch",
+      "label": "OpenAI: GPT-6.1 Sol (batch)",
+      "price": "$$",
+      "created": 1790702882,
+      "variantCount": 2
+    },
     {
       "id": "anthropic/claude-sonnet-5.5",
       "label": "Anthropic: Claude Sonnet 5.5",
@@ -216,7 +244,7 @@
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$",
+      "price": "$$",
       "created": 1789399174,
       "variantCount": 1
     },
