@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-09-29T17:37:42.562Z",
+  "generatedAt": "2026-09-30T03:58:36.674Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -517,7 +517,7 @@
     {
       "id": "~z-ai/glm-latest",
       "label": "Z.ai: GLM Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1787151053,
       "variantCount": 1
     },
