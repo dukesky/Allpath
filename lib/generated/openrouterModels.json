@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-01T04:09:21.805Z",
+  "generatedAt": "2026-10-01T18:00:57.198Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "apodex/apodex-1.1-mini:free",
+      "label": "Apodex: Apodex 1.1 Mini (free)",
+      "price": "$",
+      "created": 1790875335,
+      "variantCount": 1
+    },
+    {
+      "id": "unbiased/pareto-26.10-preview",
+      "label": "Pareto 26.10 Preview",
+      "price": "$$",
+      "created": 1790863623,
+      "variantCount": 1
+    },
     {
       "id": "openai/gpt-6.1-sol-pro",
       "label": "OpenAI: GPT-6.1 Sol Pro",
@@ -230,7 +244,7 @@
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1789399174,
       "variantCount": 1
     },
@@ -1343,7 +1357,7 @@
     {
       "id": "moonshotai/kimi-k2.6",
       "label": "MoonshotAI: Kimi K2.6",
-      "price": "$$",
+      "price": "$",
       "created": 1776699402,
       "variantCount": 1
     },
