@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-04T04:18:56.833Z",
+  "generatedAt": "2026-10-04T16:26:08.044Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -559,7 +559,7 @@
     {
       "id": "qwen/qwen3.8-27b",
       "label": "Qwen: Qwen3.8 27B",
-      "price": "$$",
+      "price": "$",
       "created": 1786722910,
       "variantCount": 2
     },
@@ -615,7 +615,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$",
+      "price": "$$",
       "created": 1786549364,
       "variantCount": 1
     },
