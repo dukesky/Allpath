@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-05T04:03:17.102Z",
+  "generatedAt": "2026-10-06T04:52:26.546Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -85,13 +85,6 @@
       "label": "Qwen: Qwen3.8 Max Prime",
       "price": "$$",
       "created": 1790191228,
-      "variantCount": 1
-    },
-    {
-      "id": "stealth/space-bunny-alpha",
-      "label": "Space Bunny Alpha",
-      "price": "$",
-      "created": 1790174884,
       "variantCount": 1
     },
     {
@@ -561,14 +554,7 @@
       "label": "Qwen: Qwen3.8 27B",
       "price": "$",
       "created": 1786722910,
-      "variantCount": 2
-    },
-    {
-      "id": "qwen/qwen3.8-27b:free",
-      "label": "Qwen: Qwen3.8 27B (free)",
-      "price": "$",
-      "created": 1786722910,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "dots-studio/dots-3-note-preview:free",
@@ -615,7 +601,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 1
     },
