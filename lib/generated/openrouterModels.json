@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-06T04:52:26.546Z",
+  "generatedAt": "2026-10-06T17:55:47.709Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "google/gemini-nano-banana-2.1",
+      "label": "Google: Nano Banana 2.1",
+      "price": "$$",
+      "created": 1791300825,
+      "variantCount": 1
+    },
+    {
+      "id": "mistralai/mistral-large-4-0",
+      "label": "Mistral: Mistral Large 4",
+      "price": "$",
+      "created": 1791294122,
+      "variantCount": 1
+    },
     {
       "id": "inclusionai/ling-3.1-flash",
       "label": "inclusionAI: Ling 3.1 Flash",
