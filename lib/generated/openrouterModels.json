@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-07T18:26:01.437Z",
+  "generatedAt": "2026-10-08T04:30:29.872Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "anthropic/claude-haiku-5.5",
+      "label": "Anthropic: Claude Haiku 5.5",
+      "price": "$",
+      "created": 1791397883,
+      "variantCount": 2
+    },
+    {
+      "id": "anthropic/claude-haiku-5.5:batch",
+      "label": "Anthropic: Claude Haiku 5.5 (batch)",
+      "price": "$",
+      "created": 1791397883,
+      "variantCount": 2
+    },
     {
       "id": "google/gemini-nano-banana-2.1",
       "label": "Google: Nano Banana 2.1",
@@ -1203,7 +1217,7 @@
     {
       "id": "~anthropic/claude-haiku-latest",
       "label": "Anthropic: Claude Haiku Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1777318492,
       "variantCount": 1
     },
