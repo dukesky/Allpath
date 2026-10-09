@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-09T04:34:15.180Z",
+  "generatedAt": "2026-10-09T17:57:55.620Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1299,13 +1299,6 @@
       "variantCount": 1
     },
     {
-      "id": "qwen/qwen3.6-max-preview",
-      "label": "Qwen: Qwen3.6 Max Preview",
-      "price": "$$",
-      "created": 1777260242,
-      "variantCount": 1
-    },
-    {
       "id": "qwen/qwen3.6-27b",
       "label": "Qwen: Qwen3.6 27B",
       "price": "$$",
@@ -1754,13 +1747,6 @@
       "variantCount": 1
     },
     {
-      "id": "qwen/qwen3-max-thinking",
-      "label": "Qwen: Qwen3 Max Thinking",
-      "price": "$$",
-      "created": 1770671901,
-      "variantCount": 1
-    },
-    {
       "id": "anthropic/claude-opus-4.6",
       "label": "Anthropic: Claude Opus 4.6",
       "price": "$$$",
@@ -2118,13 +2104,6 @@
       "variantCount": 1
     },
     {
-      "id": "qwen/qwen3-vl-32b-instruct",
-      "label": "Qwen: Qwen3 VL 32B Instruct",
-      "price": "$",
-      "created": 1761231332,
-      "variantCount": 1
-    },
-    {
       "id": "ibm-granite/granite-4.0-h-micro",
       "label": "IBM: Granite 4.0 Micro",
       "price": "$",
@@ -2151,13 +2130,6 @@
       "price": "$",
       "created": 1760547638,
       "variantCount": 2
-    },
-    {
-      "id": "qwen/qwen3-vl-8b-thinking",
-      "label": "Qwen: Qwen3 VL 8B Thinking",
-      "price": "$",
-      "created": 1760463746,
-      "variantCount": 1
     },
     {
       "id": "qwen/qwen3-vl-8b-instruct",
@@ -2251,31 +2223,10 @@
       "variantCount": 1
     },
     {
-      "id": "qwen/qwen3-vl-235b-a22b-thinking",
-      "label": "Qwen: Qwen3 VL 235B A22B Thinking",
-      "price": "$$",
-      "created": 1758668690,
-      "variantCount": 1
-    },
-    {
       "id": "qwen/qwen3-vl-235b-a22b-instruct",
       "label": "Qwen: Qwen3 VL 235B A22B Instruct",
       "price": "$",
       "created": 1758668687,
-      "variantCount": 1
-    },
-    {
-      "id": "qwen/qwen3-max",
-      "label": "Qwen: Qwen3 Max",
-      "price": "$$",
-      "created": 1758662808,
-      "variantCount": 1
-    },
-    {
-      "id": "qwen/qwen3-coder-plus",
-      "label": "Qwen: Qwen3 Coder Plus",
-      "price": "$$",
-      "created": 1758662707,
       "variantCount": 1
     },
     {
@@ -2307,24 +2258,10 @@
       "variantCount": 1
     },
     {
-      "id": "qwen/qwen-plus-2025-07-28",
-      "label": "Qwen: Qwen Plus 0728",
-      "price": "$",
-      "created": 1757347599,
-      "variantCount": 1
-    },
-    {
       "id": "moonshotai/kimi-k2-0905",
       "label": "MoonshotAI: Kimi K2 0905",
       "price": "$$",
       "created": 1757021147,
-      "variantCount": 1
-    },
-    {
-      "id": "qwen/qwen3-30b-a3b-thinking-2507",
-      "label": "Qwen: Qwen3 30B A3B Thinking 2507",
-      "price": "$",
-      "created": 1756399192,
       "variantCount": 1
     },
     {
@@ -2491,7 +2428,7 @@
     {
       "id": "qwen/qwen3-235b-a22b-thinking-2507",
       "label": "Qwen: Qwen3 235B A22B Thinking 2507",
-      "price": "$",
+      "price": "$$",
       "created": 1753449557,
       "variantCount": 1
     },
@@ -2657,13 +2594,6 @@
       "variantCount": 1
     },
     {
-      "id": "qwen/qwen3-8b",
-      "label": "Qwen: Qwen3 8B",
-      "price": "$",
-      "created": 1745876632,
-      "variantCount": 1
-    },
-    {
       "id": "qwen/qwen3-14b",
       "label": "Qwen: Qwen3 14B",
       "price": "$",
@@ -2675,13 +2605,6 @@
       "label": "Qwen: Qwen3 32B",
       "price": "$",
       "created": 1745875945,
-      "variantCount": 1
-    },
-    {
-      "id": "qwen/qwen3-235b-a22b",
-      "label": "Qwen: Qwen3 235B A22B",
-      "price": "$",
-      "created": 1745875757,
       "variantCount": 1
     },
     {
