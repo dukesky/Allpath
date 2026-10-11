@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 const GITHUB = "https://github.com/dukesky/allpath-trading-agent";
+const PAPER = "/trading/allpath-paper-ai4f-2026.pdf";
 const CONTACT_EMAIL = "0tianzhang0@gmail.com";
 
 /* The trust boundary, drawn as the pipeline it actually is. Only the human
@@ -168,6 +169,12 @@ export default function TradingPage() {
                 <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60"></span><span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-600"></span></span>
                 Live journal
               </Link>
+              <a
+                className="inline-flex items-center rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-800 transition hover:border-primary hover:text-primary"
+                href={PAPER}
+              >
+                Read the paper (PDF)
+              </a>
             </div>
             <dl className="mt-8 grid max-w-md grid-cols-3 gap-4 font-mono text-[11px] uppercase tracking-wider text-slate-500">
               <div>
@@ -402,6 +409,9 @@ export default function TradingPage() {
             <a className="hover:text-primary" href={`${GITHUB}/blob/main/CHANGELOG.md`}>
               Changelog
             </a>
+            <a className="hover:text-primary" href={PAPER}>
+              Paper
+            </a>
             <a className="hover:text-primary" href={`mailto:${CONTACT_EMAIL}`}>
               Contact
             </a>
@@ -441,6 +451,9 @@ function Header() {
         <Link className="transition hover:text-primary" href="/trading/journal">
           Live journal
         </Link>
+        <a className="transition hover:text-primary" href={PAPER}>
+          Paper
+        </a>
         <Link className="transition hover:text-primary" href="/">
           AllPath
         </Link>
