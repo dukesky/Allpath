@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-12T00:30:52.447Z",
+  "generatedAt": "2026-10-12T20:54:22.002Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "meta/muse-wonder",
+      "label": "Meta: Muse Wonder",
+      "price": "$$$",
+      "created": 1791807945,
+      "variantCount": 1
+    },
     {
       "id": "stepfun/step-5-preview",
       "label": "StepFun: Step 5 Preview",
@@ -300,7 +307,7 @@
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1789399174,
       "variantCount": 1
     },
