@@ -1,8 +1,43 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-13T05:28:51.568Z",
+  "generatedAt": "2026-10-13T18:52:06.060Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "liquid/lfm-2.5-24b-a2b",
+      "label": "LiquidAI: LFM2.5-24B-A2B",
+      "price": "$",
+      "created": 1791912025,
+      "variantCount": 1
+    },
+    {
+      "id": "google/gemini-4-argon",
+      "label": "Google: Gemini 4 Argon",
+      "price": "$$",
+      "created": 1791907477,
+      "variantCount": 2
+    },
+    {
+      "id": "google/gemini-4-argon:batch",
+      "label": "Google: Gemini 4 Argon (batch)",
+      "price": "$$",
+      "created": 1791907477,
+      "variantCount": 2
+    },
+    {
+      "id": "scaledown/summarize",
+      "label": "ScaleDown: Summarize",
+      "price": "$",
+      "created": 1791893360,
+      "variantCount": 1
+    },
+    {
+      "id": "scaledown/extract",
+      "label": "ScaleDown: Extract",
+      "price": "$",
+      "created": 1791893351,
+      "variantCount": 1
+    },
     {
       "id": "meta/muse-wonder",
       "label": "Meta: Muse Wonder",
@@ -50,13 +85,6 @@
       "label": "inclusionAI: Ling 3.1 Flash",
       "price": "$",
       "created": 1790950024,
-      "variantCount": 1
-    },
-    {
-      "id": "apodex/apodex-1.1-mini:free",
-      "label": "Apodex: Apodex 1.1 Mini (free)",
-      "price": "$",
-      "created": 1790875335,
       "variantCount": 1
     },
     {
@@ -307,7 +335,7 @@
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1789399174,
       "variantCount": 1
     },
@@ -445,13 +473,6 @@
       "variantCount": 2
     },
     {
-      "id": "inclusionai/ling-3.0-flash-sante",
-      "label": "inclusionAI: Ling 3.0 Flash Sante",
-      "price": "$",
-      "created": 1788545946,
-      "variantCount": 1
-    },
-    {
       "id": "qwen/qwen3.8-max-0902",
       "label": "Qwen: Qwen3.8 Max (0902)",
       "price": "$$",
@@ -512,13 +533,6 @@
       "label": "Tencent: Hy4 preview",
       "price": "$$",
       "created": 1787897375,
-      "variantCount": 1
-    },
-    {
-      "id": "inclusionai/ling-3.0-flash-fin",
-      "label": "inclusionAI: Ling 3.0 Flash Fin",
-      "price": "$",
-      "created": 1787846290,
       "variantCount": 1
     },
     {
