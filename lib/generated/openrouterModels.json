@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-12T20:54:22.002Z",
+  "generatedAt": "2026-10-13T05:28:51.568Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -307,7 +307,7 @@
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$",
+      "price": "$$",
       "created": 1789399174,
       "variantCount": 1
     },
