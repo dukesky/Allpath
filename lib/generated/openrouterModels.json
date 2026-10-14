@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-13T18:52:06.060Z",
+  "generatedAt": "2026-10-14T03:32:12.809Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "~unbiased/pareto-latest",
+      "label": "Pareto Latest",
+      "price": "$$",
+      "created": 1791933050,
+      "variantCount": 1
+    },
+    {
+      "id": "unbiased/pareto-26.9",
+      "label": "Pareto 26.9",
+      "price": "$$",
+      "created": 1791930537,
+      "variantCount": 1
+    },
     {
       "id": "liquid/lfm-2.5-24b-a2b",
       "label": "LiquidAI: LFM2.5-24B-A2B",
@@ -326,16 +340,9 @@
       "variantCount": 1
     },
     {
-      "id": "unbiased/pareto",
-      "label": "Pareto",
-      "price": "$$",
-      "created": 1789686178,
-      "variantCount": 1
-    },
-    {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$",
+      "price": "$$",
       "created": 1789399174,
       "variantCount": 1
     },
@@ -671,7 +678,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$",
+      "price": "$$",
       "created": 1786549364,
       "variantCount": 1
     },
