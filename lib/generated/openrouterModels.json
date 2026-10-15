@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-14T16:31:57.349Z",
+  "generatedAt": "2026-10-15T03:11:54.152Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -678,7 +678,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$",
+      "price": "$$",
       "created": 1786549364,
       "variantCount": 1
     },
@@ -944,7 +944,7 @@
     {
       "id": "openai/gpt-5.6-sol-pro",
       "label": "OpenAI: GPT-5.6 Sol Pro",
-      "price": "$$",
+      "price": "$$$",
       "created": 1783590854,
       "variantCount": 2
     },
@@ -958,7 +958,7 @@
     {
       "id": "openai/gpt-5.6-sol",
       "label": "OpenAI: GPT-5.6 Sol",
-      "price": "$$",
+      "price": "$$$",
       "created": 1783590850,
       "variantCount": 2
     },
@@ -1770,7 +1770,7 @@
     {
       "id": "z-ai/glm-5",
       "label": "Z.ai: GLM 5",
-      "price": "$",
+      "price": "$$",
       "created": 1770829182,
       "variantCount": 1
     },
