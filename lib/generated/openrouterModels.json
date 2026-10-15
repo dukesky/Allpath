@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-15T03:11:54.152Z",
+  "generatedAt": "2026-10-15T16:18:34.780Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "nvidia/nemotron-3.5-super-vl:free",
+      "label": "NVIDIA: Nemotron 3.5 Super VL (free)",
+      "price": "$",
+      "created": 1792076662,
+      "variantCount": 1
+    },
     {
       "id": "~unbiased/pareto-latest",
       "label": "Pareto Latest",
@@ -99,13 +106,6 @@
       "label": "inclusionAI: Ling 3.1 Flash",
       "price": "$",
       "created": 1790950024,
-      "variantCount": 1
-    },
-    {
-      "id": "unbiased/pareto-26.10-preview",
-      "label": "Pareto 26.10 Preview",
-      "price": "$$",
-      "created": 1790863623,
       "variantCount": 1
     },
     {
@@ -678,7 +678,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 1
     },
@@ -2591,13 +2591,6 @@
       "label": "DeepSeek: R1 0528",
       "price": "$",
       "created": 1748455170,
-      "variantCount": 1
-    },
-    {
-      "id": "anthropic/claude-sonnet-4",
-      "label": "Anthropic: Claude Sonnet 4",
-      "price": "$$",
-      "created": 1747930371,
       "variantCount": 1
     },
     {
