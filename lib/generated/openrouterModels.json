@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-16T03:07:46.175Z",
+  "generatedAt": "2026-10-16T16:04:50.718Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "reflection/beam-1.0-501b-a23b",
+      "label": "Reflection: Beam 1.0 501B A23B",
+      "price": "$",
+      "created": 1792160499,
+      "variantCount": 1
+    },
     {
       "id": "moondream/moondream3-preview",
       "label": "Moondream: Moondream 3 Preview",
@@ -370,7 +377,7 @@
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1789399174,
       "variantCount": 1
     },
@@ -706,7 +713,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 1
     },
@@ -1315,7 +1322,7 @@
     {
       "id": "~moonshotai/kimi-latest",
       "label": "MoonshotAI: Kimi Latest",
-      "price": "$$",
+      "price": "$$$",
       "created": 1777318428,
       "variantCount": 1
     },
