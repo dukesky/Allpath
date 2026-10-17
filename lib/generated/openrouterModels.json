@@ -1,12 +1,19 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-16T16:04:50.718Z",
+  "generatedAt": "2026-10-17T02:59:26.330Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
+      "id": "xingchen-agi/xing4.0-29b-a4b:free",
+      "label": "XingChen: Xing4.0 29B A4B (free)",
+      "price": "$",
+      "created": 1792177496,
+      "variantCount": 1
+    },
+    {
       "id": "reflection/beam-1.0-501b-a23b",
       "label": "Reflection: Beam 1.0 501B A23B",
-      "price": "$",
+      "price": "$$",
       "created": 1792160499,
       "variantCount": 1
     },
@@ -1177,7 +1184,14 @@
       "label": "Qwen: Qwen3.7 Plus",
       "price": "$",
       "created": 1780491783,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "qwen/qwen3.7-plus:batch",
+      "label": "Qwen: Qwen3.7 Plus (batch)",
+      "price": "$",
+      "created": 1780491783,
+      "variantCount": 2
     },
     {
       "id": "minimax/minimax-m3",
