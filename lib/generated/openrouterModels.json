@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-17T14:57:16.544Z",
+  "generatedAt": "2026-10-18T03:01:10.139Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -65,6 +65,13 @@
       "price": "$",
       "created": 1792076662,
       "variantCount": 2
+    },
+    {
+      "id": "unbiased/pareto-26.10",
+      "label": "Pareto 26.10",
+      "price": "$$",
+      "created": 1792073620,
+      "variantCount": 1
     },
     {
       "id": "~unbiased/pareto-latest",
