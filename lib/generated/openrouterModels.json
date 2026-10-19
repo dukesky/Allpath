@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-18T15:22:49.410Z",
+  "generatedAt": "2026-10-19T16:32:22.139Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "minimax/minimax-m3.1-flash:free",
+      "label": "MiniMax: MiniMax M3.1 Flash (free)",
+      "price": "$",
+      "created": 1792379569,
+      "variantCount": 1
+    },
     {
       "id": "deepseek/deepseek-v4.1-flash-1017",
       "label": "DeepSeek: DeepSeek V4.1 Flash 1017",
@@ -664,7 +671,7 @@
     {
       "id": "~z-ai/glm-latest",
       "label": "Z.ai: GLM Latest",
-      "price": "$",
+      "price": "$$",
       "created": 1787151053,
       "variantCount": 1
     },
