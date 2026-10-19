@@ -178,9 +178,19 @@ export default async function JournalPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {e.trades!.map((t, i) => (
-                        <tr key={i} className="border-b border-slate-100 font-mono">
-                          <td className={`py-2 pr-4 font-semibold ${t.side === "buy" ? "text-emerald-700" : "text-red-700"}`}>
+                      {e.trades!.map((t, i) => {
+                        // A risk-gate rejection never reached the broker (no
+                        // order id, no fill). Without this branch it rendered
+                        // exactly like a live order waiting to fill ("fill
+                        // pending"), e.g. the cash-limited dip buys of
+                        // 2026-10-14..16.
+                        const rejected = t.status === "rejected";
+                        return (
+                        <tr
+                          key={i}
+                          className={`border-b border-slate-100 font-mono ${rejected ? "text-slate-400" : ""}`}
+                        >
+                          <td className={`py-2 pr-4 font-semibold ${rejected ? "" : t.side === "buy" ? "text-emerald-700" : "text-red-700"}`}>
                             {t.side ?? "—"}
                           </td>
                           <td className="py-2 pr-4">{t.ticker ?? "—"}</td>
@@ -194,9 +204,12 @@ export default async function JournalPage() {
                                   : "—"}
                           </td>
                           <td className="py-2 pr-4">{money(t.filled_avg_price)}</td>
-                          <td className="py-2 text-slate-600">{fillTime(t.filled_at)}</td>
+                          <td className={`py-2 ${rejected ? "" : "text-slate-600"}`}>
+                            {rejected ? "rejected — not placed" : fillTime(t.filled_at)}
+                          </td>
                         </tr>
-                      ))}
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
