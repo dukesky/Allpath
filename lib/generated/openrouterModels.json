@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-19T16:32:22.139Z",
+  "generatedAt": "2026-10-19T18:19:51.416Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -36,6 +36,13 @@
       "label": "Reflection: Beam 1.0 501B A23B",
       "price": "$$",
       "created": 1792160499,
+      "variantCount": 1
+    },
+    {
+      "id": "inception/mercury-3",
+      "label": "Inception: Mercury 3",
+      "price": "$",
+      "created": 1792158337,
       "variantCount": 1
     },
     {
