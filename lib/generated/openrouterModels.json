@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-20T03:23:59.642Z",
+  "generatedAt": "2026-10-20T16:21:05.106Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1854,7 +1854,7 @@
     {
       "id": "z-ai/glm-5",
       "label": "Z.ai: GLM 5",
-      "price": "$",
+      "price": "$$",
       "created": 1770829182,
       "variantCount": 1
     },
@@ -2633,28 +2633,14 @@
       "label": "Google: Gemini 2.5 Flash",
       "price": "$",
       "created": 1750172488,
-      "variantCount": 2
-    },
-    {
-      "id": "google/gemini-2.5-flash:batch",
-      "label": "Google: Gemini 2.5 Flash (batch)",
-      "price": "$",
-      "created": 1750172488,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "google/gemini-2.5-pro",
       "label": "Google: Gemini 2.5 Pro",
       "price": "$$",
       "created": 1750169544,
-      "variantCount": 2
-    },
-    {
-      "id": "google/gemini-2.5-pro:batch",
-      "label": "Google: Gemini 2.5 Pro (batch)",
-      "price": "$$",
-      "created": 1750169544,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/o3-pro",
