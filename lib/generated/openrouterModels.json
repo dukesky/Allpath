@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-20T16:21:05.106Z",
+  "generatedAt": "2026-10-21T03:18:41.847Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -174,7 +174,7 @@
     {
       "id": "mistralai/mistral-large-4-0",
       "label": "Mistral: Mistral Large 4",
-      "price": "$",
+      "price": "$$",
       "created": 1791294122,
       "variantCount": 1
     },
