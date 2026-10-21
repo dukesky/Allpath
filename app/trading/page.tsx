@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 };
 
 const GITHUB = "https://github.com/dukesky/allpath-trading-agent";
-const PAPER = "/trading/allpath-paper-ai4f-2026.pdf";
+const PAPER = "https://arxiv.org/abs/2610.26662";
+const PAPER_PDF = "/trading/allpath-paper-ai4f-2026.pdf";
 const CONTACT_EMAIL = "0tianzhang0@gmail.com";
 
 /* The trust boundary, drawn as the pipeline it actually is. Only the human
@@ -173,9 +174,10 @@ export default function TradingPage() {
                 className="inline-flex items-center rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-800 transition hover:border-primary hover:text-primary"
                 href={PAPER}
               >
-                Read the paper (PDF)
+                Read the paper (arXiv)
               </a>
             </div>
+            <p className="mt-4 text-sm text-slate-600">Paper accepted to the AI4F workshop at ACM ICAIF 2026 · <a className="underline-offset-2 hover:underline" href={PAPER_PDF}>PDF</a></p>
             <dl className="mt-8 grid max-w-md grid-cols-3 gap-4 font-mono text-[11px] uppercase tracking-wider text-slate-500">
               <div>
                 <dt>Broker</dt>
