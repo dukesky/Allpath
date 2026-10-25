@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-24T15:23:10.724Z",
+  "generatedAt": "2026-10-25T03:11:39.678Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -781,11 +781,18 @@
       "variantCount": 1
     },
     {
+      "id": "liquid/lfm-2.5-2.6b",
+      "label": "LiquidAI: LFM2.5-2.6B",
+      "price": "$",
+      "created": 1786470519,
+      "variantCount": 2
+    },
+    {
       "id": "liquid/lfm-2.5-2.6b:free",
       "label": "LiquidAI: LFM2.5-2.6B (free)",
       "price": "$",
       "created": 1786470519,
-      "variantCount": 1
+      "variantCount": 2
     },
     {
       "id": "nvidia/nemotron-3.5-lightning",
