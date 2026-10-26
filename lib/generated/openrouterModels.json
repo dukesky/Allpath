@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-26T03:12:48.646Z",
+  "generatedAt": "2026-10-26T18:14:00.116Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -769,7 +769,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 1
     },
@@ -965,7 +965,7 @@
     {
       "id": "moonshotai/kimi-k3",
       "label": "MoonshotAI: Kimi K3",
-      "price": "$$",
+      "price": "$$$",
       "created": 1784215858,
       "variantCount": 2
     },
@@ -1590,13 +1590,6 @@
       "label": "Z.ai: GLM 5V Turbo",
       "price": "$$",
       "created": 1775061458,
-      "variantCount": 1
-    },
-    {
-      "id": "arcee-ai/trinity-large-thinking",
-      "label": "Arcee AI: Trinity Large Thinking",
-      "price": "$",
-      "created": 1775058318,
       "variantCount": 1
     },
     {
