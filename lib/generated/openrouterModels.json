@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-27T03:42:43.422Z",
+  "generatedAt": "2026-10-27T17:27:58.970Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -720,7 +720,7 @@
     {
       "id": "~z-ai/glm-latest",
       "label": "Z.ai: GLM Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1787151053,
       "variantCount": 1
     },
@@ -797,7 +797,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 1
     },
@@ -1709,14 +1709,7 @@
       "label": "NVIDIA: Nemotron 3 Super",
       "price": "$",
       "created": 1773245239,
-      "variantCount": 2
-    },
-    {
-      "id": "nvidia/nemotron-3-super-120b-a12b:free",
-      "label": "NVIDIA: Nemotron 3 Super (free)",
-      "price": "$",
-      "created": 1773245239,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "bytedance-seed/seed-2.0-lite",
