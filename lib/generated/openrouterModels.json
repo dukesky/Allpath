@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-28T03:59:04.901Z",
+  "generatedAt": "2026-10-28T17:53:46.307Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -468,7 +468,7 @@
     {
       "id": "~deepseek/deepseek-pro-latest",
       "label": "DeepSeek: DeepSeek Pro Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1789399174,
       "variantCount": 1
     },
@@ -804,7 +804,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$$",
+      "price": "$",
       "created": 1786549364,
       "variantCount": 1
     },
@@ -2370,13 +2370,6 @@
       "variantCount": 1
     },
     {
-      "id": "qwen/qwen3-next-80b-a3b-thinking",
-      "label": "Qwen: Qwen3 Next 80B A3B Thinking",
-      "price": "$",
-      "created": 1757612284,
-      "variantCount": 1
-    },
-    {
       "id": "qwen/qwen3-next-80b-a3b-instruct",
       "label": "Qwen: Qwen3 Next 80B A3B Instruct",
       "price": "$",
@@ -2692,13 +2685,6 @@
       "variantCount": 1
     },
     {
-      "id": "openai/o4-mini-high",
-      "label": "OpenAI: o4 Mini High",
-      "price": "$$",
-      "created": 1744824212,
-      "variantCount": 1
-    },
-    {
       "id": "openai/o3",
       "label": "OpenAI: o3",
       "price": "$$",
@@ -2713,18 +2699,11 @@
       "variantCount": 2
     },
     {
-      "id": "openai/o4-mini",
-      "label": "OpenAI: o4 Mini",
-      "price": "$$",
-      "created": 1744820942,
-      "variantCount": 2
-    },
-    {
       "id": "openai/o4-mini:batch",
       "label": "OpenAI: o4 Mini (batch)",
       "price": "$",
       "created": 1744820942,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openai/gpt-4.1",
@@ -2787,13 +2766,6 @@
       "label": "DeepSeek: DeepSeek V3 0324",
       "price": "$",
       "created": 1742824755,
-      "variantCount": 1
-    },
-    {
-      "id": "openai/o1-pro",
-      "label": "OpenAI: o1-pro",
-      "price": "$$$",
-      "created": 1742423211,
       "variantCount": 1
     },
     {
