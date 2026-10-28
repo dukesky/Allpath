@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-27T17:27:58.970Z",
+  "generatedAt": "2026-10-28T03:59:04.901Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -85,6 +85,13 @@
       "label": "Inception: Mercury 3",
       "price": "$",
       "created": 1792158337,
+      "variantCount": 1
+    },
+    {
+      "id": "prism-ml/ternary-bonsai-2-9b",
+      "label": "PrismML: Ternary Bonsai 2 9B",
+      "price": "$",
+      "created": 1792130995,
       "variantCount": 1
     },
     {
@@ -797,7 +804,7 @@
     {
       "id": "deepseek/deepseek-v4-pro-0813",
       "label": "DeepSeek: DeepSeek V4 Pro 0813",
-      "price": "$",
+      "price": "$$",
       "created": 1786549364,
       "variantCount": 1
     },
