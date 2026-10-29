@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-10-29T04:22:40.112Z",
+  "generatedAt": "2026-10-29T18:00:56.963Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -230,7 +230,7 @@
     {
       "id": "mistralai/mistral-large-4-0",
       "label": "Mistral: Mistral Large 4",
-      "price": "$$",
+      "price": "$",
       "created": 1791294122,
       "variantCount": 1
     },
@@ -979,7 +979,7 @@
     {
       "id": "moonshotai/kimi-k3",
       "label": "MoonshotAI: Kimi K3",
-      "price": "$$$",
+      "price": "$$",
       "created": 1784215858,
       "variantCount": 2
     },
@@ -1828,13 +1828,6 @@
       "label": "MoonshotAI: Kimi K2.5",
       "price": "$",
       "created": 1769487076,
-      "variantCount": 1
-    },
-    {
-      "id": "upstage/solar-pro-3",
-      "label": "Upstage: Solar Pro 3",
-      "price": "$",
-      "created": 1769481200,
       "variantCount": 1
     },
     {
