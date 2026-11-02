@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-01T17:38:28.229Z",
+  "generatedAt": "2026-11-02T21:23:58.984Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "z-ai/glm-5.3-flashx-legal",
+      "label": "Z.ai: GLM 5.3 FlashX Legal",
+      "price": "$",
+      "created": 1793626154,
+      "variantCount": 1
+    },
     {
       "id": "particle-ai/particle-1",
       "label": "Particle AI: Particle-1",
