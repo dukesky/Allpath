@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-02T21:23:58.984Z",
+  "generatedAt": "2026-11-03T19:02:30.316Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -456,7 +456,14 @@
       "label": "SpaceXAI: Grok 4.7",
       "price": "$$",
       "created": 1790007541,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "x-ai/grok-4.7:batch",
+      "label": "SpaceXAI: Grok 4.7 (batch)",
+      "price": "$$",
+      "created": 1790007541,
+      "variantCount": 2
     },
     {
       "id": "qwen/qwen3.8-omni-flash",
@@ -813,7 +820,14 @@
       "label": "SpaceXAI: Grok 4.6",
       "price": "$$",
       "created": 1786548957,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "x-ai/grok-4.6:batch",
+      "label": "SpaceXAI: Grok 4.6 (batch)",
+      "price": "$$",
+      "created": 1786548957,
+      "variantCount": 2
     },
     {
       "id": "liquid/lfm-2.5-2.6b:free",
