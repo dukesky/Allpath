@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-04T04:50:39.718Z",
+  "generatedAt": "2026-11-04T19:21:12.751Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "ricursiveai/ripple-65b-preview",
+      "label": "ricursiveAI/Ripple-65B-Preview",
+      "price": "$",
+      "created": 1793818990,
+      "variantCount": 1
+    },
     {
       "id": "tencent/hy4",
       "label": "Tencent: Hy4",
@@ -762,7 +769,7 @@
     {
       "id": "z-ai/glm-5.3",
       "label": "Z.ai: GLM 5.3",
-      "price": "$$",
+      "price": "$",
       "created": 1787086655,
       "variantCount": 2
     },
@@ -904,14 +911,7 @@
       "label": "Thinking Machines: Inkling Small",
       "price": "$",
       "created": 1785443117,
-      "variantCount": 2
-    },
-    {
-      "id": "thinkingmachines/inkling-small:free",
-      "label": "Thinking Machines: Inkling Small (free)",
-      "price": "$",
-      "created": 1785443117,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "qwen/qwen3.7-flash",
@@ -981,14 +981,7 @@
       "label": "Thinking Machines: Inkling",
       "price": "$$",
       "created": 1784325956,
-      "variantCount": 2
-    },
-    {
-      "id": "thinkingmachines/inkling:free",
-      "label": "Thinking Machines: Inkling (free)",
-      "price": "$",
-      "created": 1784325956,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "openrouter/auto-beta",
