@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-03T19:02:30.316Z",
+  "generatedAt": "2026-11-04T04:50:39.718Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "tencent/hy4",
+      "label": "Tencent: Hy4",
+      "price": "$",
+      "created": 1793766031,
+      "variantCount": 1
+    },
+    {
+      "id": "stealth/crouton-alpha",
+      "label": "Crouton Alpha",
+      "price": "$",
+      "created": 1793669930,
+      "variantCount": 1
+    },
     {
       "id": "z-ai/glm-5.3-flashx-legal",
       "label": "Z.ai: GLM 5.3 FlashX Legal",
