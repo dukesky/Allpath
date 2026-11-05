@@ -1,8 +1,36 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-04T19:21:12.751Z",
+  "generatedAt": "2026-11-05T19:29:13.443Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "google/gemini-omni-1.2-flash",
+      "label": "Google: Gemini Omni 1.2 Flash",
+      "price": "$$",
+      "created": 1793898961,
+      "variantCount": 1
+    },
+    {
+      "id": "openrouter/auto",
+      "label": "Auto Router",
+      "price": "$",
+      "created": 1793885889,
+      "variantCount": 1
+    },
+    {
+      "id": "openrouter/auto-code",
+      "label": "Auto Code",
+      "price": "$",
+      "created": 1793884321,
+      "variantCount": 1
+    },
+    {
+      "id": "google/gemini-omni-1.1-flash",
+      "label": "Google: Gemini Omni 1.1 Flash",
+      "price": "$$",
+      "created": 1793825668,
+      "variantCount": 1
+    },
     {
       "id": "ricursiveai/ripple-65b-preview",
       "label": "ricursiveAI/Ripple-65B-Preview",
@@ -883,6 +911,13 @@
       "label": "Meta: Muse Glimmer 30B",
       "price": "$",
       "created": 1786302394,
+      "variantCount": 1
+    },
+    {
+      "id": "inclusionai/ling-3.0-tiny",
+      "label": "inclusionAI: Ling 3.0 Tiny",
+      "price": "$",
+      "created": 1786034890,
       "variantCount": 1
     },
     {
@@ -1831,13 +1866,6 @@
       "variantCount": 1
     },
     {
-      "id": "minimax/minimax-m2-her",
-      "label": "MiniMax: MiniMax M2-her",
-      "price": "$",
-      "created": 1769177239,
-      "variantCount": 1
-    },
-    {
       "id": "writer/palmyra-x5",
       "label": "Writer: Palmyra X5",
       "price": "$$",
@@ -1884,13 +1912,6 @@
       "label": "ByteDance Seed: Seed 1.6",
       "price": "$",
       "created": 1766504997,
-      "variantCount": 1
-    },
-    {
-      "id": "minimax/minimax-m2.1",
-      "label": "MiniMax: MiniMax M2.1",
-      "price": "$",
-      "created": 1766454997,
       "variantCount": 1
     },
     {
@@ -2080,13 +2101,6 @@
       "label": "OpenAI: gpt-oss-safeguard-20b",
       "price": "$",
       "created": 1761752836,
-      "variantCount": 1
-    },
-    {
-      "id": "minimax/minimax-m2",
-      "label": "MiniMax: MiniMax M2",
-      "price": "$",
-      "created": 1761252093,
       "variantCount": 1
     },
     {
