@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-06T05:05:50.121Z",
+  "generatedAt": "2026-11-06T18:53:24.387Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -33,7 +33,7 @@
     },
     {
       "id": "ricursiveai/ripple-65b-preview",
-      "label": "ricursiveAI/Ripple-65B-Preview",
+      "label": "Ricursive: Ripple 65B Preview",
       "price": "$",
       "created": 1793818990,
       "variantCount": 1
@@ -813,7 +813,14 @@
       "label": "Qwen: Qwen3.8 27B",
       "price": "$",
       "created": 1786722910,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "qwen/qwen3.8-27b:batch",
+      "label": "Qwen: Qwen3.8 27B (batch)",
+      "price": "$",
+      "created": 1786722910,
+      "variantCount": 2
     },
     {
       "id": "dots-studio/dots-3-note-preview:free",
@@ -911,7 +918,14 @@
       "label": "Meta: Muse Glimmer 30B",
       "price": "$",
       "created": 1786302394,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "meta/muse-glimmer-30b:batch",
+      "label": "Meta: Muse Glimmer 30B (batch)",
+      "price": "$",
+      "created": 1786302394,
+      "variantCount": 2
     },
     {
       "id": "inclusionai/ling-3.0-tiny",
@@ -946,7 +960,14 @@
       "label": "Thinking Machines: Inkling Small",
       "price": "$",
       "created": 1785443117,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "thinkingmachines/inkling-small:batch",
+      "label": "Thinking Machines: Inkling Small (batch)",
+      "price": "$",
+      "created": 1785443117,
+      "variantCount": 2
     },
     {
       "id": "qwen/qwen3.7-flash",
@@ -1247,14 +1268,7 @@
       "label": "NVIDIA: Nemotron 3.5 Content Safety",
       "price": "$",
       "created": 1780581864,
-      "variantCount": 2
-    },
-    {
-      "id": "nvidia/nemotron-3.5-content-safety:free",
-      "label": "NVIDIA: Nemotron 3.5 Content Safety (free)",
-      "price": "$",
-      "created": 1780581864,
-      "variantCount": 2
+      "variantCount": 1
     },
     {
       "id": "nvidia/nemotron-3-ultra-550b-a55b",
@@ -1289,7 +1303,14 @@
       "label": "MiniMax: MiniMax M3",
       "price": "$",
       "created": 1780245374,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "minimax/minimax-m3:batch",
+      "label": "MiniMax: MiniMax M3 (batch)",
+      "price": "$",
+      "created": 1780245374,
+      "variantCount": 2
     },
     {
       "id": "stepfun/step-3.7-flash",
