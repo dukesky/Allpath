@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-06T18:53:24.387Z",
+  "generatedAt": "2026-11-07T04:39:36.044Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "liquid/lfm-3-1.7b",
+      "label": "LiquidAI: LFM3-1.7B",
+      "price": "$",
+      "created": 1794009477,
+      "variantCount": 2
+    },
+    {
+      "id": "liquid/lfm-3-1.7b:free",
+      "label": "LiquidAI: LFM3-1.7B (free)",
+      "price": "$",
+      "created": 1794009477,
+      "variantCount": 2
+    },
     {
       "id": "google/gemini-omni-1.2-flash",
       "label": "Google: Gemini Omni 1.2 Flash",
@@ -953,7 +967,14 @@
       "label": "DeepSeek: DeepSeek V4 Flash 0731",
       "price": "$",
       "created": 1785478908,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "deepseek/deepseek-v4-flash-0731:batch",
+      "label": "DeepSeek: DeepSeek V4 Flash 0731 (batch)",
+      "price": "$",
+      "created": 1785478908,
+      "variantCount": 2
     },
     {
       "id": "thinkingmachines/inkling-small",
