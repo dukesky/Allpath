@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-08T04:27:26.731Z",
+  "generatedAt": "2026-11-08T17:36:26.694Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -162,13 +162,6 @@
       "label": "Reflection: Beam 1.0 501B A23B",
       "price": "$",
       "created": 1792160499,
-      "variantCount": 1
-    },
-    {
-      "id": "inception/mercury-3",
-      "label": "Inception: Mercury 3",
-      "price": "$",
-      "created": 1792158337,
       "variantCount": 1
     },
     {
@@ -646,13 +639,6 @@
       "price": "$",
       "created": 1789021285,
       "variantCount": 2
-    },
-    {
-      "id": "inception/mercury-2.5",
-      "label": "Inception: Mercury 2.5",
-      "price": "$",
-      "created": 1788892137,
-      "variantCount": 1
     },
     {
       "id": "nex-agi/nex-n2.5-mini",
@@ -1758,13 +1744,6 @@
       "label": "OpenAI: GPT-5.4",
       "price": "$$",
       "created": 1772734352,
-      "variantCount": 1
-    },
-    {
-      "id": "inception/mercury-2",
-      "label": "Inception: Mercury 2",
-      "price": "$",
-      "created": 1772636275,
       "variantCount": 1
     },
     {
