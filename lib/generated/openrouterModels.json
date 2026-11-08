@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-07T04:39:36.044Z",
+  "generatedAt": "2026-11-08T04:27:26.731Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -134,7 +134,14 @@
       "label": "DeepSeek: DeepSeek V4.1 Flash 1017",
       "price": "$",
       "created": 1792225624,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "deepseek/deepseek-v4.1-flash-1017:batch",
+      "label": "DeepSeek: DeepSeek V4.1 Flash 1017 (batch)",
+      "price": "$",
+      "created": 1792225624,
+      "variantCount": 2
     },
     {
       "id": "elorian/glimpse",
@@ -1254,7 +1261,14 @@
       "label": "Z.ai: GLM 5.2",
       "price": "$$",
       "created": 1781631930,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "z-ai/glm-5.2:batch",
+      "label": "Z.ai: GLM 5.2 (batch)",
+      "price": "$",
+      "created": 1781631930,
+      "variantCount": 2
     },
     {
       "id": "openrouter/fusion",
@@ -1903,7 +1917,7 @@
     {
       "id": "moonshotai/kimi-k2.5",
       "label": "MoonshotAI: Kimi K2.5",
-      "price": "$",
+      "price": "$$",
       "created": 1769487076,
       "variantCount": 1
     },
@@ -2458,14 +2472,28 @@
       "label": "Morph: Morph V3 Large",
       "price": "$",
       "created": 1751910858,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "morph/morph-v3-large:batch",
+      "label": "Morph: Morph V3 Large (batch)",
+      "price": "$",
+      "created": 1751910858,
+      "variantCount": 2
     },
     {
       "id": "morph/morph-v3-fast",
       "label": "Morph: Morph V3 Fast",
       "price": "$",
       "created": 1751910002,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "morph/morph-v3-fast:batch",
+      "label": "Morph: Morph V3 Fast (batch)",
+      "price": "$",
+      "created": 1751910002,
+      "variantCount": 2
     },
     {
       "id": "mistralai/mistral-small-3.2-24b-instruct",
