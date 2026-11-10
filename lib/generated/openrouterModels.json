@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-09T21:55:45.691Z",
+  "generatedAt": "2026-11-10T05:56:19.893Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "nex-agi/nex-n2.6",
+      "label": "Nex AGI: Nex-N2.6",
+      "price": "$",
+      "created": 1794282379,
+      "variantCount": 1
+    },
+    {
+      "id": "thinkingmachines/inkling-2-small:free",
+      "label": "Thinking Machines: Inkling 2 Small (free)",
+      "price": "$",
+      "created": 1794261847,
+      "variantCount": 1
+    },
     {
       "id": "anthropic/claude-fable-5.2",
       "label": "Anthropic: Claude Fable 5.2",
@@ -78,13 +92,6 @@
       "label": "Tencent: Hy4",
       "price": "$",
       "created": 1793766031,
-      "variantCount": 1
-    },
-    {
-      "id": "stealth/crouton-alpha",
-      "label": "Crouton Alpha",
-      "price": "$",
-      "created": 1793669930,
       "variantCount": 1
     },
     {
