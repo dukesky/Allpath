@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-10T05:56:19.893Z",
+  "generatedAt": "2026-11-10T19:17:55.808Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "google/gemini-4-carbon",
+      "label": "Google: Gemini 4 Carbon",
+      "price": "$$",
+      "created": 1794326871,
+      "variantCount": 2
+    },
+    {
+      "id": "google/gemini-4-carbon:batch",
+      "label": "Google: Gemini 4 Carbon (batch)",
+      "price": "$$",
+      "created": 1794326871,
+      "variantCount": 2
+    },
     {
       "id": "nex-agi/nex-n2.6",
       "label": "Nex AGI: Nex-N2.6",
