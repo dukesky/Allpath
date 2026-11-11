@@ -1,11 +1,11 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-11T04:42:40.013Z",
+  "generatedAt": "2026-11-11T19:14:50.288Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
-      "id": "baidu/ernie-5.5-flash-preview",
-      "label": "Baidu: ERNIE-5.5-Flash-Preview",
+      "id": "baidu/ernie-5.5-flash-preview:free",
+      "label": "Baidu: ERNIE-5.5-Flash-Preview (free)",
       "price": "$",
       "created": 1794333533,
       "variantCount": 1
@@ -932,13 +932,6 @@
       "label": "Qwen: Qwen3.8 2.4T A95B",
       "price": "$$",
       "created": 1786551702,
-      "variantCount": 1
-    },
-    {
-      "id": "bytedance-seed/seed-2.0-code",
-      "label": "ByteDance Seed: Seed-2.0-Code",
-      "price": "$$",
-      "created": 1786550701,
       "variantCount": 1
     },
     {
@@ -2003,20 +1996,6 @@
       "label": "OpenAI: GPT-5.2-Codex",
       "price": "$$",
       "created": 1768409315,
-      "variantCount": 1
-    },
-    {
-      "id": "bytedance-seed/seed-1.6-flash",
-      "label": "ByteDance Seed: Seed 1.6 Flash",
-      "price": "$",
-      "created": 1766505011,
-      "variantCount": 1
-    },
-    {
-      "id": "bytedance-seed/seed-1.6",
-      "label": "ByteDance Seed: Seed 1.6",
-      "price": "$",
-      "created": 1766504997,
       "variantCount": 1
     },
     {
