@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-10T19:17:55.808Z",
+  "generatedAt": "2026-11-11T04:42:40.013Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "baidu/ernie-5.5-flash-preview",
+      "label": "Baidu: ERNIE-5.5-Flash-Preview",
+      "price": "$",
+      "created": 1794333533,
+      "variantCount": 1
+    },
+    {
+      "id": "baidu/ernie-light-dt-1.0-intl",
+      "label": "Baidu: ERNIE-Light-DT-1.0",
+      "price": "$$",
+      "created": 1794331260,
+      "variantCount": 1
+    },
     {
       "id": "google/gemini-4-carbon",
       "label": "Google: Gemini 4 Carbon",
@@ -74,6 +88,13 @@
       "variantCount": 1
     },
     {
+      "id": "kt/midm-k-3.0-pro",
+      "label": "KT: Mi:dm K 3.0 Pro",
+      "price": "$",
+      "created": 1793897701,
+      "variantCount": 1
+    },
+    {
       "id": "openrouter/auto",
       "label": "Auto Router",
       "price": "$",
@@ -106,6 +127,13 @@
       "label": "Tencent: Hy4",
       "price": "$",
       "created": 1793766031,
+      "variantCount": 1
+    },
+    {
+      "id": "motif-technologies/motif-3",
+      "label": "Motif Technologies: Motif 3",
+      "price": "$",
+      "created": 1793655334,
       "variantCount": 1
     },
     {
@@ -190,13 +218,6 @@
       "label": "Elorian: Glimpse",
       "price": "$$",
       "created": 1792206629,
-      "variantCount": 1
-    },
-    {
-      "id": "xingchen-agi/xing4.0-29b-a4b:free",
-      "label": "XingChen: Xing4.0 29B A4B (free)",
-      "price": "$",
-      "created": 1792177496,
       "variantCount": 1
     },
     {
