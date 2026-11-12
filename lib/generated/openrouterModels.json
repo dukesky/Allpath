@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-11T19:14:50.288Z",
+  "generatedAt": "2026-11-12T05:44:58.837Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -183,7 +183,14 @@
       "label": "MoonshotAI: Kimi K3.1 Pro",
       "price": "$$",
       "created": 1792778188,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "moonshotai/kimi-k3.1-pro:batch",
+      "label": "MoonshotAI: Kimi K3.1 Pro (batch)",
+      "price": "$$",
+      "created": 1792778188,
+      "variantCount": 2
     },
     {
       "id": "recursive/flint-v1.0:free",
@@ -372,6 +379,13 @@
       "label": "inclusionAI: Ling 3.1 Flash",
       "price": "$",
       "created": 1790950024,
+      "variantCount": 1
+    },
+    {
+      "id": "unbiased/pareto-26.10-preview",
+      "label": "Pareto 26.10 Preview",
+      "price": "$$",
+      "created": 1790863623,
       "variantCount": 1
     },
     {
