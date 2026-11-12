@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-12T05:44:58.837Z",
+  "generatedAt": "2026-11-12T19:31:55.058Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "google/gemini-4-hydrogen",
+      "label": "Google: Gemini 4 Hydrogen",
+      "price": "$$",
+      "created": 1794506460,
+      "variantCount": 2
+    },
+    {
+      "id": "google/gemini-4-hydrogen:batch",
+      "label": "Google: Gemini 4 Hydrogen (batch)",
+      "price": "$$",
+      "created": 1794506460,
+      "variantCount": 2
+    },
     {
       "id": "baidu/ernie-5.5-flash-preview:free",
       "label": "Baidu: ERNIE-5.5-Flash-Preview (free)",
@@ -379,6 +393,13 @@
       "label": "inclusionAI: Ling 3.1 Flash",
       "price": "$",
       "created": 1790950024,
+      "variantCount": 1
+    },
+    {
+      "id": "apodex/apodex-1.1-mini:free",
+      "label": "Apodex: Apodex 1.1 Mini (free)",
+      "price": "$",
+      "created": 1790875335,
       "variantCount": 1
     },
     {
@@ -760,6 +781,13 @@
       "variantCount": 2
     },
     {
+      "id": "inclusionai/ling-3.0-flash-sante",
+      "label": "inclusionAI: Ling 3.0 Flash Sante",
+      "price": "$",
+      "created": 1788545946,
+      "variantCount": 1
+    },
+    {
       "id": "qwen/qwen3.8-max-0902",
       "label": "Qwen: Qwen3.8 Max (0902)",
       "price": "$$",
@@ -820,6 +848,13 @@
       "label": "Tencent: Hy4 preview",
       "price": "$$",
       "created": 1787897375,
+      "variantCount": 1
+    },
+    {
+      "id": "inclusionai/ling-3.0-flash-fin",
+      "label": "inclusionAI: Ling 3.0 Flash Fin",
+      "price": "$",
+      "created": 1787846290,
       "variantCount": 1
     },
     {
@@ -1973,7 +2008,7 @@
     {
       "id": "moonshotai/kimi-k2.5",
       "label": "MoonshotAI: Kimi K2.5",
-      "price": "$$",
+      "price": "$",
       "created": 1769487076,
       "variantCount": 1
     },
