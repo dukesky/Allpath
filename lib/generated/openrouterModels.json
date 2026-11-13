@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-12T19:31:55.058Z",
+  "generatedAt": "2026-11-13T05:03:17.172Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -53,11 +53,18 @@
       "variantCount": 1
     },
     {
+      "id": "thinkingmachines/inkling-2-small",
+      "label": "Thinking Machines: Inkling 2 Small",
+      "price": "$",
+      "created": 1794261847,
+      "variantCount": 2
+    },
+    {
       "id": "thinkingmachines/inkling-2-small:free",
       "label": "Thinking Machines: Inkling 2 Small (free)",
       "price": "$",
       "created": 1794261847,
-      "variantCount": 1
+      "variantCount": 2
     },
     {
       "id": "anthropic/claude-fable-5.2",
@@ -162,7 +169,14 @@
       "label": "Particle AI: Particle-1",
       "price": "$",
       "created": 1793207893,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "particle-ai/particle-1:free",
+      "label": "Particle AI: Particle-1 (free)",
+      "price": "$",
+      "created": 1793207893,
+      "variantCount": 2
     },
     {
       "id": "openai/gpt-6.1-terra-pro",
@@ -923,7 +937,7 @@
     {
       "id": "z-ai/glm-5.3",
       "label": "Z.ai: GLM 5.3",
-      "price": "$",
+      "price": "$$",
       "created": 1787086655,
       "variantCount": 2
     },
