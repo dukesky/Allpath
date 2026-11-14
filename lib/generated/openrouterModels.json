@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-13T19:12:12.144Z",
+  "generatedAt": "2026-11-14T04:55:44.096Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "inclusionai/ling-3.2-flash:free",
+      "label": "inclusionAI: Ling 3.2 Flash (free)",
+      "price": "$",
+      "created": 1794591958,
+      "variantCount": 1
+    },
     {
       "id": "google/gemini-4-hydrogen",
       "label": "Google: Gemini 4 Hydrogen",
