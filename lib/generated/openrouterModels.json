@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-15T02:28:21.097Z",
+  "generatedAt": "2026-11-15T18:28:51.464Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -2090,13 +2090,6 @@
       "variantCount": 1
     },
     {
-      "id": "stepfun/step-3.5-flash",
-      "label": "StepFun: Step 3.5 Flash",
-      "price": "$",
-      "created": 1769728337,
-      "variantCount": 1
-    },
-    {
       "id": "moonshotai/kimi-k2.5",
       "label": "MoonshotAI: Kimi K2.5",
       "price": "$",
@@ -2405,13 +2398,6 @@
       "variantCount": 1
     },
     {
-      "id": "qwen/qwen3-vl-30b-a3b-thinking",
-      "label": "Qwen: Qwen3 VL 30B A3B Thinking",
-      "price": "$",
-      "created": 1759794479,
-      "variantCount": 1
-    },
-    {
       "id": "qwen/qwen3-vl-30b-a3b-instruct",
       "label": "Qwen: Qwen3 VL 30B A3B Instruct",
       "price": "$",
@@ -2703,13 +2689,6 @@
       "label": "Venice: Uncensored",
       "price": "$",
       "created": 1752094966,
-      "variantCount": 1
-    },
-    {
-      "id": "tencent/hunyuan-a13b-instruct",
-      "label": "Tencent: Hunyuan A13B Instruct",
-      "price": "$",
-      "created": 1751987664,
       "variantCount": 1
     },
     {
