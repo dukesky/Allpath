@@ -71,7 +71,7 @@ const PRODUCTS: Product[] = [
       "Embeds in Shopify, WordPress, Wix",
       "Search and click analytics"
     ],
-    status: "Paused",
+    status: "Beta",
     statusNote: "Demo online",
     href: "https://polarbear-frontend-vcpindq3cq-uc.a.run.app",
     hrefLabel: "Open PolarBear",
