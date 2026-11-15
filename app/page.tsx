@@ -1,61 +1,161 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FeaturedConversations } from "./FeaturedConversations";
 
 const CONTACT_EMAIL = "0tianzhang0@gmail.com";
+const GITHUB_URL = "https://github.com/dukesky";
 
-const HERO_CHIPS = [
-  "Round Table",
-  "One-to-One",
-  "Story Personas",
-  "File Analysis",
-  "Agent Teams"
-];
+type ProductStatus = "Live" | "Beta" | "Paused";
 
-const DETAIL_CARDS = [
+interface Product {
+  name: string;
+  tagline: string;
+  description: string;
+  highlights: string[];
+  status: ProductStatus;
+  statusNote: string;
+  href: string;
+  hrefLabel: string;
+  external?: boolean;
+  repo: string;
+  secondary?: { label: string; href: string };
+  accent: string;
+  mark: string;
+  logo?: string;
+}
+
+const PRODUCTS: Product[] = [
   {
-    eyebrow: "Multi-agent discussion",
-    title: "Build an AI team instead of relying on one answer.",
-    body:
-      "AllPath lets one user coordinate multiple AI agents in the same conversation. Each agent can use a different role, personality, or model so the discussion surfaces contrast, trade-offs, and stronger decisions.",
-    href: "/about"
+    name: "Trading Agent",
+    tagline: "It proposes. You approve.",
+    description:
+      "A self-hosted trading agent that watches your strategies, explains its reasoning, and never places an order without your sign-off.",
+    highlights: [
+      "YAML strategies checked hourly",
+      "Chat with memory on web and Telegram",
+      "Nightly reflection on its own calls"
+    ],
+    status: "Live",
+    statusNote: "Paper trading",
+    href: "/trading",
+    hrefLabel: "Explore Trading Agent",
+    repo: "https://github.com/dukesky/allpath-trading-agent",
+    secondary: { label: "Live journal", href: "/trading/journal" },
+    accent: "from-emerald-500/20 to-emerald-500/0",
+    mark: "📈"
   },
   {
-    eyebrow: "Configurable workflows",
-    title: "Move from quick starts to structured collaboration.",
-    body:
-      "Start from story-based presets, historical figures, or your own custom agent library. Switch between round table and one-to-one modes, upload files, and keep sessions organized as reusable discussions.",
-    href: "/chat"
+    name: "Personal Agent",
+    tagline: "A local agent that teaches itself to you.",
+    description:
+      "Starts as a plain chat and adds one capability at a time — connect a model, link Telegram, schedule a morning briefing — all on your own machine.",
+    highlights: [
+      "Runs locally, your data stays put",
+      "Every side effect needs your approval",
+      "Grows with you, one step at a time"
+    ],
+    status: "Beta",
+    statusNote: "Open source",
+    href: "/agent",
+    hrefLabel: "Explore Personal Agent",
+    repo: "https://github.com/dukesky/allpath-agent",
+    accent: "from-sky-500/20 to-sky-500/0",
+    mark: "🧭"
   },
   {
-    eyebrow: "For real work",
-    title: "Use it for research, product thinking, writing, and strategy.",
-    body:
-      "AllPath is designed for people who need more than a generic assistant: founders comparing options, creators developing ideas, and teams pressure-testing assumptions before they act.",
-    href: "/about"
+    name: "PolarBear",
+    tagline: "Hybrid search for small businesses.",
+    description:
+      "No-code, AI-enhanced site search for SMEs: upload a product CSV, paste two lines of code, and shoppers get keyword plus semantic search.",
+    highlights: [
+      "Keyword + semantic vector search",
+      "Embeds in Shopify, WordPress, Wix",
+      "Search and click analytics"
+    ],
+    status: "Paused",
+    statusNote: "Demo online",
+    href: "https://polarbear-frontend-vcpindq3cq-uc.a.run.app",
+    hrefLabel: "Open PolarBear",
+    external: true,
+    repo: "https://github.com/dukesky/PolarBear",
+    accent: "from-indigo-500/20 to-indigo-500/0",
+    mark: "🐻‍❄️",
+    logo: "/polarbear-logo.png"
   }
 ];
 
-const FEATURE_PANELS = [
-  {
-    eyebrow: "Quick start",
-    title: "Launch a conversation in seconds.",
-    body:
-      "Choose a story or agent group, start a session, and get an AI team ready to discuss one problem from multiple perspectives."
-  },
-  {
-    eyebrow: "Flexible control",
-    title: "Decide who speaks, what they know, and how they respond.",
-    body:
-      "Each agent can have its own profile, model, and initial rules. Mute participants, direct replies with @ mentions, or let the full team respond together."
-  },
-  {
-    eyebrow: "Built to evolve",
-    title: "A foundation for richer human-AI collaboration.",
-    body:
-      "Today it is a live beta for multi-agent discussion. The long-term direction is a workspace where persistent teams of AI agents help users think, compare, and decide at a higher level."
-  }
-];
+const STATUS_STYLES: Record<ProductStatus, string> = {
+  Live: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  Beta: "border-sky-200 bg-sky-50 text-sky-700",
+  Paused: "border-slate-200 bg-slate-100 text-slate-600"
+};
+
+function ProductCard({ product }: { product: Product }) {
+  const primaryProps = product.external ? { target: "_blank", rel: "noopener noreferrer" } : {};
+
+  return (
+    <article className="group relative flex flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white/92 p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-[0_18px_50px_rgba(96,72,32,0.12)] lg:p-7">
+      <div
+        aria-hidden
+        className={`pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b ${product.accent}`}
+      />
+      <div className="relative flex items-start justify-between gap-3">
+        <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white text-2xl shadow-sm">
+          {product.logo ? (
+            <Image alt={`${product.name} logo`} className="object-contain p-1" fill sizes="48px" src={product.logo} />
+          ) : (
+            product.mark
+          )}
+        </span>
+        <div className="text-right">
+          <span
+            className={`inline-block rounded-full border px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${STATUS_STYLES[product.status]}`}
+          >
+            {product.status}
+          </span>
+          <p className="mt-1 text-[11px] text-slate-500">{product.statusNote}</p>
+        </div>
+      </div>
+
+      <h3 className="relative mt-5 text-2xl font-semibold tracking-tight">{product.name}</h3>
+      <p className="relative mt-1 text-sm font-medium text-primary">{product.tagline}</p>
+      <p className="relative mt-4 text-sm leading-7 text-slate-700">{product.description}</p>
+
+      <ul className="relative mt-5 space-y-2 text-sm text-slate-600">
+        {product.highlights.map((item) => (
+          <li key={item} className="flex gap-2">
+            <span aria-hidden className="text-slate-400">
+              —
+            </span>
+            {item}
+          </li>
+        ))}
+      </ul>
+
+      <div className="relative mt-auto flex flex-wrap items-center gap-x-4 gap-y-3 pt-7">
+        <Link
+          className="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-primary"
+          href={product.href}
+          {...primaryProps}
+        >
+          {product.hrefLabel} {product.external ? "↗" : "→"}
+        </Link>
+        {product.secondary && (
+          <Link className="text-sm font-medium text-slate-700 hover:text-primary" href={product.secondary.href}>
+            {product.secondary.label}
+          </Link>
+        )}
+        <a
+          className="text-sm font-medium text-slate-500 hover:text-primary"
+          href={product.repo}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          GitHub ↗
+        </a>
+      </div>
+    </article>
+  );
+}
 
 export default function HomePage() {
   return (
@@ -64,249 +164,135 @@ export default function HomePage() {
       style={{ backgroundImage: "url('/home-cream-bg.svg')" }}
     >
       <div className="mx-auto flex w-full max-w-7xl flex-col px-4 pb-12 pt-4 sm:px-6 lg:px-8">
-        <header className="sticky top-4 z-20 mb-6 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white/88 px-4 py-3 shadow-sm backdrop-blur sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative h-12 w-12 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+        <header className="relative z-20 mb-6 sm:sticky sm:top-4 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white/88 px-4 py-3 shadow-sm backdrop-blur sm:flex-row sm:items-center sm:justify-between">
+          <Link className="flex items-center gap-3" href="/">
+            <div className="relative h-11 w-11 overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
               <Image
                 alt="AllPath logo"
                 className="object-contain"
                 fill
                 priority
-                sizes="48px"
+                sizes="44px"
                 src="/allpath-logo-mark.png"
               />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-semibold">AllPath</h1>
-                <span className="rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
-                  Beta
-                </span>
-              </div>
-              <p className="text-sm text-slate-600">Where many minds find one path.</p>
+              <p className="text-xl font-semibold">AllPath</p>
+              <p className="text-sm text-slate-600">Open-source AI agents with a human in the loop.</p>
             </div>
-          </div>
-          <nav className="flex flex-wrap items-center gap-4 text-sm font-medium text-slate-600">
-            <Link className="transition hover:text-primary" href="/about">
-              What is AllPath
-            </Link>
-            <Link className="transition hover:text-primary" href="/contact">
-              Contact
-            </Link>
+          </Link>
+          <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-medium text-slate-600">
+            <a className="transition hover:text-primary" href="#products">
+              Products
+            </a>
             <Link className="transition hover:text-primary" href="/trading">
-              Trading Agent
+              Trading
             </Link>
             <Link className="transition hover:text-primary" href="/agent">
               Personal Agent
             </Link>
-            <Link className="rounded-full bg-slate-950 px-5 py-2.5 text-white transition hover:bg-primary" href="/chat">
-              Start Your Conversation
+            <a
+              className="transition hover:text-primary"
+              href="https://polarbear-frontend-vcpindq3cq-uc.a.run.app"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              PolarBear
+            </a>
+            <Link className="transition hover:text-primary" href="/contact">
+              Contact
             </Link>
+            <a
+              className="rounded-full border border-slate-300 bg-white px-4 py-2 text-slate-800 transition hover:border-slate-400"
+              href={GITHUB_URL}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              GitHub ↗
+            </a>
           </nav>
         </header>
 
-        <section className="flex min-h-[calc(100vh-7.5rem)] flex-col items-center justify-center py-10">
-          <div className="flex w-full flex-col items-center rounded-[2rem] border border-[#eadfcf] bg-white/65 px-6 py-10 shadow-[0_24px_80px_rgba(96,72,32,0.10)] backdrop-blur sm:px-10 lg:px-14 lg:py-14">
-            <p className="text-sm font-medium uppercase tracking-[0.24em] text-primary">AllPath</p>
-            <h2 className="mt-6 max-w-5xl text-center text-4xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">
-              Where many minds find one path.
-            </h2>
-            <p className="mt-6 max-w-3xl text-center text-base leading-8 text-slate-700 sm:text-lg">
-              A multi-agent workspace where models think together to reach a better answer.
-            </p>
+        <section className="flex flex-col items-center px-2 pb-10 pt-12 text-center sm:pt-16">
+          <p className="text-sm font-medium uppercase tracking-[0.24em] text-primary">AllPath</p>
+          <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-tight sm:text-6xl">
+            Small AI agents that do real work — and ask before they act.
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-8 text-slate-700 sm:text-lg">
+            AllPath is a family of open-source projects. Each one is built to run on your own terms,
+            show its reasoning, and keep a person in charge of every consequential step.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <a
+              className="rounded-full bg-slate-950 px-6 py-3 text-sm font-medium text-white transition hover:bg-primary"
+              href="#products"
+            >
+              Browse the products
+            </a>
+            <a
+              className="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-medium text-slate-700 transition hover:border-slate-400"
+              href={GITHUB_URL}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              View on GitHub
+            </a>
+          </div>
+        </section>
 
-            <div className="mt-12 w-full max-w-4xl rounded-[2rem] border border-[#eadfcf] bg-white/95 p-4 shadow-[0_18px_50px_rgba(96,72,32,0.12)]">
-              <div className="rounded-[1.6rem] border border-slate-200 bg-[#fffdf8] px-5 py-5 shadow-inner">
-                <p className="text-center text-3xl font-semibold tracking-tight sm:text-4xl">
-                  What should your AI team work on?
-                </p>
-                <div className="mt-6 flex flex-col gap-4 rounded-[1.4rem] border border-slate-200 bg-white px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="flex-1 text-left text-base leading-7 text-slate-500 sm:text-lg">
-                    Ask your AI team to brainstorm ideas, challenge assumptions, compare options,
-                    or analyze a file together.
-                  </p>
-                  <Link
-                    className="inline-flex h-12 w-12 items-center justify-center self-end rounded-full bg-slate-950 text-xl text-white transition hover:bg-primary sm:self-auto"
-                    href="/chat"
-                  >
-                    ↗
-                  </Link>
-                </div>
-                <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-                  {HERO_CHIPS.map((chip) => (
-                    <span
-                      key={chip}
-                      className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600"
-                    >
-                      {chip}
-                    </span>
-                  ))}
-                </div>
+        <section className="scroll-mt-28 pb-10" id="products">
+          <div className="mb-5 flex items-end justify-between gap-4 px-1">
+            <h2 className="text-2xl font-semibold tracking-tight">Products</h2>
+            <p className="hidden text-sm text-slate-500 sm:block">All open source · self-hostable</p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {PRODUCTS.map((product) => (
+              <ProductCard key={product.name} product={product} />
+            ))}
+          </div>
+        </section>
+
+        <section className="pb-10">
+          <h2 className="mb-4 px-1 text-sm font-medium uppercase tracking-[0.2em] text-slate-500">
+            Experiments
+          </h2>
+          <Link
+            className="group flex flex-col gap-4 rounded-[1.5rem] border border-dashed border-slate-300 bg-white/60 p-5 transition hover:border-slate-400 hover:bg-white/80 sm:flex-row sm:items-center sm:justify-between"
+            href="/chat"
+          >
+            <div className="max-w-3xl">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="font-semibold text-slate-800">Group Chat</p>
+                <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
+                  Archived beta
+                </span>
               </div>
-            </div>
-
-            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <Link
-                className="rounded-full bg-slate-950 px-6 py-3 text-sm font-medium text-white transition hover:bg-primary"
-                href="/chat"
-              >
-                Start Your Conversation
-              </Link>
-              <Link
-                className="rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-medium text-slate-700 transition hover:border-slate-400"
-                href="/about"
-              >
-                Learn More
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        <FeaturedConversations />
-
-        <section className="grid gap-6 pb-8 lg:grid-cols-[1.6fr_0.9fr]">
-          <article className="rounded-[2rem] border border-slate-200 bg-white/92 p-8 shadow-sm">
-            <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">
-              Introducing AllPath
-            </p>
-            <h3 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">
-              AI collaboration should feel like a team room, not a single reply box.
-            </h3>
-            <p className="mt-5 max-w-3xl text-base leading-8 text-slate-700">
-              Most AI products optimize for one assistant and one response. AllPath is built for a
-              different workflow: one user directing multiple AI participants in the same session,
-              letting perspectives collide before the final conclusion.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                className="rounded-full bg-primary px-5 py-3 text-sm font-medium text-white"
-                href="/chat"
-              >
-                Open the Workspace
-              </Link>
-              <Link
-                className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700"
-                href="/about"
-              >
-                Read About AllPath
-              </Link>
-            </div>
-          </article>
-
-          <div className="space-y-6">
-            <article className="rounded-[2rem] border border-slate-200 bg-white/92 p-6 shadow-sm">
-              <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">
-                Live beta
-              </p>
-              <h4 className="mt-3 text-2xl font-semibold tracking-tight">
-                Try the current product now.
-              </h4>
-              <p className="mt-4 text-sm leading-7 text-slate-700">
-                The current beta already supports round table and one-to-one modes, story-based
-                agent groups, image and file uploads, and configurable model choices.
-              </p>
-            </article>
-
-            <article className="rounded-[2rem] border border-slate-200 bg-white/92 p-6 shadow-sm">
-              <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">
-                Contact
-              </p>
-              <h4 className="mt-3 text-2xl font-semibold tracking-tight">
-                Talk to us about pilots, collaboration, or investment.
-              </h4>
-              <p className="mt-4 text-sm leading-7 text-slate-700">
-                If you want to test AllPath in a real workflow or discuss a partnership, use the
-                contact page or email directly.
-              </p>
-              <a
-                className="mt-5 inline-block text-sm font-medium text-primary hover:underline"
-                href={`mailto:${CONTACT_EMAIL}`}
-              >
-                {CONTACT_EMAIL}
-              </a>
-            </article>
-          </div>
-        </section>
-
-        <section className="grid gap-6 pb-8 md:grid-cols-3">
-          {DETAIL_CARDS.map((card) => (
-            <article
-              key={card.title}
-              className="rounded-[2rem] border border-slate-200 bg-white/92 p-6 shadow-sm"
-            >
-              <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">
-                {card.eyebrow}
-              </p>
-              <h4 className="mt-4 text-2xl font-semibold tracking-tight">{card.title}</h4>
-              <p className="mt-4 text-sm leading-8 text-slate-700">{card.body}</p>
-              <Link className="mt-6 inline-block text-sm font-medium text-primary hover:underline" href={card.href}>
-                Learn more
-              </Link>
-            </article>
-          ))}
-        </section>
-
-        <section className="grid gap-6 pb-12 lg:grid-cols-3">
-          {FEATURE_PANELS.map((panel) => (
-            <article
-              key={panel.title}
-              className="rounded-[2rem] border border-slate-200 bg-[#fffaf2]/95 p-6 shadow-sm"
-            >
-              <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">
-                {panel.eyebrow}
-              </p>
-              <h4 className="mt-4 text-2xl font-semibold tracking-tight">{panel.title}</h4>
-              <p className="mt-4 text-sm leading-8 text-slate-700">{panel.body}</p>
-            </article>
-          ))}
-        </section>
-
-        <section className="pb-4">
-          <Link
-            className="group flex flex-col gap-6 rounded-[2rem] border border-slate-200 bg-[#101727] p-6 text-slate-100 shadow-sm transition hover:border-primary sm:flex-row sm:items-center sm:justify-between lg:p-8"
-            href="/trading"
-          >
-            <div className="max-w-2xl">
-              <p className="font-mono text-xs font-medium uppercase tracking-[0.24em] text-slate-400">
-                Related project · open source
-              </p>
-              <h4 className="mt-3 text-2xl font-semibold tracking-tight">
-                AllPath Trading Agent — a self-hosted trading agent that proposes. You approve.
-              </h4>
-              <p className="mt-3 text-sm leading-7 text-slate-300">
-                YAML strategies watched hourly, a chat agent with memory (web and Telegram), a nightly
-                reflection loop, and a human approval gate in front of every order. Paper trading by default.
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                The original AllPath: put several AI personas in one room — round table or one-to-one —
+                and let their perspectives collide. No longer actively developed; bring your own
+                OpenRouter API key.
               </p>
             </div>
-            <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-slate-950 transition group-hover:bg-primary group-hover:text-white">
-              trading.all-path.com ↗
+            <span className="shrink-0 text-sm font-medium text-slate-700 group-hover:text-primary">
+              Try it →
             </span>
           </Link>
         </section>
 
-        <section className="pb-4">
-          <Link
-            className="group flex flex-col gap-6 rounded-[2rem] border border-slate-200 bg-[#101727] p-6 text-slate-100 shadow-sm transition hover:border-primary sm:flex-row sm:items-center sm:justify-between lg:p-8"
-            href="/agent"
-          >
-            <div className="max-w-2xl">
-              <p className="font-mono text-xs font-medium uppercase tracking-[0.24em] text-slate-400">
-                Related project · open source
-              </p>
-              <h4 className="mt-3 text-2xl font-semibold tracking-tight">
-                AllPath Personal Agent — a local agent that teaches itself to you.
-              </h4>
-              <p className="mt-3 text-sm leading-7 text-slate-300">
-                Starts as a plain chat and introduces one capability at a time: connect a model in
-                conversation, link Telegram, schedule a morning briefing. Every side effect behind
-                your approval, everything on your own machine.
-              </p>
-            </div>
-            <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-medium text-slate-950 transition group-hover:bg-primary group-hover:text-white">
-              agent.all-path.com ↗
-            </span>
-          </Link>
-        </section>
+        <footer className="flex flex-col gap-3 border-t border-slate-200/80 px-1 pt-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} AllPath</p>
+          <div className="flex flex-wrap gap-5">
+            <a className="hover:text-primary" href={`mailto:${CONTACT_EMAIL}`}>
+              {CONTACT_EMAIL}
+            </a>
+            <Link className="hover:text-primary" href="/about">
+              About Group Chat
+            </Link>
+            <a className="hover:text-primary" href={GITHUB_URL} rel="noopener noreferrer" target="_blank">
+              GitHub
+            </a>
+          </div>
+        </footer>
       </div>
     </main>
   );
