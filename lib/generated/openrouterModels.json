@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-16T04:45:07.538Z",
+  "generatedAt": "2026-11-16T21:38:38.457Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "tencent/hy4-flash",
+      "label": "Tencent: Hy4 flash",
+      "price": "$",
+      "created": 1794838706,
+      "variantCount": 1
+    },
     {
       "id": "qwen/qwen4-max",
       "label": "Qwen: Qwen4 Max",
