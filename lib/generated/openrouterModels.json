@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-17T20:27:57.740Z",
+  "generatedAt": "2026-11-18T05:54:16.795Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -8,28 +8,56 @@
       "label": "OpenAI: GPT-6.2 Astra Pro",
       "price": "$$$",
       "created": 1794938432,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6.2-astra-pro:batch",
+      "label": "OpenAI: GPT-6.2 Astra Pro (batch)",
+      "price": "$$$",
+      "created": 1794938432,
+      "variantCount": 2
     },
     {
       "id": "openai/gpt-6.2-astra",
       "label": "OpenAI: GPT-6.2 Astra",
       "price": "$$$",
       "created": 1794938423,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6.2-astra:batch",
+      "label": "OpenAI: GPT-6.2 Astra (batch)",
+      "price": "$$$",
+      "created": 1794938423,
+      "variantCount": 2
     },
     {
       "id": "openai/gpt-6.2-sol-pro",
       "label": "OpenAI: GPT-6.2 Sol Pro",
       "price": "$$",
       "created": 1794938409,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6.2-sol-pro:batch",
+      "label": "OpenAI: GPT-6.2 Sol Pro (batch)",
+      "price": "$$",
+      "created": 1794938409,
+      "variantCount": 2
     },
     {
       "id": "openai/gpt-6.2-sol",
       "label": "OpenAI: GPT-6.2 Sol",
       "price": "$$",
       "created": 1794938371,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "openai/gpt-6.2-sol:batch",
+      "label": "OpenAI: GPT-6.2 Sol (batch)",
+      "price": "$$",
+      "created": 1794938371,
+      "variantCount": 2
     },
     {
       "id": "tencent/hy4-flash",
