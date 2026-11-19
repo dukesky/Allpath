@@ -1,8 +1,22 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-18T05:54:16.795Z",
+  "generatedAt": "2026-11-19T05:54:18.138Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "google/gemini-4-neon",
+      "label": "Google: Gemini 4 Neon",
+      "price": "$$",
+      "created": 1795006977,
+      "variantCount": 2
+    },
+    {
+      "id": "google/gemini-4-neon:batch",
+      "label": "Google: Gemini 4 Neon (batch)",
+      "price": "$$",
+      "created": 1795006977,
+      "variantCount": 2
+    },
     {
       "id": "openai/gpt-6.2-astra-pro",
       "label": "OpenAI: GPT-6.2 Astra Pro",
