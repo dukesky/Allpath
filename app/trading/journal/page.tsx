@@ -110,6 +110,9 @@ export default async function JournalPage() {
             <Link className="transition hover:text-primary" href="/trading">
               About the agent
             </Link>
+            <Link className="transition hover:text-primary" href="/trading/blog">
+              Blog
+            </Link>
             <a
               className="rounded-full bg-slate-950 px-4 py-2 text-white transition hover:bg-primary"
               href="https://github.com/dukesky/allpath-trading-agent"

@@ -453,6 +453,9 @@ function Header() {
         <Link className="transition hover:text-primary" href="/trading/journal">
           Live journal
         </Link>
+        <Link className="transition hover:text-primary" href="/trading/blog">
+          Blog
+        </Link>
         <a className="transition hover:text-primary" href={PAPER}>
           Paper
         </a>
