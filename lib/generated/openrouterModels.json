@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-20T05:43:11.380Z",
+  "generatedAt": "2026-11-20T22:41:19.860Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1765,13 +1765,6 @@
       "label": "DeepSeek: DeepSeek V4 Flash 0423",
       "price": "$",
       "created": 1777000666,
-      "variantCount": 1
-    },
-    {
-      "id": "tencent/hy3-preview",
-      "label": "Tencent: Hy3 preview",
-      "price": "$",
-      "created": 1776878150,
       "variantCount": 1
     },
     {
