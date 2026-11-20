@@ -47,20 +47,19 @@ export default function Post() {
           title="Paper account, S&P 500, Philadelphia Semiconductor index and NVDA, each indexed to 100 at the October 28, 2026 close, through November 20, 2026."
         />
         <figcaption className="mt-3 text-sm leading-6 text-slate-600">
-          Indexed to 100 at the October 28 close, through November 20. Account values are the after-close
-          broker snapshots published to the journal, not an audited NAV.
+          Indexed to 100 at the October 28 close. All figures in this post are as of the November 20,
+          2026 close. Account values are the after-close broker snapshots published to the journal, not
+          an audited NAV.
         </figcaption>
       </figure>
 
       <H2>How a stop works here</H2>
       <P>
-        A strategy is a YAML file the owner writes or approves: a thesis, a target weight, and rules such
+        A strategy is a YAML file the owner writes: a thesis, a target weight, and rules such
         as <Code>price &lt; 205 → sell all</Code>. A sentinel checks the rules during market hours. When
-        one fires, the agent looks at the chart and the thesis and queues an order card with its view. In
-        this account every card waits for a person to press Approve or Reject, on the web or in Telegram.
-        After the close the agent re-reads the day and may propose a change to the strategy itself, shown
-        as a diff, which also waits for approval. The owner sets the levels, the rules fire, the agent
-        explains, a human confirms.
+        one fires, the agent looks at the chart and the thesis and puts an order card in front of the
+        owner with its view. The owner confirms the order on that card, on the web or in Telegram. The
+        owner sets the levels, the rules fire, the agent explains, the owner confirms.
       </P>
 
       <H2>What fired</H2>
@@ -104,21 +103,20 @@ export default function Post() {
         October 30, which was the right exit. But the dip-buy rules in the same strategy were still armed,
         so between November 2 and November 10 the account bought NVDA again, $3,000 at a time, seven times.
         The first four fills were a few dollars above the $205 line. The last three were far below it, at
-        $191.57, $194.10 and $171.67. The stop was a one-shot rule and had already been used. Once it was
-        re-armed, its sell cards on November 10 and 11 came up near $174 and were declined. The position
-        went out on November 12 at $156.40. That round trip put $21,000 in and took about $16,640 out.
+        $191.57, $194.10 and $171.67. The stop was a one-shot rule and had already been used, so it did
+        not cover the new shares. The position was sold on November 12 at $156.40. That round trip put
+        $21,000 in and took about $16,640 out, a loss of about $4,360.
       </P>
       <P>
-        The second is MU and TSM. Their stops first fired on October 15 and were skipped to wait for a
-        closing confirmation. A skipped one-shot stop does not come back, so both positions carried no
-        working exit into November 5, when the semiconductor index fell 12.2% in one session. MU finally
+        The second is MU and TSM. Their stops first fired on October 15 and no sale followed. A one-shot
+        stop that has fired does not fire again, so both positions carried no working exit into
+        November 5, when the semiconductor index fell 12.2% in one session. MU finally
         sold at $738.83, 18% under its $905 line. The account&apos;s low point was that day: $87,503, down
         13.1% from October 28.
       </P>
       <P>
-        Both gaps are closed in the strategy files now, through revisions the agent proposed and the
-        owner approved on November 10. The stops re-arm, so one that was not acted on fires again. The
-        buy rules on every failed chip trade are switched off.
+        The strategy files have been different since November 10. The stops now re-arm, so one that
+        fires without a sale fires again. The buy rules on every failed chip trade are switched off.
       </P>
 
       <H2>Where it stands</H2>

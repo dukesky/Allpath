@@ -28,7 +28,7 @@ export const TRADING_BLOG_POSTS: readonly TradingBlogPost[] = [
     slug: "semis-slide-what-the-stops-did",
     title: "Heavy in semis through the NVDA slide: what the stops did",
     summary:
-      "Seventeen trading days, a chip index down 28%, and a paper account that started the stretch 99% invested. What the exit rules did, and where we got in their way.",
+      "Seventeen trading days, a chip index down 28%, and a paper account that started the stretch 99% invested. What the exit rules did, and what they did not. Figures as of the November 20, 2026 close.",
     date: "2026-11-20",
     readingMinutes: 4,
     tags: ["paper account", "stops", "post-mortem"]
