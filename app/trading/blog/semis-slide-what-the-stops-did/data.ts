@@ -1,5 +1,5 @@
 /**
- * Numbers behind "Heavy in semis through the NVDA slide".
+ * Numbers behind "The Chips Fell. Here's What Our Trading Agent Did."
  *
  * Account: the paper account's equity as published to the live journal
  * (/trading/journal) after each close. These are broker snapshots taken by
@@ -56,15 +56,54 @@ export type Exit = {
   soldAt: number;
   /** The stock's close on 2026-11-20. */
   lastClose: number;
-  note?: string;
 };
 
 export const EXITS: readonly Exit[] = [
-  { date: "Oct 29", ticker: "GOOGL", stop: 308, soldAt: 283.02, lastClose: 265.29, note: "gapped below the stop on earnings" },
+  { date: "Oct 29", ticker: "GOOGL", stop: 308, soldAt: 283.02, lastClose: 265.29 },
   { date: "Oct 30", ticker: "NVDA", stop: 205, soldAt: 204.65, lastClose: 125.53 },
   { date: "Oct 30", ticker: "META", stop: 615, soldAt: 615.36, lastClose: 560.84 },
   { date: "Nov 10", ticker: "TSM", stop: 405, soldAt: 398.69, lastClose: 319.14 },
-  { date: "Nov 10", ticker: "MU", stop: 905, soldAt: 738.83, lastClose: 594.51, note: "sold far below its stop; see below" },
-  { date: "Nov 12", ticker: "NVDA", stop: 205, soldAt: 156.4, lastClose: 125.53, note: "the re-bought position; see below" },
+  { date: "Nov 10", ticker: "MU", stop: 905, soldAt: 738.83, lastClose: 594.51 },
+  { date: "Nov 12", ticker: "NVDA", stop: 205, soldAt: 156.4, lastClose: 125.53 },
   { date: "Nov 20", ticker: "AMD", stop: 485, soldAt: 458.66, lastClose: 424.39 }
 ];
+
+/** NVDA fills from the first exit to the second, from the trade log. */
+export const NVDA_STOP = 205;
+export const NVDA_SEQUENCE: readonly { date: string; side: "sell" | "buy"; what: string; price: number }[] = [
+  { date: "Oct 30", side: "sell", what: "Sold all, 80.76 sh", price: 204.65 },
+  { date: "Nov 2", side: "buy", what: "Bought $3,000", price: 208.27 },
+  { date: "Nov 2", side: "buy", what: "Bought $3,000", price: 208.31 },
+  { date: "Nov 3", side: "buy", what: "Bought $3,000", price: 208.34 },
+  { date: "Nov 4", side: "buy", what: "Bought $3,000", price: 205.39 },
+  { date: "Nov 5", side: "buy", what: "Bought $3,000", price: 191.57 },
+  { date: "Nov 6", side: "buy", what: "Bought $3,000", price: 194.1 },
+  { date: "Nov 10", side: "buy", what: "Bought $3,000", price: 171.67 },
+  { date: "Nov 12", side: "sell", what: "Sold all, 106.40 sh", price: 156.4 }
+];
+
+/** The NVDA strategy's stop and second dip-buy rule, as written in the
+    strategy file before and since 2026-11-10. Other rules omitted. */
+export const RULES_BEFORE = `- id: stop-loss
+  condition: price < 205
+  action: sell all
+  state: armed
+
+- id: dip-buy-2
+  condition: position_weight < 0.20 and price < 213
+  action: buy $3000
+  state: armed
+  rearm: 90`;
+
+export const RULES_SINCE = `- id: stop-loss
+  condition: position_weight > 0 and price < 205
+  action: sell all
+  state: armed
+  rearm: 120
+  max_fires_per_day: 1
+
+- id: dip-buy-2
+  condition: position_weight < 0.20 and price < 213
+  action: buy $3000
+  state: disabled
+  rearm: 90`;

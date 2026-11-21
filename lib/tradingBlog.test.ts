@@ -7,6 +7,10 @@ import {
   EXITS,
   NDX,
   NVDA,
+  NVDA_SEQUENCE,
+  NVDA_STOP,
+  RULES_BEFORE,
+  RULES_SINCE,
   SOX,
   SP500
 } from "../app/trading/blog/semis-slide-what-the-stops-did/data";
@@ -16,6 +20,7 @@ import {
   getTradingBlogPost,
   indexTo100,
   listTradingBlogPosts,
+  readingMinutesFor,
   signedPct,
   totalChangePct
 } from "./tradingBlog";
@@ -69,6 +74,11 @@ describe("trading blog helpers", () => {
     expect(indexTo100([0, 1])).toEqual([100, 100]);
   });
 
+  it("rounds reading time at 230 words a minute", () => {
+    expect(readingMinutesFor(1150)).toBe(5);
+    expect(readingMinutesFor(40)).toBe(1);
+  });
+
   it("formats signed percentages with a real minus sign", () => {
     expect(signedPct(-11.19)).toBe("−11.2%");
     expect(signedPct(1.64)).toBe("+1.6%");
@@ -109,6 +119,32 @@ describe("semis-slide post data", () => {
     expect(low).toBe(87503.09);
     expect(DATES[(ACCOUNT as readonly number[]).indexOf(low)]).toBe("2026-11-05");
     expect(((low / ACCOUNT[0] - 1) * 100).toFixed(1)).toBe("-13.1");
+  });
+
+  it("counts 17 trading days after the October 28 close", () => {
+    expect(DATES.length - 1).toBe(17);
+  });
+
+  it("has the NVDA sequence the post describes", () => {
+    const buys = NVDA_SEQUENCE.filter((f) => f.side === "buy");
+    const sells = NVDA_SEQUENCE.filter((f) => f.side === "sell");
+    expect(buys.length).toBe(7);
+    expect(sells.map((f) => f.price)).toEqual([204.65, 156.4]);
+    expect(NVDA_SEQUENCE[0].side).toBe("sell");
+    expect(NVDA_SEQUENCE[NVDA_SEQUENCE.length - 1].side).toBe("sell");
+    // "The first four fills came between $205.39 and $208.34 ... the last three ... below it."
+    const above = buys.slice(0, 4).map((f) => f.price);
+    expect(Math.min(...above)).toBe(205.39);
+    expect(Math.max(...above)).toBe(208.34);
+    expect(buys.slice(4).map((f) => f.price)).toEqual([191.57, 194.1, 171.67]);
+    for (const f of buys.slice(4)) expect(f.price).toBeLessThan(NVDA_STOP);
+  });
+
+  it("shows the rule change the post describes", () => {
+    expect(RULES_BEFORE).not.toContain("rearm: 120");
+    expect(RULES_BEFORE).toContain("state: armed\n  rearm: 90");
+    expect(RULES_SINCE).toContain("rearm: 120");
+    expect(RULES_SINCE).toContain("state: disabled");
   });
 
   it("lists exits that all sold above where the stock closed on Nov 20", () => {

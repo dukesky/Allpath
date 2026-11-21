@@ -18,7 +18,8 @@ export type ChartSeries = {
   color: string;
   /** The series the post is about: drawn heavier. */
   emphasis?: boolean;
-  dashed?: boolean;
+  /** SVG dash pattern, e.g. "6 4". Solid when omitted. */
+  dash?: string;
 };
 
 type Props = {
@@ -108,7 +109,7 @@ function Plot({ dates, series, title, width, height, compact }: Props & { width:
           fill="none"
           points={s.idx.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ")}
           stroke={s.color}
-          strokeDasharray={s.dashed ? "5 4" : undefined}
+          strokeDasharray={s.dash}
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={s.emphasis ? 3 : 1.75}

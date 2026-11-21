@@ -21,17 +21,20 @@ export type TradingBlogPost = {
   date: string;
   readingMinutes: number;
   tags: readonly string[];
+  /** Short line shown in the amber box under the summary. */
+  note?: string;
 };
 
 export const TRADING_BLOG_POSTS: readonly TradingBlogPost[] = [
   {
     slug: "semis-slide-what-the-stops-did",
-    title: "Heavy in semis through the NVDA slide: what the stops did",
+    title: "The Chips Fell. Here's What Our Trading Agent Did.",
     summary:
-      "Seventeen trading days, a chip index down 28%, and a paper account that started the stretch 99% invested. What the exit rules did, and what they did not. Figures as of the November 20, 2026 close.",
+      "A nearly fully invested paper account met a semiconductor selloff. Here's what the exits changed, what broke, and what we fixed.",
     date: "2026-11-20",
-    readingMinutes: 4,
-    tags: ["paper account", "stops", "post-mortem"]
+    readingMinutes: 6,
+    tags: ["paper account", "stops", "post-mortem"],
+    note: "Paper trading. Figures through the November 20, 2026 close. Not financial advice."
   }
 ];
 
@@ -76,6 +79,11 @@ export function totalChangePct(values: readonly number[]): number {
   const last = values[values.length - 1];
   if (!first || last === undefined) return 0;
   return (last / first - 1) * 100;
+}
+
+/** Reading time at 230 words a minute, never less than one minute. */
+export function readingMinutesFor(words: number): number {
+  return Math.max(1, Math.round(words / 230));
 }
 
 export function signedPct(n: number, digits = 1): string {

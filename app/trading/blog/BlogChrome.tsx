@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { formatPostDate, type TradingBlogPost } from "@/lib/tradingBlog";
+import CopyButton from "../CopyButton";
 
 const GITHUB = "https://github.com/dukesky/allpath-trading-agent";
 
@@ -77,7 +78,7 @@ export function BlogPostShell({ post, children }: { post: TradingBlogPost; child
           <h1 className="mt-4 text-3xl font-semibold leading-[1.12] tracking-tight sm:text-[2.6rem]">{post.title}</h1>
           <p className="mt-5 text-lg leading-8 text-slate-600">{post.summary}</p>
           <p className="mt-6 rounded-xl border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-800">
-            Paper trading, not real money. Nothing here is financial advice or a promise of returns.
+            {post.note ?? "Paper trading, not real money. Nothing here is financial advice or a promise of returns."}
           </p>
           <div className="mt-8">{children}</div>
           <p className="mt-10 border-t border-[#eadfcf] pt-6 text-sm text-slate-600">
@@ -94,11 +95,11 @@ export function BlogPostShell({ post, children }: { post: TradingBlogPost; child
 /* ── Body building blocks, so every post gets the same typography ───────── */
 
 export function P({ children }: { children: ReactNode }) {
-  return <p className="mt-5 text-[17px] leading-8 text-slate-800">{children}</p>;
+  return <p className="mt-5 text-[17px] leading-[1.65] text-slate-800 sm:text-[18px]">{children}</p>;
 }
 
 export function H2({ children }: { children: ReactNode }) {
-  return <h2 className="mt-10 text-2xl font-semibold tracking-tight text-slate-950">{children}</h2>;
+  return <h2 className="mt-11 text-2xl font-semibold leading-tight tracking-tight text-slate-950 sm:mt-12">{children}</h2>;
 }
 
 export function Code({ children }: { children: ReactNode }) {
@@ -120,11 +121,26 @@ export function A({ href, children }: { href: string; children: ReactNode }) {
   );
 }
 
-/** Dark block for commands, matching the product screenshots' dark world. */
-export function Terminal({ children }: { children: string }) {
+/** Dark block for commands, with a language label and a copy button.
+    `copy` is what lands on the clipboard: runnable commands only. */
+export function Terminal({ children, copy, label = "Shell" }: { children: string; copy?: string; label?: string }) {
   return (
-    <pre className="mt-5 overflow-x-auto rounded-2xl bg-[#101727] p-5 font-mono text-[13px] leading-6 text-slate-100">
+    <div className="mt-6 overflow-hidden rounded-2xl bg-[#101727]">
+      <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-2.5">
+        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-400">{label}</span>
+        <CopyButton label="Copy" text={copy ?? children} />
+      </div>
+      <pre className="overflow-x-auto p-5 font-mono text-[13px] leading-6 text-slate-100">{children}</pre>
+    </div>
+  );
+}
+
+/** A figure with a caption: chart, image, table or snippet. */
+export function Figure({ children, caption }: { children: ReactNode; caption: ReactNode }) {
+  return (
+    <figure className="mt-8 rounded-2xl border border-[#eadfcf] bg-white/80 p-4 sm:p-5">
       {children}
-    </pre>
+      <figcaption className="mt-3 text-sm leading-6 text-slate-600">{caption}</figcaption>
+    </figure>
   );
 }
