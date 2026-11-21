@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-20T22:41:19.860Z",
+  "generatedAt": "2026-11-21T00:51:27.442Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "radixark/daisyrose-27b",
+      "label": "RadixArk: DaisyRose 27B",
+      "price": "$",
+      "created": 1795187604,
+      "variantCount": 1
+    },
     {
       "id": "mistralai/pixtral-large-2502",
       "label": "Mistral: Pixtral Large 2502",
