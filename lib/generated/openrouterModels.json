@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-23T05:45:53.103Z",
+  "generatedAt": "2026-11-23T23:23:18.520Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1772,13 +1772,6 @@
       "label": "DeepSeek: DeepSeek V4 Flash 0423",
       "price": "$",
       "created": 1777000666,
-      "variantCount": 1
-    },
-    {
-      "id": "xiaomi/mimo-v2.5-pro",
-      "label": "Xiaomi: MiMo-V2.5-Pro",
-      "price": "$",
-      "created": 1776874273,
       "variantCount": 1
     },
     {
