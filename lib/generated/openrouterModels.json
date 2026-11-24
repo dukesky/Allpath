@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-24T08:23:50.110Z",
+  "generatedAt": "2026-11-24T21:54:51.364Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1061,13 +1061,6 @@
       "variantCount": 2
     },
     {
-      "id": "dots-studio/dots-3-note-preview:free",
-      "label": "Dots Studio: Dots3-Note Preview (free)",
-      "price": "$",
-      "created": 1786680361,
-      "variantCount": 1
-    },
-    {
       "id": "google/gemini-3.7-flash",
       "label": "Google: Gemini 3.7 Flash",
       "price": "$$",
@@ -1772,13 +1765,6 @@
       "label": "DeepSeek: DeepSeek V4 Flash 0423",
       "price": "$",
       "created": 1777000666,
-      "variantCount": 1
-    },
-    {
-      "id": "xiaomi/mimo-v2.5",
-      "label": "Xiaomi: MiMo-V2.5",
-      "price": "$",
-      "created": 1776874269,
       "variantCount": 1
     },
     {
@@ -2566,13 +2552,6 @@
       "variantCount": 1
     },
     {
-      "id": "mistralai/mistral-medium-3.1",
-      "label": "Mistral: Mistral Medium 3.1",
-      "price": "$",
-      "created": 1755095639,
-      "variantCount": 1
-    },
-    {
       "id": "z-ai/glm-4.5v",
       "label": "Z.ai: GLM 4.5V",
       "price": "$",
@@ -2808,13 +2787,6 @@
       "label": "DeepSeek: R1 0528",
       "price": "$",
       "created": 1748455170,
-      "variantCount": 1
-    },
-    {
-      "id": "mistralai/mistral-medium-3",
-      "label": "Mistral: Mistral Medium 3",
-      "price": "$",
-      "created": 1746627341,
       "variantCount": 1
     },
     {
