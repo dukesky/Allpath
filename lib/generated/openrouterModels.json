@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-23T23:23:18.520Z",
+  "generatedAt": "2026-11-24T08:23:50.110Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1763,7 +1763,7 @@
     {
       "id": "deepseek/deepseek-v4-pro",
       "label": "DeepSeek: DeepSeek V4 Pro 0423",
-      "price": "$",
+      "price": "$$",
       "created": 1777000679,
       "variantCount": 1
     },
@@ -2391,13 +2391,6 @@
       "variantCount": 1
     },
     {
-      "id": "moonshotai/kimi-k2-thinking",
-      "label": "MoonshotAI: Kimi K2 Thinking",
-      "price": "$$",
-      "created": 1762440622,
-      "variantCount": 1
-    },
-    {
       "id": "amazon/nova-premier-v1",
       "label": "Amazon: Nova Premier 1.0",
       "price": "$$",
@@ -2556,13 +2549,6 @@
       "label": "Qwen: Qwen3 Next 80B A3B Instruct",
       "price": "$",
       "created": 1757612213,
-      "variantCount": 1
-    },
-    {
-      "id": "moonshotai/kimi-k2-0905",
-      "label": "MoonshotAI: Kimi K2 0905",
-      "price": "$$",
-      "created": 1757021147,
       "variantCount": 1
     },
     {
@@ -2745,13 +2731,6 @@
       "label": "Qwen: Qwen3 235B A22B Instruct 2507",
       "price": "$",
       "created": 1753119555,
-      "variantCount": 1
-    },
-    {
-      "id": "moonshotai/kimi-k2",
-      "label": "MoonshotAI: Kimi K2 0711",
-      "price": "$",
-      "created": 1752263252,
       "variantCount": 1
     },
     {
