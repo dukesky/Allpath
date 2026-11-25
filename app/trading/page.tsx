@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 
 const GITHUB = "https://github.com/dukesky/allpath-trading-agent";
 const PAPER = "https://arxiv.org/abs/2610.26662";
+const GAME = "/trading/game";
 const PAPER_PDF = "/trading/allpath-paper-ai4f-2026.pdf";
 const CONTACT_EMAIL = "0tianzhang0@gmail.com";
 
@@ -216,6 +217,35 @@ export default function TradingPage() {
               demo data — not a real account
             </figcaption>
           </figure>
+        </section>
+
+        {/* ── Mini-game: Bagholder Simulator (static build from dukesky/allpath-trading-game) ── */}
+        <section className="mt-8 grid items-center gap-6 overflow-hidden rounded-[2rem] border-[3px] border-[#2b1d14] bg-[#ffd166] p-5 shadow-[6px_6px_0_#2b1d14] sm:grid-cols-[1.1fr_1fr] sm:p-8">
+          <a className="block overflow-hidden rounded-2xl border-[3px] border-[#2b1d14] bg-[#f8f1e4]" href={GAME}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt="Cartoon: a nervous leek trader at a desk while a whale in a suit holds a sickle behind it"
+              className="aspect-video h-auto w-full object-cover"
+              height={540}
+              loading="lazy"
+              src="/trading/game/art/hero.webp"
+              width={960}
+            />
+          </a>
+          <div className="text-[#2b1d14]">
+            <p className="text-sm font-semibold">Free mini-game · 3 minutes</p>
+            <h3 className="mt-1 text-3xl font-black tracking-tight">Bagholder Simulator 🥬</h3>
+            <p className="mt-3 leading-7">
+              Trade through a real market crash or rally with the dates hidden. Buy, sell or hold each round,
+              then see the year and whether you beat a rules robot that never panics. English and 中文.
+            </p>
+            <a
+              className="mt-5 inline-flex items-center gap-2 rounded-2xl border-[3px] border-[#2b1d14] bg-[#ff6b35] px-6 py-3 font-bold text-white shadow-[4px_4px_0_#2b1d14] transition active:translate-x-1 active:translate-y-1 active:shadow-none"
+              href={GAME}
+            >
+              Play the game
+            </a>
+          </div>
         </section>
 
         {/* ── Signature: the pipeline ────────────────────────────────────────── */}
@@ -456,6 +486,9 @@ function Header() {
         <Link className="transition hover:text-primary" href="/trading/blog">
           Blog
         </Link>
+        <a className="transition hover:text-primary" href={GAME}>
+          🥬 Game
+        </a>
         <a className="transition hover:text-primary" href={PAPER}>
           Paper
         </a>
