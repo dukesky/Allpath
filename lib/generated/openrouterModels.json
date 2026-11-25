@@ -1,8 +1,29 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-24T21:54:51.364Z",
+  "generatedAt": "2026-11-25T06:59:17.686Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "upstage/solar-mini-4-5",
+      "label": "Upstage: Solar Mini 4.5 (Preview)",
+      "price": "$",
+      "created": 1795562304,
+      "variantCount": 1
+    },
+    {
+      "id": "upstage/solar-pro-4-contributor",
+      "label": "Upstage: Solar Pro 4 Contributor",
+      "price": "$",
+      "created": 1795562304,
+      "variantCount": 1
+    },
+    {
+      "id": "xiaomi/mimo-v2.6-flash-mopd",
+      "label": "Xiaomi: MiMo-V2.6-Flash-MOPD",
+      "price": "$",
+      "created": 1795456634,
+      "variantCount": 1
+    },
     {
       "id": "thinkingmachines/inkling-2-mini",
       "label": "Thinking Machines: Inkling 2 Mini",
