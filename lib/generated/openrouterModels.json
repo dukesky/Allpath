@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-25T18:24:37.074Z",
+  "generatedAt": "2026-11-25T20:37:32.390Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -1933,7 +1933,14 @@
       "label": "Mistral: Mistral Small 4",
       "price": "$",
       "created": 1773695685,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/mistral-small-2603:batch",
+      "label": "Mistral: Mistral Small 4 (batch)",
+      "price": "$",
+      "created": 1773695685,
+      "variantCount": 2
     },
     {
       "id": "z-ai/glm-5-turbo",
@@ -2304,7 +2311,14 @@
       "label": "Mistral: Ministral 3 8B 2512",
       "price": "$",
       "created": 1764681654,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/ministral-8b-2512:batch",
+      "label": "Mistral: Ministral 3 8B 2512 (batch)",
+      "price": "$",
+      "created": 1764681654,
+      "variantCount": 2
     },
     {
       "id": "mistralai/ministral-3b-2512",
@@ -2647,7 +2661,14 @@
       "label": "Mistral: Codestral 2508",
       "price": "$",
       "created": 1754079630,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/codestral-2508:batch",
+      "label": "Mistral: Codestral 2508 (batch)",
+      "price": "$",
+      "created": 1754079630,
+      "variantCount": 2
     },
     {
       "id": "qwen/qwen3-coder-30b-a3b-instruct",
