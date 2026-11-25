@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-25T20:37:32.390Z",
+  "generatedAt": "2026-11-25T21:02:05.074Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -2332,7 +2332,14 @@
       "label": "Mistral: Mistral Large 3 2512",
       "price": "$",
       "created": 1764624472,
-      "variantCount": 1
+      "variantCount": 2
+    },
+    {
+      "id": "mistralai/mistral-large-2512:batch",
+      "label": "Mistral: Mistral Large 3 2512 (batch)",
+      "price": "$",
+      "created": 1764624472,
+      "variantCount": 2
     },
     {
       "id": "deepseek/deepseek-v3.2",
