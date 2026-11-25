@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-25T06:59:17.686Z",
+  "generatedAt": "2026-11-25T18:24:37.074Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -431,24 +431,10 @@
       "variantCount": 2
     },
     {
-      "id": "unbiased/pareto-26.10",
-      "label": "Pareto 26.10",
-      "price": "$$",
-      "created": 1792073620,
-      "variantCount": 1
-    },
-    {
       "id": "~unbiased/pareto-latest",
       "label": "Pareto Latest",
-      "price": "$$",
+      "price": "$",
       "created": 1791933050,
-      "variantCount": 1
-    },
-    {
-      "id": "unbiased/pareto-26.9",
-      "label": "Pareto 26.9",
-      "price": "$$",
-      "created": 1791930537,
       "variantCount": 1
     },
     {
@@ -533,13 +519,6 @@
       "label": "inclusionAI: Ling 3.1 Flash",
       "price": "$",
       "created": 1790950024,
-      "variantCount": 1
-    },
-    {
-      "id": "unbiased/pareto-26.10-preview",
-      "label": "Pareto 26.10 Preview",
-      "price": "$$",
-      "created": 1790863623,
       "variantCount": 1
     },
     {
@@ -1777,7 +1756,7 @@
     {
       "id": "deepseek/deepseek-v4-pro",
       "label": "DeepSeek: DeepSeek V4 Pro 0423",
-      "price": "$$",
+      "price": "$",
       "created": 1777000679,
       "variantCount": 1
     },
@@ -2738,6 +2717,13 @@
       "label": "Venice: Uncensored",
       "price": "$",
       "created": 1752094966,
+      "variantCount": 1
+    },
+    {
+      "id": "tngtech/deepseek-r1t2-chimera",
+      "label": "TNG: DeepSeek R1T2 Chimera",
+      "price": "$$",
+      "created": 1751986985,
       "variantCount": 1
     },
     {
