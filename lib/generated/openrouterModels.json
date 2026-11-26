@@ -1,8 +1,15 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-25T21:02:05.074Z",
+  "generatedAt": "2026-11-26T20:55:28.366Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
+    {
+      "id": "inclusionai/lingsante-3.1-air-vl",
+      "label": "inclusionAI: LingSante 3.1 Air VL",
+      "price": "$",
+      "created": 1795705284,
+      "variantCount": 1
+    },
     {
       "id": "upstage/solar-mini-4-5",
       "label": "Upstage: Solar Mini 4.5 (Preview)",
@@ -2559,6 +2566,13 @@
       "variantCount": 1
     },
     {
+      "id": "moonshotai/kimi-k2-0905",
+      "label": "MoonshotAI: Kimi K2 0905",
+      "price": "$$",
+      "created": 1757021147,
+      "variantCount": 1
+    },
+    {
       "id": "nousresearch/hermes-4-405b",
       "label": "Nous: Hermes 4 405B",
       "price": "$$",
@@ -2738,6 +2752,13 @@
       "label": "Qwen: Qwen3 235B A22B Instruct 2507",
       "price": "$",
       "created": 1753119555,
+      "variantCount": 1
+    },
+    {
+      "id": "moonshotai/kimi-k2",
+      "label": "MoonshotAI: Kimi K2 0711",
+      "price": "$",
+      "created": 1752263252,
       "variantCount": 1
     },
     {
