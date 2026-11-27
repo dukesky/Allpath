@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-26T20:55:28.366Z",
+  "generatedAt": "2026-11-27T06:43:33.438Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -2162,7 +2162,7 @@
     {
       "id": "moonshotai/kimi-k2.5",
       "label": "MoonshotAI: Kimi K2.5",
-      "price": "$",
+      "price": "$$",
       "created": 1769487076,
       "variantCount": 1
     },
