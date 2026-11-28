@@ -1,6 +1,6 @@
 {
   "source": "openrouter",
-  "generatedAt": "2026-11-27T20:41:10.326Z",
+  "generatedAt": "2026-11-28T06:17:48.756Z",
   "minCreatedAt": "2025-03-01T00:00:00Z",
   "models": [
     {
@@ -2717,13 +2717,6 @@
       "label": "Z.ai: GLM 4.5 Air",
       "price": "$",
       "created": 1753471258,
-      "variantCount": 1
-    },
-    {
-      "id": "qwen/qwen3-235b-a22b-thinking-2507",
-      "label": "Qwen: Qwen3 235B A22B Thinking 2507",
-      "price": "$$",
-      "created": 1753449557,
       "variantCount": 1
     },
     {
